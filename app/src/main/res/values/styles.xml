@@ -1,0 +1,80 @@
+<resources>
+
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="colorSecondary">@color/secondaryColor</item>
+
+        <item name="android:textColorPrimary">@color/primaryTextColor</item>
+        <item name="android:textColorSecondary">@color/secondaryTextColor</item>
+        <item name="android:windowActivityTransitions">true</item>
+    </style>
+    <style name="ShowPhototheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="colorPrimary">@color/primaryTextColor</item>
+        <item name="colorPrimaryDark">@color/primaryTextColor</item>
+        <item name="colorAccent">@color/primaryTextColor</item>
+    </style>
+    <!-- Base application theme. -->
+    <style name="AppTheme.StatusBarTransparent" parent="Theme.AppCompat.Light.NoActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="colorControlActivated">@color/colorAccent</item>
+        <item name="android:actionMenuTextColor">@color/colorAccent</item>
+    </style>
+    <style name="TextViewCircle">
+        <item name="android:layout_width">48dp</item>
+        <item name="android:layout_height">48dp</item>
+        <item name="android:layout_margin">8dp</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textColor">@color/secondaryTextColor</item>
+        <item name="android:textSize">26sp</item>
+    </style>
+    <style name="tableRow">
+        <item name="android:layout_marginTop">2dp</item>
+        <item name="android:layout_marginLeft">4dp</item>
+        <item name="android:layout_marginRight">4dp</item>
+        <item name="android:layout_marginBottom">2dp</item>
+    </style>
+    <style name="TextImputStyle">
+        <item name="android:layout_marginLeft">20dp</item>
+        <item name="android:layout_marginRight">20dp</item>
+        <item name="android:layout_marginTop">10dp</item>
+    </style>
+
+    <style name="TextView">
+        <item name="android:textSize">20dp</item>
+    </style>
+    <style name="baseCardViewStyle">
+        <item name="android:layout_marginBottom">2dp</item>
+        <item name="android:layout_marginTop">4dp</item>
+        <item name="cardCornerRadius">8dp</item>
+        <item name="cardElevation">4dp</item>
+    </style>
+    <style name="mCardViewStyle" parent="baseCardViewStyle">
+        <item name="cardBackgroundColor">#ECECEC</item>
+    </style>
+
+    <style name="mCardViewStyleRight" parent="baseCardViewStyle">
+        <item name="android:layout_marginLeft">44dp</item>
+    </style>
+    <style name="mCardViewStyleLeft" parent="baseCardViewStyle">
+        <item name="android:layout_marginRight">4dp</item>
+    </style>
+
+    <style name="AppTheme.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+    <style name="linearLayout">
+        <item name="android:layout_marginLeft">2dp</item>
+        <item name="android:layout_marginTop">2dp</item>
+    </style>
+    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+</resources>

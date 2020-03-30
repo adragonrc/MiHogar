@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/iOrdenar"
+        android:title="Ordenar por" >
+        <menu>
+            <item
+                android:id="@+id/itFecha"
+                android:title="Fecha de pago" />
+        </menu>
+    </item>
+    <item android:title="Ver" >
+        <menu >
+            <item
+                android:id="@+id/iCuartosLibres"
+                android:title="Cuartos libres" />
+            <item
+                android:id="@+id/iCuartosAlquilados"
+                android:title="Cuartos Alquilados" />
+            <item
+                android:id="@+id/iTodos"
+                android:title="Todos" />
+        </menu>
+    </item>
+</menu>

@@ -1,0 +1,91 @@
+<resources>
+    <string name="app_name">ALQUILER</string>
+    <string name="msmAvanzarCont">PRESIONA TRES VECES PARA BORRAR:</string>
+    <string-array name="dias">
+        <item>01</item>
+        <item>02</item>
+        <item>03</item>
+        <item>04</item>
+        <item>05</item>
+        <item>06</item>
+        <item>07</item>
+        <item>08</item>
+        <item>09</item>
+        <item>10</item>
+        <item>11</item>
+        <item>12</item>
+        <item>13</item>
+        <item>14</item>
+        <item>15</item>
+        <item>16</item>
+        <item>17</item>
+        <item>18</item>
+        <item>19</item>
+        <item>20</item>
+        <item>21</item>
+        <item>22</item>
+        <item>23</item>
+        <item>24</item>
+        <item>25</item>
+        <item>26</item>
+        <item>27</item>
+        <item>28</item>
+        <item>29</item>
+        <item>30</item>
+        <item>31</item>
+    </string-array>
+
+    <string-array name="MesesInt">
+        <item>01</item>
+        <item>02</item>
+        <item>03</item>
+        <item>04</item>
+        <item>05</item>
+        <item>06</item>
+        <item>07</item>
+        <item>08</item>
+        <item>09</item>
+        <item>10</item>
+        <item>11</item>
+        <item>12</item>
+    </string-array>
+
+    <string-array name="Años">
+        <item>2019</item>
+        <item>2020</item>
+        <item>2021</item>
+        <item>2022</item>
+        <item>2023</item>
+        <item>2024</item>
+        <item>2025</item>
+    </string-array>
+
+    <string name="sNombreUser">Nombres: </string>
+    <string name="id">identificador</string>
+    <string name="password">password</string>
+    <string name="direccion">direccion</string>
+    <string name="correo">correo</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="title_activity_tabla">TablaActivity</string>
+    <string name="sApeMat">Apellido materno</string>
+    <string name="sApePat">Apellido paterno.</string>
+    <string name="sDni">DNI:</string>
+    <string name="buttonSalir">salir</string>
+    <string name="buttonVerPagos">Ver Pagos</string>
+    <string name="sBtCancelar">cancelar</string>
+    <string name="sBtAgregar">AGREGAR</string>
+    <string name="sfecha_i">Fecha de inicio</string>
+    <string name="s_num_c">Numero de cuarto:</string>
+    <string name="sTitleAI">NUEVO INQUILINO</string>
+    <string name="srbFaltaC">Falta Cancelar</string>
+    <string name="srbCancelo">Cancelo</string>
+    <string name="sMensualidad">Mensualidad</string>
+    <string name="cdImageView">Calificativo</string>
+    <string name="sMotSalida">MOTIVOS DE SALIDA</string>
+    <string name="s_datos_usuario">DATOS DE USUARIO.</string>
+    <string name="transition_name">transition_photo</string>
+    <string name="NumeroTelf">Numero Telefonico</string>
+    <string name="sCorreoEl">Correo Electronico</string>
+    <string name="start">inicio</string>
+</resources>

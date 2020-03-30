@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/opVerUsuario"
+        android:title="Ver usuario" />
+    <item
+        android:id="@+id/opVerPagos"
+        android:title="Ver pagos" />
+    <item
+        android:id="@+id/opTerminarA"
+        android:title="Terminar alquiler" />
+</menu>
