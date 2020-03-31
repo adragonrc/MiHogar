@@ -195,9 +195,15 @@ public class DataBaseAdmin extends SQLiteOpenHelper implements DataBaseInterface
     }
 
     @Override
-    public TableCursor getallUsuarios(String columnas) {
+    public Cursor getallUsuarios(String columnas) {
         String sql = "select " + columnas + " from " + TUsuario.T_NOMBRE ;
-        return consultarAll(sql);
+        return consultarAll2(sql);
+    }
+
+    public Cursor getAllUsuariosADDAlert(String columnas){
+        String select = "select * from "+ TAlquiler.T_NOMBRE  + " where " + TAlquiler.ALERT + " = '1'";
+        String sql ="select distinct "+TUsuario.T_NOMBRE+".*, "+TAlquiler.ALERT+" from "+TUsuario.T_NOMBRE + " left join ("+ select + ") using("+TUsuario.DNI+"); ";
+        return  consultarAll2(sql);
     }
 
     public ContentValues getFilaAlquilerByCuartoOf(String columnas, Object numCuarto){

@@ -2,8 +2,8 @@ package com.alexander_rodriguez.mihogar.historialcasa;
 
 import com.alexander_rodriguez.mihogar.Base.BaseView;
 import com.alexander_rodriguez.mihogar.Base.IBasePresenter;
-import com.alexander_rodriguez.mihogar.mi_casa.Models.ModelAlquilerView;
-import com.alexander_rodriguez.mihogar.mi_casa.Models.ModelUserView;
+import com.alexander_rodriguez.mihogar.Adapters.Models.ModelAlquilerView;
+import com.alexander_rodriguez.mihogar.Adapters.Models.ModelUserView;
 
 import java.util.ArrayList;
 

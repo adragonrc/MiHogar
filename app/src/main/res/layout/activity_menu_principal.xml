@@ -28,20 +28,20 @@
                     android:layout_height="wrap_content"
                     android:layout_width="wrap_content"
                     android:clickable="true"
-                    android:focusable="true">
+                    android:focusable="true"
+                    android:onClick="onClickMasAlquiler">
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:orientation="vertical"
                         android:gravity="center">
 
-                        <ImageButton
+                        <ImageView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center"
-                            android:layout_margin="8dp"
+                            android:layout_margin="18dp"
                             android:background="@drawable/circle_red"
-                            android:onClick="onClickMasAlquiler"
                             android:padding="12dp"
                             android:src="@drawable/ic_person_add_black_24dp" />
 
@@ -49,7 +49,8 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center"
-                            android:text="MAS INQUILINOS"
+                            android:gravity="center"
+                            android:text="AGREGAR\nINQUILINOS"
                             android:textColor="@color/primaryTextColor" />
                     </LinearLayout>
                 </androidx.cardview.widget.CardView>
@@ -64,7 +65,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:clickable="true"
-                    android:focusable="true">
+                    android:focusable="true"
+                    android:onClick="onClickMasCuartos">
 
                     <LinearLayout
                         android:layout_width="wrap_content"
@@ -73,13 +75,12 @@
                         android:gravity="center"
                         android:layout_gravity="center">
 
-                        <ImageButton
+                        <ImageView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center"
-                            android:layout_margin="8dp"
+                            android:layout_margin="18dp"
                             android:background="@drawable/circle_red"
-                            android:onClick="onClickMasCuartos"
                             android:padding="12dp"
                             android:src="@drawable/ic_add_home_black_28dp" />
 
@@ -87,7 +88,8 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center"
-                            android:text="MAS CUARTOS"
+                            android:gravity="center"
+                            android:text="AGREGAR\nCUARTOS"
                             android:textColor="@color/primaryTextColor" />
                     </LinearLayout>
                 </androidx.cardview.widget.CardView>
@@ -111,7 +113,9 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:clickable="true"
-                    android:focusable="true">
+                    android:focusable="true"
+
+                    android:onClick="onClickMiCasa">
 
                     <LinearLayout
                         android:layout_width="wrap_content"
@@ -120,12 +124,11 @@
                         android:orientation="vertical"
                         android:layout_gravity="center">
 
-                        <ImageButton
+                        <ImageView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_margin="8dp"
+                            android:layout_margin="18dp"
                             android:background="@drawable/circle_red"
-                            android:onClick="onClickMiCasa"
                             android:padding="12dp"
                             android:src="@drawable/ic_home_black_24dp" />
 
@@ -147,7 +150,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:clickable="true"
-                    android:focusable="true">
+                    android:focusable="true"
+                    android:onClick="onClickHistorialCasa">
 
                     <LinearLayout
                         android:layout_width="wrap_content"
@@ -156,13 +160,12 @@
                         android:layout_gravity="center"
                         android:gravity="center">
 
-                        <ImageButton
+                        <ImageView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center"
-                            android:layout_margin="8dp"
+                            android:layout_margin="18dp"
                             android:background="@drawable/circle_red"
-                            android:onClick="onClickHistorialCasa"
                             android:padding="12dp"
                             android:src="@drawable/ic_recent_actors_black_24dp" />
 

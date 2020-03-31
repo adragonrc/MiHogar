@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
@@ -15,6 +16,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.ActionBar;
 
 import com.alexander_rodriguez.mihogar.Base.BaseActivity;
 import com.alexander_rodriguez.mihogar.Modelos.ModelUsuario;
@@ -68,7 +70,18 @@ public class AgregarInquilino extends BaseActivity<Interfaz.Presenter> implement
     @Override
     protected void iniciarComandos() {
         setTitle("Agregar Inquilino");
+        ActionBar ab =  getSupportActionBar();
+        if (ab != null){
+            ab.setDisplayHomeAsUpEnabled(true);
+        }
         etDNI.requestFocus();
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == BACK_PRESSED)
+            onBackPressed();
+        return super.onContextItemSelected(item);
     }
 
     @Override

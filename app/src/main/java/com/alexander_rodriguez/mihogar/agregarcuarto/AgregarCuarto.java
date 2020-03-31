@@ -3,6 +3,7 @@ package com.alexander_rodriguez.mihogar.agregarcuarto;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -10,6 +11,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.ActionBar;
 
 import  com.alexander_rodriguez.mihogar.AdministradorCamara;
 import com.alexander_rodriguez.mihogar.Base.BaseActivity;
@@ -71,8 +73,18 @@ public class AgregarCuarto extends BaseActivity<Interfaz.Presenter> implements I
     @Override
     protected void iniciarComandos() {
         setTitle("Agregar cuarto");
+        ActionBar ab =  getSupportActionBar();
+        if (ab != null){
+            ab.setDisplayHomeAsUpEnabled(true);
+        }
         numeroDeCuarto.requestFocus();
         adc = new AdministradorCamara(this);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if  (item.getItemId() == BACK_PRESSED) onBackPressed();
+        return super.onContextItemSelected(item);
     }
 
     @Override

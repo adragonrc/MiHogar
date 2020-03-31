@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -17,8 +18,8 @@ import com.alexander_rodriguez.mihogar.R;
 import com.alexander_rodriguez.mihogar.UTILIDADES.TAlquiler;
 import com.alexander_rodriguez.mihogar.UTILIDADES.TUsuario;
 import com.alexander_rodriguez.mihogar.historialUserPakage.HistorialUsuarioActivity;
-import com.alexander_rodriguez.mihogar.mi_casa.Models.ModelAlquilerView;
-import com.alexander_rodriguez.mihogar.mi_casa.Models.ModelUserView;
+import com.alexander_rodriguez.mihogar.Adapters.Models.ModelAlquilerView;
+import com.alexander_rodriguez.mihogar.Adapters.Models.ModelUserView;
 import com.alexander_rodriguez.mihogar.tableActivity.TableActivity;
 
 import java.util.ArrayList;
@@ -33,6 +34,10 @@ public class HistorialCasaActivity extends BaseActivity<Interface.Presenter> imp
     @Override
     protected void iniciarComandos() {
         setTitle("Historial");
+        ActionBar ab =  getSupportActionBar();
+        if (ab != null){
+            ab.setDisplayHomeAsUpEnabled(true);
+        }
         manager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(manager);
         menu = R.menu.menu_historial_mi_casa;
@@ -64,6 +69,10 @@ public class HistorialCasaActivity extends BaseActivity<Interface.Presenter> imp
             }
             case R.id.iVerUsuario:{
                 presenter.mostrarUsuarios();
+                break;
+            }
+            case BACK_PRESSED:{
+                onBackPressed();
                 break;
             }
         }

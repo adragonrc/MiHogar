@@ -20,12 +20,11 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_weight="1"
-        android:divider="?android:listDivider"
         android:gravity="center"
         android:layout_gravity="center"
         android:orientation="vertical"
+        android:divider="?android:listDivider"
         android:showDividers="end">
-
 
         <TextView
             android:id="@+id/tvTitle"

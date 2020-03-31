@@ -2,7 +2,7 @@ package com.alexander_rodriguez.mihogar.mi_casa;
 
 import com.alexander_rodriguez.mihogar.Base.BaseView;
 import com.alexander_rodriguez.mihogar.Base.IBasePresenter;
-import com.alexander_rodriguez.mihogar.mi_casa.Models.ModelCuartoView;
+import com.alexander_rodriguez.mihogar.Adapters.Models.ModelCuartoView;
 
 import java.util.ArrayList;
 

@@ -2,13 +2,17 @@ package com.alexander_rodriguez.mihogar.historialUserPakage;
 
 import android.content.ContentValues;
 import android.content.Intent;
+import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
 import androidx.core.app.ActivityOptionsCompat;
 import androidx.core.view.ViewCompat;
 
@@ -17,10 +21,11 @@ import com.alexander_rodriguez.mihogar.Base.BaseActivity;
 import com.alexander_rodriguez.mihogar.R;
 import com.alexander_rodriguez.mihogar.UTILIDADES.TUsuario;
 import com.alexander_rodriguez.mihogar.alquilerusuario.AlquilerUsuarioActivity;
+import com.alexander_rodriguez.mihogar.vercuarto.ProfileView;
 
 
 public class HistorialUsuarioActivity extends BaseActivity<Interfaz.presenter> implements Interfaz.view {
-    private TextView tvDNI;
+
     private TextView tvNombres;
     private TextView tvApellidoPat;
     private TextView tvApellidoMat;
@@ -46,14 +51,25 @@ public class HistorialUsuarioActivity extends BaseActivity<Interfaz.presenter> i
     private LinearLayout llConfirNumTel;
     private LinearLayout llConfirCorreo;
 
-    private ImageView imPhoto;
+
+    private ProfileView profileView;
 
     private String uriPhoto;
 
     private String dni;
+
+    private Button verPagos;
+    private Button salir;
+
     @Override
     protected void iniciarComandos() {
-        setTitle("Inquilino");
+
+        //setTitle("Inquilino");
+        setSupportActionBar(profileView.getToolbar());
+        ActionBar ab =  getSupportActionBar();
+        if (ab != null){
+            ab.setDisplayHomeAsUpEnabled(true);
+        }
     }
 
     @Override
@@ -86,20 +102,23 @@ public class HistorialUsuarioActivity extends BaseActivity<Interfaz.presenter> i
 
     @Override
     public void mostrarDatosUsuario(ContentValues datos, String i) {
-        tvDNI.setText(datos.getAsString(TUsuario.DNI));
+        profileView.setSubTitle(datos.getAsString(TUsuario.DNI));
+        profileView.setTitle(datos.getAsString(TUsuario.NOMBRES));
+
         tvNombres.setText(datos.getAsString(TUsuario.NOMBRES));
         tvApellidoPat.setText(datos.getAsString(TUsuario.APELLIDO_PAT));
         tvApellidoMat.setText(datos.getAsString(TUsuario.APELLIDO_MAT));
         tvNumeroTel.setText(datos.getAsString(TUsuario.NUMERO_TEL));
         tvCorreo.setText(datos.getAsString(TUsuario.CORREO));
         uriPhoto = datos.getAsString(TUsuario.URI);
-        presenter.setImage(imPhoto, uriPhoto);
+        presenter.setImage(profileView.getIvPhoto(), uriPhoto);
         tvNumAlquiler.setText(i);
     }
 
     @Override
     public void modoError(String error){
-        tvDNI.setText(error);
+        profileView.setTitle(error);
+        profileView.setSubTitle(error);
         tvNombres.setText(error);
         tvApellidoPat.setText(error);
         tvApellidoMat.setText(error);
@@ -195,7 +214,7 @@ public class HistorialUsuarioActivity extends BaseActivity<Interfaz.presenter> i
     }
     public void onClickPhoto(View view){
         Intent intent = new Intent(this, ActivityShowImage.class);
-        ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(this, imPhoto, ViewCompat.getTransitionName(imPhoto));
+        ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(this, profileView.getIvPhoto(), ViewCompat.getTransitionName(profileView.getIvPhoto()));
         intent.putExtra(ActivityShowImage.IS_USER_IMAGE, true);
         intent.putExtra(TUsuario.DNI, dni);
         intent.putExtra(ActivityShowImage.DATA_IMAGE, uriPhoto);
@@ -205,8 +224,17 @@ public class HistorialUsuarioActivity extends BaseActivity<Interfaz.presenter> i
     @Override
     public void ocVerMas(View view){
         Intent i = new Intent(this, AlquilerUsuarioActivity.class);
-        i.putExtra(AlquilerUsuarioActivity.EXTRA_DNI, Integer.valueOf(tvDNI.getText().toString()));
+        i.putExtra(AlquilerUsuarioActivity.EXTRA_DNI, Integer.valueOf(dni));
         startActivity(i);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if (id ==BACK_PRESSED){
+                onBackPressed();
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
@@ -256,15 +284,18 @@ public class HistorialUsuarioActivity extends BaseActivity<Interfaz.presenter> i
     @Override
     protected void iniciarViews() {
         modificarTransicion();
-        tvDNI = findViewById(R.id.hutvDNI);
+
+        profileView = findViewById(R.id.profileAppid);
+
+        ScrollView cuerpo = (ScrollView) LayoutInflater.from(this).inflate(R.layout.perfil_usuario_cuerpo, null);
+        profileView.addToCuerpo(cuerpo);
+
         tvNombres = findViewById(R.id.hutvNombres);
         tvApellidoPat = findViewById(R.id.hutvApePat);
         tvApellidoMat = findViewById(R.id.hutvApeMat);
         tvNumeroTel = findViewById(R.id.hutvNumTel);
         tvCorreo = findViewById(R.id.hutvCorreo);
         tvNumAlquiler = findViewById(R.id.tvNumAlquiler);
-
-        imPhoto = findViewById(R.id.imPhoto);
 
         etNombres = findViewById(R.id.etNombres);
         etApellidoPat = findViewById(R.id.etApePat);
@@ -283,6 +314,10 @@ public class HistorialUsuarioActivity extends BaseActivity<Interfaz.presenter> i
         llConfirApeMat = findViewById(R.id.llConfirmApeMat);
         llConfirNumTel = findViewById(R.id.llConfirmNumTel);
         llConfirCorreo = findViewById(R.id.llConfirmCorreo);
-    }
 
+        salir = findViewById(R.id.button0);
+        verPagos = findViewById(R.id.button1);
+        salir.setText("SALIR");
+        verPagos.setText("VER PAGOS");
+    }
 }

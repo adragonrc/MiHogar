@@ -1,5 +1,11 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.alexander_rodriguez.mihogar">
+    <uses-feature
+        android:name="android.hardware.camera"
+        android:required="true" />
+
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
     <application
         android:allowBackup="true"
@@ -7,7 +13,8 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme" >
+        android:theme="@style/AppTheme"
+        android:configChanges="orientation" >
         <activity android:name=".registrarcasa.RegistrarCasaActivity" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -28,16 +35,23 @@
         <activity android:name=".listalquileres.ListAlquileresActivity" />
         <activity android:name=".historialcasa.HistorialCasaActivity" />
         <activity android:name=".mi_casa.MiCasaActivity" />
-        <activity android:name=".historialUserPakage.HistorialUsuarioActivity" />
+        <activity android:name=".historialUserPakage.HistorialUsuarioActivity"
+            android:theme="@style/AppTheme.StatusBarTransparent"
+            android:label=""/>
         <activity android:name=".tableActivity.TableActivity" />
 
         <activity
             android:label=""
-            android:name=".MainActivity"
+            android:name=".vercuarto.ProfileView"
             android:theme="@style/AppTheme.StatusBarTransparent"/>
 
         <activity
             android:name=".vercuarto.VerCuartoActivity"
+            android:label=""
+            android:configChanges="orientation"
+            android:theme="@style/AppTheme.StatusBarTransparent"/>
+        <activity
+            android:name=".vercuarto.VerCuarto2"
             android:label=""
             android:configChanges="orientation"
             android:theme="@style/AppTheme.StatusBarTransparent"/>

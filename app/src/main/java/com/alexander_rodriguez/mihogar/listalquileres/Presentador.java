@@ -9,7 +9,7 @@ import com.alexander_rodriguez.mihogar.TableCursor;
 import com.alexander_rodriguez.mihogar.UTILIDADES.TAlquiler;
 import com.alexander_rodriguez.mihogar.UTILIDADES.TCuarto;
 import com.alexander_rodriguez.mihogar.UTILIDADES.TUsuario;
-import com.alexander_rodriguez.mihogar.mi_casa.Models.ModelAlquilerView;
+import com.alexander_rodriguez.mihogar.Adapters.Models.ModelAlquilerView;
 
 import java.util.ArrayList;
 

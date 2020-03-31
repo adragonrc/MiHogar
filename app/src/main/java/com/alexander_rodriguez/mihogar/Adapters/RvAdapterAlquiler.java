@@ -10,7 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.alexander_rodriguez.mihogar.R;
-import com.alexander_rodriguez.mihogar.mi_casa.Models.ModelAlquilerView;
+import com.alexander_rodriguez.mihogar.Adapters.Models.ModelAlquilerView;
 
 import java.util.ArrayList;
 

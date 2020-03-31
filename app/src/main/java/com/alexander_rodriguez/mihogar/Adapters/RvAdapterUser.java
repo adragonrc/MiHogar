@@ -1,16 +1,19 @@
 package com.alexander_rodriguez.mihogar.Adapters;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.alexander_rodriguez.mihogar.R;
-import com.alexander_rodriguez.mihogar.mi_casa.Models.ModelUserView;
+import com.alexander_rodriguez.mihogar.Adapters.Models.ModelUserView;
 
 import java.util.ArrayList;
 
@@ -36,8 +39,15 @@ public class RvAdapterUser extends RecyclerView.Adapter<RvAdapterUser.Holder> {
         final ModelUserView item = list.get(i);
         holder.DNI.setText(item.getDni());
         holder.nombres.setText(item.getNombres());
-        holder.letra.setText(item.getLetra());
-        holder.letra.setBackgroundDrawable(item.getDrawable());
+        String path = item.getPath();
+        if(path != null )
+            if(!path.equals("")) {
+                Bitmap bm = BitmapFactory.decodeFile(path);
+                holder.ivPhoto.setImageBitmap(bm);
+            }
+        if(item.getAlert())
+            holder.ivAlert.setImageDrawable(mInterface.getContext().getResources().getDrawable(R.drawable.ic_add_alert_black_24dp));
+        else holder.ivAlert.setVisibility(View.GONE);
     }
 
     public View getViewSelect() {
@@ -54,14 +64,16 @@ public class RvAdapterUser extends RecyclerView.Adapter<RvAdapterUser.Holder> {
     }
 
     public class Holder extends RecyclerView.ViewHolder implements View.OnCreateContextMenuListener{
-        private TextView letra;
         private TextView DNI;
         private TextView nombres;
+        private ImageView ivPhoto;
+        private ImageView ivAlert;
         public Holder(@NonNull View itemView) {
             super(itemView);
-            letra = itemView.findViewById(R.id.vutvLetra);
             DNI = itemView.findViewById(R.id.vuTvDNI);
             nombres = itemView.findViewById(R.id.vuTvNombres);
+            ivPhoto = itemView.findViewById(R.id.ivPhoto);
+            ivAlert = itemView.findViewById(R.id.ivAlert);
             itemView.setOnCreateContextMenuListener(this);
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override

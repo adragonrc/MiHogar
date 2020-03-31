@@ -39,6 +39,6 @@ public interface DataBaseInterface {
 
     Cursor getAllCuartos(String columnas);
 
-    TableCursor getallUsuarios(String columnas);
+    Cursor getallUsuarios(String columnas);
 }
 

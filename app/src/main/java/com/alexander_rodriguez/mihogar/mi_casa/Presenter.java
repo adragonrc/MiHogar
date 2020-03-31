@@ -5,7 +5,7 @@ import android.database.Cursor;
 import com.alexander_rodriguez.mihogar.Base.BasePresenter;
 import com.alexander_rodriguez.mihogar.MyAdminDate;
 import com.alexander_rodriguez.mihogar.UTILIDADES.TAlquiler;
-import com.alexander_rodriguez.mihogar.mi_casa.Models.ModelCuartoView;
+import com.alexander_rodriguez.mihogar.Adapters.Models.ModelCuartoView;
 
 import java.util.ArrayList;
 

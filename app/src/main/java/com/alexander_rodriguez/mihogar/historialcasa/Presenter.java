@@ -1,16 +1,18 @@
 package com.alexander_rodriguez.mihogar.historialcasa;
 
 import android.content.ContentValues;
+import android.database.Cursor;
 import android.graphics.drawable.Drawable;
 
+import com.alexander_rodriguez.mihogar.Adapters.Models.ModelCuartoView;
 import com.alexander_rodriguez.mihogar.Base.BasePresenter;
 import com.alexander_rodriguez.mihogar.MyAdminDate;
 import com.alexander_rodriguez.mihogar.R;
 import com.alexander_rodriguez.mihogar.TableCursor;
 import com.alexander_rodriguez.mihogar.UTILIDADES.TAlquiler;
 import com.alexander_rodriguez.mihogar.UTILIDADES.TUsuario;
-import com.alexander_rodriguez.mihogar.mi_casa.Models.ModelAlquilerView;
-import com.alexander_rodriguez.mihogar.mi_casa.Models.ModelUserView;
+import com.alexander_rodriguez.mihogar.Adapters.Models.ModelAlquilerView;
+import com.alexander_rodriguez.mihogar.Adapters.Models.ModelUserView;
 
 import java.util.ArrayList;
 
@@ -31,17 +33,10 @@ public class Presenter extends BasePresenter<Interface.View> implements Interfac
         view.mostarListUsuarios(getListUsuarios());
     }
     private ArrayList<ModelUserView> getListUsuarios(){
-        ArrayList<ModelUserView> list= new ArrayList<>();
-        TableCursor tc = db.getallUsuarios("*");
-        for (int i= 0; i<tc.getCount(); i++){
-            Drawable drawable;
-            String dni = tc.getValue(i, TUsuario.DNI);
-            if(db.usuarioAlertado(dni))
-                drawable =  view.getContext().getResources().getDrawable(R.drawable.circle_red);
-            else drawable = view.getContext().getResources().getDrawable(R.drawable.circle_blue);
-            list.add(new ModelUserView(dni, tc.getValue(i, TUsuario.NOMBRES) + " " + tc.getValue(i, TUsuario.APELLIDO_PAT), drawable));
-        }
-        return  list;
+        String columnas = "*";
+        Cursor c = db.getAllUsuariosADDAlert(columnas);
+        return ModelUserView.createListModel(c);
+
     }
 
     @Override

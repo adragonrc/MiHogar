@@ -198,7 +198,7 @@ public class VerCuartoActivity extends BaseActivity<Interface.Presenter> impleme
 
     @Override
     protected int getLayout() {
-        return R.layout.datos_de_casa;
+        return R.layout.profile_app;
     }
 
     @NonNull
@@ -313,7 +313,7 @@ public class VerCuartoActivity extends BaseActivity<Interface.Presenter> impleme
         Intent intent = new Intent(this, ActivityShowImage.class);
         ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(this, ivPerfil, ViewCompat.getTransitionName(ivPerfil));
         intent.putExtra(ActivityShowImage.IS_CUARTO_IMAGE, true);
-        intent.putExtra(TCuarto.NUMERO, presenter.getDatosAlquiler().getAsString(TAlquiler.NUMERO_C));
+        intent.putExtra(TCuarto.NUMERO, numCuarto);
         intent.putExtra(ActivityShowImage.DATA_IMAGE, URIPerfil);
         startActivity(intent, options.toBundle());
     }
@@ -392,7 +392,7 @@ public class VerCuartoActivity extends BaseActivity<Interface.Presenter> impleme
         etDetalles = findViewById(R.id.etDetalles);
         etMensualidad = findViewById(R.id.etMensualidad);
 
-        btPagarAlquiler = findViewById(R.id.btPagarAlquiler);
+        btPagarAlquiler = findViewById(R.id.button1);
 
         cvDetallesAlquiler = findViewById(R.id.cvDetallesAlquiler);
         cvMensaje = findViewById(R.id.cvMensaje);

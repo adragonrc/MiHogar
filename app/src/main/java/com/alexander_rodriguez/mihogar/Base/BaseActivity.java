@@ -14,6 +14,9 @@ import androidx.fragment.app.Fragment;
 
 public abstract class BaseActivity<P extends IBasePresenter> extends AppCompatActivity implements BaseView{
     protected P presenter;
+
+    public static final int BACK_PRESSED = 16908332;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

@@ -14,17 +14,16 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.alexander_rodriguez.mihogar.Adapters.RvAdapterCuartos;
 import com.alexander_rodriguez.mihogar.Base.BaseActivity;
-import com.alexander_rodriguez.mihogar.MainActivity;
 import com.alexander_rodriguez.mihogar.R;
 import com.alexander_rodriguez.mihogar.UTILIDADES.TAlquiler;
 import com.alexander_rodriguez.mihogar.UTILIDADES.TCuarto;
-import com.alexander_rodriguez.mihogar.mi_casa.Models.ModelCuartoView;
+import com.alexander_rodriguez.mihogar.Adapters.Models.ModelCuartoView;
 import com.alexander_rodriguez.mihogar.mydialog.DialogImput;
 import com.alexander_rodriguez.mihogar.mydialog.DialogInterfaz;
 import com.alexander_rodriguez.mihogar.mydialog.DialogOptions;
 import com.alexander_rodriguez.mihogar.mydialog.PresenterDialogImput;
 import com.alexander_rodriguez.mihogar.tableActivity.TableActivity;
-import com.alexander_rodriguez.mihogar.vercuarto.VerCuartoActivity;
+import com.alexander_rodriguez.mihogar.vercuarto.VerCuarto2;
 
 import java.util.ArrayList;
 
@@ -191,7 +190,7 @@ public class MiCasaActivity extends BaseActivity<Interface.Presenter> implements
     @Override
     public void onClickCuarto(View view) {
         String numero = ((TextView)view).getText().toString();
-        Intent i = new Intent(this, VerCuartoActivity.class);
+        Intent i = new Intent(this, VerCuarto2.class);
         i.putExtra(TCuarto.NUMERO, numero);
         startActivity(i);
     }

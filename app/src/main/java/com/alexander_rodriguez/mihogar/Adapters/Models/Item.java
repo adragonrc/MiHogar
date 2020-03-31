@@ -1,4 +1,4 @@
-package com.alexander_rodriguez.mihogar.mi_casa;
+package com.alexander_rodriguez.mihogar.Adapters.Models;
 
 import android.graphics.drawable.Drawable;
 
