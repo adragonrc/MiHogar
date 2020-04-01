@@ -1,12 +1,16 @@
 package com.alexander_rodriguez.mihogar.Adapters;
 
+import android.graphics.BitmapFactory;
+import android.os.Build;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.alexander_rodriguez.mihogar.R;
@@ -36,11 +40,17 @@ public class RvAdapterAlquiler extends RecyclerView.Adapter<RvAdapterAlquiler.Ho
 
         holder.dni.setText(item.getDni());
         holder.fecha.setText(item.getFecha());
-        holder.letra.setText(item.getLetra());
+        if(!item.getPath().equals(""))holder.ivPhoto.setImageBitmap(BitmapFactory.decodeFile(item.getPath()));
         holder.numCuarto.setText(item.getNumCuarto());
         holder.nombres.setText(item.getNombres());
         holder.mId  = item.getId();
-        holder.letra.setBackgroundDrawable(item.getBackground());
+
+        if (item.isAlert()){
+            holder.nombres.setTextColor(view.getContext().getResources().getColor(R.color.colorPrimary));
+            holder.dni.setTextColor(view.getContext().getResources().getColor(R.color.colorAccent));
+            holder.fecha.setTextColor(view.getContext().getResources().getColor(R.color.colorAccent));
+            holder.numCuarto.setTextColor(view.getContext().getResources().getColor(R.color.colorAccent));
+        }
     }
     public View getViewSelect() {
         return viewSelect;
@@ -56,7 +66,7 @@ public class RvAdapterAlquiler extends RecyclerView.Adapter<RvAdapterAlquiler.Ho
     }
 
     public class Holder extends RecyclerView.ViewHolder implements View.OnCreateContextMenuListener{
-        private TextView letra;
+        private ImageView ivPhoto;
         private TextView dni;
         private TextView nombres;
         private TextView fecha;
@@ -65,7 +75,7 @@ public class RvAdapterAlquiler extends RecyclerView.Adapter<RvAdapterAlquiler.Ho
 
         public Holder(@NonNull View itemView) {
             super(itemView);
-            letra = itemView.findViewById(R.id.vatvLetra);
+            ivPhoto = itemView.findViewById(R.id.ivPhoto);
             dni = itemView.findViewById(R.id.vatvDni);
             fecha = itemView.findViewById(R.id.vatvFecha);
             nombres = itemView.findViewById(R.id.vatvNombre);

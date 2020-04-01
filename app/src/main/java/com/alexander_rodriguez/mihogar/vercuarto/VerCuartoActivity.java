@@ -132,12 +132,6 @@ public class VerCuartoActivity extends BaseActivity<Interface.Presenter> impleme
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
-        presenter.mostrarDetalles();
-    }
-
-    @Override
     protected void iniciarComandos() {
         ButterKnife.bind(this);
         diseñoPrueba();

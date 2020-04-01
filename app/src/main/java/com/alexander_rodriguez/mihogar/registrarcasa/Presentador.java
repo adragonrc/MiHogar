@@ -43,6 +43,7 @@ public class Presentador extends BasePresenter<interfaz.view> implements interfa
 
         }
     }
+
     public void onResume(){
         Context c = view.getContext();
         if(sp.getBoolean(c.getString(R.string.start), false)){

@@ -1,6 +1,8 @@
 package com.alexander_rodriguez.mihogar.listalquileres;
 
 import android.content.ContentValues;
+import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.drawable.Drawable;
 
 import com.alexander_rodriguez.mihogar.Base.BasePresenter;
@@ -15,9 +17,13 @@ import java.util.ArrayList;
 
 public class Presentador extends BasePresenter<Interface.Vista>{
     private String numeroCuarto;
-    public Presentador(Interface.Vista view, String numeroCuarto) {
+    private String dniUsuario;
+    private Intent i;
+    public Presentador(Interface.Vista view, Intent i) {
         super(view);
-        this.numeroCuarto = numeroCuarto;
+        this.i = i;
+        numeroCuarto = i.getStringExtra(TCuarto.NUMERO);
+        dniUsuario = i.getStringExtra(TUsuario.DNI);
     }
 
     @Override
@@ -25,22 +31,8 @@ public class Presentador extends BasePresenter<Interface.Vista>{
         view.mostarListAlquileres(getListAlquileres());
     }
     private ArrayList<ModelAlquilerView> getListAlquileres(){
-        ArrayList<ModelAlquilerView> list;
         String columnas = "*";
-        TableCursor tcAlquileres = db.getAllAlquileres(columnas, TCuarto.NUMERO, numeroCuarto);
-        list = new ArrayList<>();
-        for (int i = 0; i < tcAlquileres.getCount(); i++) {
-            ContentValues nombres = db.getFilaInUsuariosOf(TUsuario.NOMBRES+ ", " + TUsuario.APELLIDO_PAT, tcAlquileres.getValue(i, TAlquiler.DNI));
-            Drawable drawable;
-            if (tcAlquileres.getValue(i,TAlquiler.VAL).equals("0"))
-            drawable = view.getContext().getResources().getDrawable(R.drawable.circle_blue);
-            else drawable = view.getContext().getResources().getDrawable(R.drawable.circle_red);
-            list.add(new ModelAlquilerView(tcAlquileres.getValue(i,TAlquiler.ID),
-                    tcAlquileres.getValue(i, TUsuario.DNI),
-                    nombres.getAsString(TUsuario.NOMBRES) + " " +nombres.getAsString(TUsuario.APELLIDO_PAT),
-                    tcAlquileres.getValue(i, TAlquiler.FECHA_C),
-                    tcAlquileres.getValue(i, TAlquiler.NUMERO_C), drawable));
-        }
-        return list;
+        Cursor c = db.getAllAlquileresJoinUserExept(columnas, TCuarto.NUMERO, numeroCuarto, dniUsuario);
+        return ModelAlquilerView.createListModel(c);
     }
 }

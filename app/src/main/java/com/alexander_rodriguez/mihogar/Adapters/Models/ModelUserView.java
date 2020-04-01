@@ -24,7 +24,7 @@ public class ModelUserView {
 
     public ModelUserView(Cursor c){
         this.dni = c.getString(TUsuario.INT_DNI);
-        this.nombres = c.getString(TUsuario.INT_NOMBRES);
+        this.nombres = c.getString(TUsuario.INT_NOMBRES) + " " +c.getString(TUsuario.INT_APELLIDO_PAT);
         this.path = c.getString(TUsuario.INT_URI);
         this.alert = c.getString(TAlquiler.INT_ALERT);
     }

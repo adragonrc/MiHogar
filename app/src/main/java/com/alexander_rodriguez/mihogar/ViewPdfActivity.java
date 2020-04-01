@@ -1,14 +1,17 @@
 package com.alexander_rodriguez.mihogar;
 
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.alexander_rodriguez.mihogar.Base.BaseActivity;
 import com.alexander_rodriguez.mihogar.UTILIDADES.TUsuario;
 import com.github.barteksc.pdfviewer.PDFView;
 
 import java.io.File;
+import java.util.Objects;
 
 public class ViewPdfActivity extends AppCompatActivity {
     public static final String EXTRA_PATH_PDF = "path_pdf";
@@ -20,6 +23,7 @@ public class ViewPdfActivity extends AppCompatActivity {
         setTitle("Voucher");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_pdf);
+        Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
         pdfView = findViewById(R.id.pdfView);
         Bundle bundle = getIntent().getExtras();
         if (bundle != null){
@@ -31,7 +35,17 @@ public class ViewPdfActivity extends AppCompatActivity {
                     .enableAntialiasing(true)
                     .load();
         }
+
     }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == BaseActivity.BACK_PRESSED){
+            onBackPressed();
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
     public void onclick(View view){
         Send.sendForGMail(this, file.getName(), getIntent().getStringExtra(TUsuario.CORREO));
     }

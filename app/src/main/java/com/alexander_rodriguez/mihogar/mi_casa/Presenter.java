@@ -57,7 +57,7 @@ public class Presenter extends BasePresenter<Interface.View> implements Interfac
     }
     private ArrayList<ModelCuartoView> getListCuartos() {
         String columnas = "*";
-        Cursor c = db.getAllCuartos(columnas);
+        Cursor c = db.getAllCuartosJoinAlquiler(columnas);
         return ModelCuartoView.createListModel(c);
     }
 }

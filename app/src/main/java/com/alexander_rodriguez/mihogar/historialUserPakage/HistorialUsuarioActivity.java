@@ -10,6 +10,7 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
@@ -22,6 +23,10 @@ import com.alexander_rodriguez.mihogar.R;
 import com.alexander_rodriguez.mihogar.UTILIDADES.TUsuario;
 import com.alexander_rodriguez.mihogar.alquilerusuario.AlquilerUsuarioActivity;
 import com.alexander_rodriguez.mihogar.vercuarto.ProfileView;
+
+import java.util.Objects;
+
+import javax.xml.validation.Validator;
 
 
 public class HistorialUsuarioActivity extends BaseActivity<Interfaz.presenter> implements Interfaz.view {
@@ -82,12 +87,6 @@ public class HistorialUsuarioActivity extends BaseActivity<Interfaz.presenter> i
     protected Interfaz.presenter createPresenter() {
         dni = getIntent().getStringExtra(TUsuario.DNI);
         return new Presenter(this, dni);
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        presenter.iniciarComandos();
     }
 
     @Override
@@ -213,12 +212,18 @@ public class HistorialUsuarioActivity extends BaseActivity<Interfaz.presenter> i
         presenter.actualizarCorreo(etCorreo.getText().toString());
     }
     public void onClickPhoto(View view){
+        if(Objects.requireNonNull(uriPhoto).equals("")) {
+            Toast.makeText(this, "Sin foto", Toast.LENGTH_SHORT).show();
+            return;
+        }
         Intent intent = new Intent(this, ActivityShowImage.class);
         ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(this, profileView.getIvPhoto(), ViewCompat.getTransitionName(profileView.getIvPhoto()));
         intent.putExtra(ActivityShowImage.IS_USER_IMAGE, true);
         intent.putExtra(TUsuario.DNI, dni);
         intent.putExtra(ActivityShowImage.DATA_IMAGE, uriPhoto);
         startActivity(intent, options.toBundle());
+
+
     }
 
     @Override

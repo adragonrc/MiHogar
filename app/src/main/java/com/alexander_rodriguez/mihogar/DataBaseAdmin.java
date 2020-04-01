@@ -173,15 +173,29 @@ public class DataBaseAdmin extends SQLiteOpenHelper implements DataBaseInterface
                 " where " +key+ "= '" + value + "'; ";
         return consultarAll(sql);
     }
-    public TableCursor getAllAlquileres(String columnas){
-        String sql = "select " + columnas+ " from " + TAlquiler.T_NOMBRE ;
-        return consultarAll(sql);
+    public Cursor getAllAlquileresJoinUserExept(String columnas, String key, Object value, Object dniIgnore){
+        String sql = "select " + columnas+ " from " + TAlquiler.T_NOMBRE + " natural join " + TUsuario.T_NOMBRE+
+                " where " +key+ " = '" + value + "' and " + TUsuario.DNI + " <> '" + dniIgnore +"' ; ";
+        return consultarAll2(sql);
     }
-
+    public Cursor getAllAlquileres(String columnas){
+        String sql = "select " + columnas+ " from " + TAlquiler.T_NOMBRE ;
+        return consultarAll2(sql);
+    }
+    public Cursor getAllAlquilerJoinUser(String columnas){
+        String sql = "select " + columnas + " from " + TAlquiler.T_NOMBRE + " natural join "+ TUsuario.T_NOMBRE;
+        return consultarAll2(sql);
+    }
 
     @Override
     public Cursor getAllCuartos(String columnas) {
         String sql = "select " + columnas+ " from " + TCuarto.T_NOMBRE;
+        return consultarAll2(sql);
+    }
+
+    public Cursor getAllCuartosJoinAlquiler(String columnas) {
+        String select = "select * from " + TAlquiler.T_NOMBRE + " where " + TAlquiler.VAL +" = 1";
+        String sql = "select " + columnas+ " from " + TCuarto.T_NOMBRE + " left join (" + select + ") using (" + TCuarto.NUMERO + ") ;" ;
         return consultarAll2(sql);
     }
     public Cursor getCuartosLibres(String columnas) {
@@ -543,4 +557,5 @@ public class DataBaseAdmin extends SQLiteOpenHelper implements DataBaseInterface
         }
         return null;
     }
+
 }

@@ -18,7 +18,7 @@ public class Presenter extends BasePresenter<Interfaz.View> implements Interfaz.
             } else {
                 db.agregarCuarto(numCuarto, detalles, precio, URL);
                 view.showMensaje("Agregado");
-                view.getContext().startActivity(new Intent(view.getContext(), MenuPricipal.class));
+                view.salir();
             }
         }else{
             view.showMensaje("Campo vacio");

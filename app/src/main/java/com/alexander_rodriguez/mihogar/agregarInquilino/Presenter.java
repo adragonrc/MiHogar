@@ -12,6 +12,8 @@ import java.text.ParseException;
 import java.util.Date;
 
 public class Presenter extends BasePresenter<Interfaz.View> implements Interfaz.Presenter{
+    public static String ON_CREATE  = "onCreate";
+    public static String ON_RESUME  = "onResume";
     private MyAdminDate myTime;
     private Boolean confirmacion;
 
@@ -98,7 +100,6 @@ public class Presenter extends BasePresenter<Interfaz.View> implements Interfaz.
             view.sinCuartos();
         }else{
             ArrayAdapter<String> adapter= new ArrayAdapter<String>(view.getContext(), R.layout.support_simple_spinner_dropdown_item, numeroCuartos);
-
             view.prepararSpinsers(adapter);
         }
         confirmacion = false;

@@ -45,21 +45,8 @@ public class Presenter extends BasePresenter<Interface.View> implements Interfac
     }
 
     private ArrayList<ModelAlquilerView> getListAlquileres(){
-        ArrayList<ModelAlquilerView> list= new ArrayList<>();
         String columnas = "*";
-        TableCursor tcAlquileres = db.getAllAlquileres(columnas);
-        for (int i = 0; i < tcAlquileres.getCount(); i++) {
-            ContentValues nombres = db.getFilaInUsuariosOf(TUsuario.NOMBRES+ ", " + TUsuario.APELLIDO_PAT, tcAlquileres.getValue(i,TAlquiler.DNI));
-
-            String fechac = tcAlquileres.getValue(i, TAlquiler.FECHA_C);
-            String id =tcAlquileres.getValue(i,TAlquiler.ID);
-            String dni = tcAlquileres.getValue(i, TUsuario.DNI);
-            String noombres = nombres.getAsString(TUsuario.NOMBRES) + " " +nombres.getAsString(TUsuario.APELLIDO_PAT);
-            String numeroCuarto = tcAlquileres.getValue(i, TAlquiler.NUMERO_C);
-            Drawable drawable = view.getContext().getResources().getDrawable(R.drawable.circle_blue);
-
-            list.add(new ModelAlquilerView(id, dni, noombres, fechac,numeroCuarto, drawable));
-        }
-        return list;
+        Cursor c = db.getAllAlquilerJoinUser(columnas);
+        return ModelAlquilerView.createListModel(c);
     }
 }

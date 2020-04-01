@@ -27,7 +27,7 @@
                 android:layout_height="match_parent"
                 android:fitsSystemWindows="true"
                 android:scaleType="centerCrop"
-                android:src="@drawable/image_foto"
+                android:src="@drawable/images"
                 android:transitionName="@string/transition_name"
                 android:contentDescription="@string/cdImageView"
                 android:onClick="onClickPhoto"

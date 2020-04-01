@@ -35,7 +35,7 @@ public class ListAlquileresActivity extends BaseActivity<IBasePresenter> impleme
     @NonNull
     @Override
     protected IBasePresenter createPresenter() {
-        return new Presentador(this, getIntent().getStringExtra(TCuarto.NUMERO));
+        return new Presentador(this, getIntent());
     }
 
     @Override

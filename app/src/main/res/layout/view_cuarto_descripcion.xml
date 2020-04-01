@@ -13,35 +13,46 @@
         android:layout_height="64dp"
         android:layout_margin="8dp"
         android:gravity="center"
-        android:src="@drawable/image_foto"
+        android:src="@drawable/images"
         />
 
-    <LinearLayout
+    <TableLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_weight="1"
-        android:gravity="center"
-        android:layout_gravity="center"
         android:orientation="vertical"
         android:divider="?android:listDivider"
+        android:stretchColumns="0"
         android:showDividers="end">
 
-        <TextView
-            android:id="@+id/tvTitle"
-            android:layout_width="match_parent"
+        <TableRow
             android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:gravity="bottom|center"
-            android:text="Title"
-            android:textSize="16sp"
-            android:textColor="@color/primaryTextColor"
-            android:textStyle="bold" />
+            android:layout_weight="1">
 
-        <TextView
-            android:id="@+id/tvDetalles"
-            android:layout_width="match_parent"
+            <TextView
+                android:id="@+id/tvTitle"
+                android:layout_gravity="bottom"
+                android:text="Title"
+                android:textSize="16sp"
+                android:textColor="@color/primaryTextColor"
+                android:textStyle="bold" />
+            <ImageView
+                android:id="@+id/ivAlert"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:layout_gravity="bottom"
+                android:src="@drawable/ic_add_alert_black_24dp"/>
+        </TableRow>
+
+        <TableRow
             android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:text="Detalles" />
-    </LinearLayout>
+            android:layout_weight="1">
+
+            <TextView
+                android:id="@+id/tvDetalles"
+                android:layout_height="match_parent"
+                android:layout_marginStart="4dp"
+                android:layout_weight="1"
+                android:text="Detalles" />
+        </TableRow>
+    </TableLayout>
 </LinearLayout>

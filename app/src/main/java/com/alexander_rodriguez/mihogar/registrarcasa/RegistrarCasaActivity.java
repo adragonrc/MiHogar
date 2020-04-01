@@ -25,14 +25,14 @@ public class RegistrarCasaActivity extends BaseActivity<interfaz.presentador> im
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
-        presenter.onResume();
+    protected int getLayout() {
+        return R.layout.activity_registrar_casa;
     }
 
     @Override
-    protected int getLayout() {
-        return R.layout.activity_registrar_casa;
+    protected void onResume() {
+        super.onResume();
+        presenter.onResume();
     }
 
     @NonNull

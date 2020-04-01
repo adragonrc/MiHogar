@@ -24,8 +24,12 @@ public abstract class BaseActivity<P extends IBasePresenter> extends AppCompatAc
         presenter = createPresenter();
         iniciarViews();
         iniciarComandos();
-        presenter.iniciarComandos();
+    }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        presenter.iniciarComandos();
     }
 
     @Override

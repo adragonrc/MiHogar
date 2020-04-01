@@ -46,6 +46,11 @@ public class AgregarCuarto extends BaseActivity<Interfaz.Presenter> implements I
         startActivityForResult(i, AdministradorCamara.REQUEST_TAKE_PHOTO);
     }
 
+    @Override
+    public void salir() {
+        onBackPressed();
+    }
+
     protected void iniciarViews(){
         numeroDeCuarto = findViewById(R.id.etNumeroCuarto);
         precio = findViewById(R.id.etPrecio);

@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<TableRow
+<com.alexander_rodriguez.mihogar.tableActivity.TableRowView
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
+
     <TextView
         android:id="@+id/tvId"
         android:layout_width="wrap_content"
@@ -26,4 +27,4 @@
         android:layout_weight="1"
         android:text="TextView"
         android:gravity="center"/>
-</TableRow>
+</com.alexander_rodriguez.mihogar.tableActivity.TableRowView>

@@ -32,12 +32,12 @@ public class Presentador extends BasePresenter<Interface.view> implements Interf
     public Presentador(Interface.view view, String numeroCuarto) {
         super(view);
         this.numeroCuarto = numeroCuarto;
+        adminDate = new MyAdminDate();
+        adminDate.setFormat(MyAdminDate.FORMAT_DATE_TIME);
     }
 
     @Override
     public void iniciarComandos(){
-        adminDate = new MyAdminDate();
-        adminDate.setFormat(MyAdminDate.FORMAT_DATE_TIME);
         mostrarDetalles();
     }
 
@@ -123,8 +123,6 @@ public class Presentador extends BasePresenter<Interface.view> implements Interf
             pago = db.getUltimoPago(Mensualidad.ID);
             PDF pdf = new PDF();
 
-            numeroDePago = "-1";
-            fecha = "00-00-00";
             if  (pago != null){
                 if (pago.moveToLast()){
                     numeroDePago = pago.getString(TPago.INT_ID);
@@ -141,6 +139,7 @@ public class Presentador extends BasePresenter<Interface.view> implements Interf
                         ex.printStackTrace();
                     }
                 }
+                pago.close();
             }
         }else{
             view.showMensaje("Error al pagar");

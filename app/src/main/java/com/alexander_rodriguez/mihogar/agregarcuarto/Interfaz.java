@@ -10,6 +10,8 @@ public interface Interfaz{
     interface View extends BaseView {
         void onClickAgregar(android.view.View view);
         void onClickCamara(android.view.View view);
+
+        void salir();
     }
 
 }

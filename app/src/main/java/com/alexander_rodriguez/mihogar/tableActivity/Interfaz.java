@@ -5,10 +5,11 @@ import android.view.ViewGroup;
 import android.widget.TableLayout;
 
 import com.alexander_rodriguez.mihogar.Base.BaseView;
+import com.alexander_rodriguez.mihogar.Base.IBasePresenter;
 
 public interface Interfaz {
-    interface Presenter{
-
+    interface Presenter extends IBasePresenter {
+        void onPositive();
     }
     interface view extends BaseView {
         void addRow(String... atts);
@@ -19,5 +20,7 @@ public interface Interfaz {
         void addTable(TableLayout tl);
 
         ViewGroup getGrup();
+
+        void showDialog(String mensaje);
     }
 }

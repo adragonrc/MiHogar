@@ -36,6 +36,7 @@ import com.alexander_rodriguez.mihogar.tableActivity.TableActivity;
 import com.alexander_rodriguez.mihogar.verusuario.DialogConfirmPago;
 
 import java.io.File;
+import java.util.Objects;
 
 import butterknife.ButterKnife;
 
@@ -100,11 +101,6 @@ public class VerCuarto2 extends BaseActivity<Interface.Presenter> implements Int
         return super.onOptionsItemSelected(item);
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        presenter.mostrarDetalles();
-    }
 
     @Override
     protected void iniciarComandos() {
@@ -231,6 +227,10 @@ public class VerCuarto2 extends BaseActivity<Interface.Presenter> implements Int
 
     @Override
     public void onClickPhoto(View view) {
+        if(Objects.requireNonNull(URIPerfil).equals("")) {
+            Toast.makeText(this, "Sin foto", Toast.LENGTH_SHORT).show();
+            return;
+        }
         Intent intent = new Intent(this, ActivityShowImage.class);
         ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(this, ivPerfil, ViewCompat.getTransitionName(ivPerfil));
         intent.putExtra(ActivityShowImage.IS_CUARTO_IMAGE, true);
@@ -243,6 +243,7 @@ public class VerCuarto2 extends BaseActivity<Interface.Presenter> implements Int
     public void onClickVerAlquileres(View view) {
         Intent i = new Intent(this, ListAlquileresActivity.class);
         i.putExtra(TCuarto.NUMERO, numCuarto);
+        i.putExtra(TUsuario.DNI, perfilCuarto.getDniText());
         startActivity(i);
     }
 

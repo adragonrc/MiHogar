@@ -1,6 +1,8 @@
 package com.alexander_rodriguez.mihogar.tableActivity;
 
+import android.app.AlertDialog;
 import android.content.ContentValues;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,7 +21,7 @@ import com.alexander_rodriguez.mihogar.ViewPdfActivity;
 import com.alexander_rodriguez.mihogar.viewForTable.ViewFilaOfPagos;
 
 
-public class TableActivity extends BaseActivity<IBasePresenter> implements Interfaz.view {
+public class TableActivity extends BaseActivity<Presenter> implements Interfaz.view {
     private LinearLayout llPagos;
 
     @Override
@@ -34,7 +36,7 @@ public class TableActivity extends BaseActivity<IBasePresenter> implements Inter
 
     @NonNull
     @Override
-    protected IBasePresenter createPresenter() {
+    protected Presenter createPresenter() {
         return new Presenter(this,getIntent().getStringExtra(TAlquiler.ID));
     }
 
@@ -73,6 +75,24 @@ public class TableActivity extends BaseActivity<IBasePresenter> implements Inter
     @Override
     public ViewGroup getGrup() {
         return llPagos;
+    }
+
+    @Override
+    public void showDialog(String mensaje) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle(mensaje)
+                .setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        presenter.onPositive();
+                    }
+                }).setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+            }
+        });
+        builder.create().show();
     }
 
     public void ocListo(View view){

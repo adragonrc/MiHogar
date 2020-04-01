@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -50,6 +51,8 @@ public class AgregarInquilino extends BaseActivity<Interfaz.Presenter> implement
     private RadioGroup radioGroup;
     private String currentImagePath;
     private Bitmap bmGuardar;
+
+    private boolean cancelDialog;
     private DialogInterface.OnClickListener positivo = new DialogInterface.OnClickListener() {
         @Override
         public void onClick(DialogInterface dialog, int which) {
@@ -171,6 +174,7 @@ public class AgregarInquilino extends BaseActivity<Interfaz.Presenter> implement
                 .setPositiveButton("Agregar nuevo", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
+                        cancelDialog = false;
                         startActivity(new Intent(AgregarInquilino.this, AgregarCuarto.class));
                     }
                 }).setNegativeButton("Salir", new DialogInterface.OnClickListener() {
@@ -179,8 +183,30 @@ public class AgregarInquilino extends BaseActivity<Interfaz.Presenter> implement
                             onBackPressed();
                         }
                     });
-        builder.create().show();
+        AlertDialog a =builder.create();
+        a.setOnDismissListener(new DialogInterface.OnDismissListener() {
+            @Override
+            public void onDismiss(DialogInterface dialog) {
+                if (cancelDialog) {
+                    AgregarInquilino.this.onBackPressed();
+                }
+            }
+        });
+        a.setOnCancelListener(new DialogInterface.OnCancelListener() {
+            @Override
+            public void onCancel(DialogInterface dialog) {
+                cancelDialog = true;
+            }
+        });
+        a.show();
     }
+
+    @Override
+    public void onWindowFocusChanged(boolean hasFocus) {
+        Toast.makeText(this, "Focus: " + hasFocus, Toast.LENGTH_SHORT).show();
+        super.onWindowFocusChanged(hasFocus);
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -197,12 +223,6 @@ public class AgregarInquilino extends BaseActivity<Interfaz.Presenter> implement
             }
         }
     }
-    @Override
-    protected void onResume() {
-        super.onResume();
-        presenter.iniciarComandos();
-    }
-
     protected void iniciarViews(){
         etDNI = findViewById(R.id.etDNI);
         etNombre = findViewById(R.id.etNombre);

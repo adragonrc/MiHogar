@@ -1,24 +1,62 @@
 package com.alexander_rodriguez.mihogar.Adapters.Models;
 
-import android.graphics.drawable.Drawable;
+import android.database.Cursor;
+import android.graphics.Color;
+
+import com.alexander_rodriguez.mihogar.MyAdminDate;
+import com.alexander_rodriguez.mihogar.UTILIDADES.TAlquiler;
+import com.alexander_rodriguez.mihogar.UTILIDADES.TUsuario;
+
+import java.text.Format;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
 
 public class ModelAlquilerView {
     private String nombres;
     private String dni;
     private String fecha;
     private String numCuarto;
-    private String letra;
-    private Drawable background;
+    private boolean alert;
     private String id;
+    private String path;
 
-    public ModelAlquilerView(String id, String dni, String nombres, String fecha, String numCuarto, Drawable background) {
-        this.id = id;
+    public ModelAlquilerView(String nombres, String dni, String fecha, String numCuarto, boolean alert, String id, String path) {
         this.nombres = nombres;
         this.dni = dni;
         this.fecha = fecha;
         this.numCuarto = numCuarto;
-        this.background= background;
-        letra = nombres.substring(0,1);
+        this.alert = alert;
+        this.id = id;
+        this.path = path;
+    }
+
+    public ModelAlquilerView(Cursor c){
+        this.nombres = c.getString(c.getColumnIndex(TUsuario.NOMBRES)) + " " +c.getString(c.getColumnIndex(TUsuario.APELLIDO_PAT));
+        this.dni = c.getString(TAlquiler.INT_DNI);
+        this.fecha = c.getString(TAlquiler.INT_FECHA);
+        Format f = new SimpleDateFormat(MyAdminDate.FORMAT_DATE);
+        fecha = f.format(new Date());
+        this.numCuarto = c.getString(TAlquiler.INT_NUMERO_C);
+        this.alert = c.getString(TAlquiler.INT_ALERT).equals("1");
+        this.id = c.getString(TAlquiler.INT_ID);
+        this.path = c.getString(c.getColumnIndex(TUsuario.URI));
+    }
+
+    public static ArrayList<ModelAlquilerView> createListModel(Cursor c){
+        ArrayList<ModelAlquilerView> list = new ArrayList<>();
+        if (c.moveToFirst()){
+            do{
+                ModelAlquilerView mav = new ModelAlquilerView(c);
+                list.add(mav);
+            }while(c.moveToNext());
+        }
+        c.close();
+        return list;
+    }
+
+    public String getNombres() {
+        return nombres;
     }
 
     public String getDni() {
@@ -29,23 +67,19 @@ public class ModelAlquilerView {
         return fecha;
     }
 
-    public String getLetra() {
-        return letra;
-    }
-
-    public String getNombres() {
-        return nombres;
-    }
-
     public String getNumCuarto() {
         return numCuarto;
     }
 
-    public Drawable getBackground() {
-        return background;
+    public boolean isAlert() {
+        return alert;
     }
 
     public String getId() {
         return id;
+    }
+
+    public String getPath() {
+        return path;
     }
 }

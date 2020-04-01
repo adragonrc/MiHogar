@@ -39,13 +39,17 @@ public class RvAdapterCuartos extends RecyclerView.Adapter<RvAdapterCuartos.Hold
         holder.tvTitle.setText(item.getNumero());
         holder.tvDetalles.setText(item.getDescripcion());
         holder.id = item.getNumero();
-
         String path = item.getPath();
         if(path != null )
             if(!path.equals("")) {
                 Bitmap bm = BitmapFactory.decodeFile(path);
                 holder.ivPhoto.setImageBitmap(bm);
             }
+        if (item.isAlert()){
+            holder.ivAlert.setImageDrawable(mInterface.getContext().getResources().getDrawable(R.drawable.ic_add_alert_black_24dp));
+        }else{
+            holder.ivAlert.setVisibility(View.GONE);
+        }
     }
 
     @Override
@@ -61,6 +65,7 @@ public class RvAdapterCuartos extends RecyclerView.Adapter<RvAdapterCuartos.Hold
         private TextView tvTitle;
         private TextView tvDetalles;
         private ImageView ivPhoto;
+        private ImageView ivAlert;
         private String id;
 
         public Holder(@NonNull View itemView) {
@@ -68,6 +73,7 @@ public class RvAdapterCuartos extends RecyclerView.Adapter<RvAdapterCuartos.Hold
             ivPhoto = itemView.findViewById(R.id.ivPhoto);
             tvTitle = itemView.findViewById(R.id.tvTitle);
             tvDetalles = itemView.findViewById(R.id.tvDetalles);
+            ivAlert = itemView.findViewById(R.id.ivAlert);
 
             itemView.setOnCreateContextMenuListener(this);
             itemView.setOnClickListener(new View.OnClickListener() {
