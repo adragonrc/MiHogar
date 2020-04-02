@@ -3,6 +3,7 @@ package com.alexander_rodriguez.mihogar;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 
 public class MyAdminDate {
@@ -30,16 +31,35 @@ public class MyAdminDate {
         return f;
     }
 
-    public String getFecha(String fechai){
+    public String getFechaSiguiente(String fechai, int modo) throws ParseException {
         String f = null;
-        try {
-            Date date = dateFormat.parse(fechai);
-            date.setMonth(date.getMonth() + 1);
-            f = dateFormat.format(date);
-        } catch (ParseException e) {
-            e.printStackTrace();
+        Date date = dateFormat.parse(fechai);
+        switch (modo){
+            case 0:{
+                date.setMonth(date.getMonth() + 1);
+                break;
+            }
+            case 1:{
+                date = sumarTiempo(date, Calendar.DAY_OF_YEAR, 1);
+                break;
+            }
+            case 2:{
+                date = sumarTiempo(date, Calendar.HOUR_OF_DAY, 1);
+                break;
+            }
+            case 3:{
+                date = sumarTiempo(date, Calendar.MINUTE, 1);
+                break;
+            }
         }
+        f = dateFormat.format(date);
         return f;
+    }
+    public Date sumarTiempo(Date fecha, int label, int num){
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(fecha);
+        calendar.add(label, num);
+        return calendar.getTime();
     }
     public static String getFechaActual(){
         return (new SimpleDateFormat(FORMAT_DATE_TIME)).format(new Date());

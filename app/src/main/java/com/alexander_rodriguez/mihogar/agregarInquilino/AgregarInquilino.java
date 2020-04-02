@@ -5,9 +5,9 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -20,7 +20,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 
 import com.alexander_rodriguez.mihogar.Base.BaseActivity;
-import com.alexander_rodriguez.mihogar.Modelos.ModelUsuario;
+import com.alexander_rodriguez.mihogar.modelos.ModelUsuario;
 import com.alexander_rodriguez.mihogar.MyAdminDate;
 import com.alexander_rodriguez.mihogar.R;
 import com.alexander_rodriguez.mihogar.Save;
@@ -48,6 +48,8 @@ public class AgregarInquilino extends BaseActivity<Interfaz.Presenter> implement
     private Spinner spMes;
     private Spinner spAnio;
 
+    private Spinner spPlazo;
+
     private RadioGroup radioGroup;
     private String currentImagePath;
     private Bitmap bmGuardar;
@@ -66,7 +68,7 @@ public class AgregarInquilino extends BaseActivity<Interfaz.Presenter> implement
         @Override
         public void onClick(DialogInterface dialog, int which) {
             presenter.confirmar();
-            agregar();
+            agregarAlquiler();
         }
     };
 
@@ -96,12 +98,13 @@ public class AgregarInquilino extends BaseActivity<Interfaz.Presenter> implement
     @Override
     protected Interfaz.Presenter createPresenter() {
         return new Presenter(this);
-
     }
-    private void agregar(){
+
+    private void agregarAlquiler(){
         //String fecha = spDia.getSelectedItem().toString()+ "/"  + spMes.getSelectedItem().toString() +"/" +spAnio.getSelectedItem().toString();
         String fecha ;
         Save s = new Save();
+        int plazo = spPlazo.getSelectedItemPosition();
 
         fecha =  MyAdminDate.buidFecha(spAnio.getSelectedItem().toString(), spMes.getSelectedItem().toString(), spDia.getSelectedItem().toString());
         currentImagePath = s.SaveImage(this, bmGuardar);
@@ -109,6 +112,7 @@ public class AgregarInquilino extends BaseActivity<Interfaz.Presenter> implement
         presenter.agregarUsuario( mu,
                 spNumCuarto.getSelectedItem().toString(),
                 etPrecio.getText().toString(),
+                plazo,
                 fecha,
                 presenter.doPago(radioGroup));
 
@@ -116,7 +120,7 @@ public class AgregarInquilino extends BaseActivity<Interfaz.Presenter> implement
 
     @Override
     public void onClickAgregar(View view) {
-        agregar();
+        agregarAlquiler();
     }
 
     @Override
@@ -131,6 +135,16 @@ public class AgregarInquilino extends BaseActivity<Interfaz.Presenter> implement
 
     public void close(){
         onBackPressed();
+    }
+
+    @Override
+    public void mostrarEtPlazo() {
+        (findViewById(R.id.tilPlazo)).setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void ocultarEtPlazo() {
+        (findViewById(R.id.tilPlazo)).setVisibility(View.GONE);
     }
 
     @Override
@@ -202,12 +216,6 @@ public class AgregarInquilino extends BaseActivity<Interfaz.Presenter> implement
     }
 
     @Override
-    public void onWindowFocusChanged(boolean hasFocus) {
-        Toast.makeText(this, "Focus: " + hasFocus, Toast.LENGTH_SHORT).show();
-        super.onWindowFocusChanged(hasFocus);
-    }
-
-    @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if(requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE){
@@ -236,8 +244,12 @@ public class AgregarInquilino extends BaseActivity<Interfaz.Presenter> implement
         spDia = findViewById(R.id.spDia);
         spMes= findViewById(R.id.spMes);
         spAnio= findViewById(R.id.spAnio);
+        spPlazo = findViewById(R.id.spPlazo);
+
         radioGroup = findViewById(R.id.radioGrup);
         ivPhoto = findViewById(R.id.ivPhoto);
+
+        spPlazo.setOnItemSelectedListener((AdapterView.OnItemSelectedListener) presenter);
     }
 
 }

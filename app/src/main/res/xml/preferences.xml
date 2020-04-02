@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <PreferenceCategory
+        android:title="Modo de renta.">
+
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:key="@string/cpCasa"
+            android:title="Renta de casa"/>
+
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:key="@string/cpHotel"
+            android:title="Hotel" />
+        <PreferenceScreen
+            android:title="Preferencias de hotel"
+            android:key="psModHotel"
+            android:enabled="true">
+            <ListPreference
+                android:defaultValue="0"
+                android:entries="@array/key_tiempo_pago"
+                android:entryValues="@array/value_tiempo_pago"
+                android:key="@string/lpPlazo"
+                android:title="Plazo predeterminado" />
+
+            <CheckBoxPreference
+                android:defaultValue="false"
+                android:key="@string/cpHotel"
+                android:title="Remover alquiler automaticament" />
+        </PreferenceScreen>
+    </PreferenceCategory>
+</PreferenceScreen>

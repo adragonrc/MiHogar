@@ -1,11 +1,8 @@
 package com.alexander_rodriguez.mihogar.Adapters.Models;
 
 import android.database.Cursor;
-import android.graphics.drawable.Drawable;
 
-import com.alexander_rodriguez.mihogar.Modelos.ModelUsuario;
 import com.alexander_rodriguez.mihogar.UTILIDADES.TAlquiler;
-import com.alexander_rodriguez.mihogar.UTILIDADES.TCuarto;
 import com.alexander_rodriguez.mihogar.UTILIDADES.TUsuario;
 
 import java.util.ArrayList;

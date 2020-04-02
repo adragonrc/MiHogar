@@ -67,7 +67,11 @@
         <activity
             android:name=".agregarInquilino.AgregarInquilino"
             android:theme="@style/AppTheme" />
-
+        <activity
+            android:name=".Preferencias"
+            android:configChanges="orientation"
+            android:label="@string/title_activity_settings"
+            android:theme="@style/Theme.Preferences" />
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="com.alexander_rodriguez.mihogar.android.fileprovider"

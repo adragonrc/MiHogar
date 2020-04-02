@@ -16,5 +16,6 @@
     <include
         android:id="@+id/btAceptarCancelar"
         layout="@layout/buttons_aceptar_cancelar"
+
         />
 </LinearLayout>

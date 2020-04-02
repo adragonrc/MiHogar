@@ -42,7 +42,6 @@ import butterknife.ButterKnife;
 
 public class VerCuarto2 extends BaseActivity<Interface.Presenter> implements Interface.view {
     public static final String TAG_REALIZAR_PAGO = "confirmarPago";
-    //private TextView tvNumeroCuarto;
 
     private PerfilCuarto perfilCuarto;
 
@@ -289,9 +288,12 @@ public class VerCuarto2 extends BaseActivity<Interface.Presenter> implements Int
     protected void iniciarViews() {
         modificarTransicion();
         profileCuarto = findViewById(R.id.profileAppid);
+
         aceptarCancelar = findViewById(R.id.btAceptarCancelar);
-        btPagarAlquiler = findViewById(R.id.button1);
+        btPagarAlquiler = aceptarCancelar.getButton1();
         ivPerfil = findViewById(R.id.ivPerfil);
+
+        aceptarCancelar.setListenerButtonCancelar(this::onClickTerminarAlquiler);
 
         perfilCuarto = (PerfilCuarto)LayoutInflater.from(this).inflate(R.layout.activity_perfil_cuarto, null);
         profileCuarto.addToCuerpo(perfilCuarto);

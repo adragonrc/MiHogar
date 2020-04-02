@@ -9,11 +9,9 @@ import android.widget.LinearLayout;
 import androidx.annotation.Nullable;
 
 public class ButtonsAceptarCancelar extends LinearLayout {
-
     private Button button0;
     private Button button1;
 
-    private mInterface listener;
     public ButtonsAceptarCancelar(Context context) {
         super(context);
     }
@@ -33,34 +31,16 @@ public class ButtonsAceptarCancelar extends LinearLayout {
     @Override
     protected void onFinishInflate() {
         super.onFinishInflate();
-
-    }
-    public void setListener(mInterface listener){
-        this.listener = listener;
-    }
-
-    public void onAceptar(View view){
-        listener.onAceptar(view);
-    }
-    public void onCancelar(View view){
-        listener.onCancelar(view);
-    }
-    public interface mInterface{
-        void onAceptar(View view);
-        void onCancelar(View view);
-    }
-
-    @Override
-    public void setVisibility(int visibility) {
-        super.setVisibility(visibility);
-    }
-
-    public void setListenerButtonAceptar(OnClickListener listener){
-        findViewById(R.id.button1).setOnClickListener(listener);
+        button0 = findViewById(R.id.button0);
+        button1 = findViewById(R.id.button1);
     }
 
     public void setListenerButtonCancelar(OnClickListener listener){
-        findViewById(R.id.button0).setOnClickListener(listener);
+        button0.setOnClickListener(listener);
+    }
+
+    public void setListenerButtonAceptar(OnClickListener listener){
+        button1.setOnClickListener(listener);
     }
 
     public Button getButton0() {
@@ -70,4 +50,5 @@ public class ButtonsAceptarCancelar extends LinearLayout {
     public Button getButton1() {
         return button1;
     }
+
 }

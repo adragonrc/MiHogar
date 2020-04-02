@@ -5,12 +5,12 @@ import android.widget.RadioGroup;
 
 import com.alexander_rodriguez.mihogar.Base.BaseView;
 import com.alexander_rodriguez.mihogar.Base.IBasePresenter;
-import com.alexander_rodriguez.mihogar.Modelos.ModelUsuario;
+import com.alexander_rodriguez.mihogar.modelos.ModelUsuario;
 
 public interface Interfaz {
     interface Presenter  extends IBasePresenter {
         boolean doPago(RadioGroup radioGroup);
-        void agregarUsuario(ModelUsuario mu, String numCuarto, String mensualidad, String fecha, boolean pago);
+        void agregarUsuario(ModelUsuario mu, String numCuarto, String mensualidad, int plazo, String fecha, boolean pago);
          void confirmar();
     }
     interface View extends BaseView {
@@ -22,5 +22,9 @@ public interface Interfaz {
         void prepararSpinsers(ArrayAdapter<String> a);
         void sinCuartos();
         void close();
+
+        void mostrarEtPlazo();
+
+        void ocultarEtPlazo();
     }
 }

@@ -12,6 +12,13 @@
         <item name="android:textColorSecondary">@color/secondaryTextColor</item>
         <item name="android:windowActivityTransitions">true</item>
     </style>
+    <style name="Theme.Preferences" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="colorSecondary">@color/secondaryColor</item>
+
+    </style>
     <style name="ShowPhototheme" parent="Theme.AppCompat.Light.DarkActionBar">
         <item name="colorPrimary">@color/primaryTextColor</item>
         <item name="colorPrimaryDark">@color/primaryTextColor</item>
@@ -43,7 +50,7 @@
     <style name="TextImputStyle">
         <item name="android:layout_marginLeft">20dp</item>
         <item name="android:layout_marginRight">20dp</item>
-        <item name="android:layout_marginTop">10dp</item>
+        <item name="android:layout_marginTop">4dp</item>
     </style>
 
     <style name="TextView">

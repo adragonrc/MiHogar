@@ -2,6 +2,8 @@ package com.alexander_rodriguez.mihogar.menuPrincipal;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 
 import androidx.annotation.NonNull;
@@ -9,6 +11,7 @@ import androidx.appcompat.app.AlertDialog;
 
 import com.alexander_rodriguez.mihogar.Base.BaseActivity;
 import com.alexander_rodriguez.mihogar.Base.IBasePresenter;
+import com.alexander_rodriguez.mihogar.Preferencias;
 import com.alexander_rodriguez.mihogar.R;
 import com.alexander_rodriguez.mihogar.agregarInquilino.AgregarInquilino;
 import com.alexander_rodriguez.mihogar.agregarcuarto.AgregarCuarto;
@@ -32,6 +35,26 @@ public class MenuPricipal extends BaseActivity<IBasePresenter> implements Interf
     @Override
     protected IBasePresenter createPresenter() {
         return new Presentador(this);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_configuraciones, menu);
+        return true;
+    }
+
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        int config = R.id.item_Ajustes;
+        if (id == config) {
+            startActivity(new Intent(this, Preferencias.class));
+        }else{
+            /*if (id == R.id.about){
+                alertDialog().show();
+            }*/
+        }
+        return super.onOptionsItemSelected(item);
+
     }
 
     @Override

@@ -37,7 +37,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:layout_marginBottom="8dp"
-            android:visibility="gone">
+            android:visibility="visible">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -154,29 +154,15 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Fecha de pago"
+                        android:text="Fecha de ingreso"
                         android:textColor="@color/colorPrimary" />
-                    <LinearLayout
+
+                    <TextView
+                        android:id="@+id/tvFechaIngreso"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:layout_margin="4dp">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:text="Fecha de ingreso"
-                            android:visibility="visible" />
-
-                        <TextView
-                            android:id="@+id/tvFechaIngreso"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:gravity="end"
-                            android:visibility="visible" />
-                    </LinearLayout>
+                        android:layout_margin="4dp"
+                        android:visibility="visible" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -347,7 +333,7 @@
                     android:orientation="horizontal">
 
                     <TextView
-                        android:layout_width="match_parent"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:text="Otros alquileres"
@@ -367,16 +353,17 @@
                     android:orientation="horizontal">
 
                     <TextView
-                        android:layout_width="wrap_content"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="Alquileres anteriores" />
+                        android:text="Ver alquileres anteriores." />
 
                     <TextView
                         android:id="@+id/tvNumAlquiler"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginRight="8dp"
+                        android:layout_marginEnd="8dp"
+                        android:visibility="gone"
                         android:text="1" />
                 </LinearLayout>
             </LinearLayout>

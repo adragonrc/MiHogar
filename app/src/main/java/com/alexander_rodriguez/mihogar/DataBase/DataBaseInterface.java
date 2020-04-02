@@ -6,7 +6,7 @@ import android.database.Cursor;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.alexander_rodriguez.mihogar.Modelos.ModelUsuario;
+import com.alexander_rodriguez.mihogar.modelos.ModelUsuario;
 import com.alexander_rodriguez.mihogar.TableCursor;
 
 public interface DataBaseInterface {

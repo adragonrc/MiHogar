@@ -60,6 +60,22 @@
         <item>2025</item>
     </string-array>
 
+    <string-array name="value_tiempo_pago">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+    </string-array>
+
+    <string-array name="key_tiempo_pago">
+        <item>Mensual</item>
+        <item>Diario</item>
+        <item>Horas</item>
+        <item>1 Minuto</item>
+    </string-array>
+
+    <style name="keyTiempo">value_tiempo_pago</style>
+    <style name="valueTiempo">key_tiempo_pago</style>
     <string name="sNombreUser">Nombres: </string>
     <string name="id">identificador</string>
     <string name="password">password</string>
@@ -88,4 +104,9 @@
     <string name="NumeroTelf">Numero Telefonico</string>
     <string name="sCorreoEl">Correo Electronico</string>
     <string name="start">inicio</string>
+    <string name="title_activity_settings">Ajustes</string>
+    <string name="lpPlazo">list_tiempo</string>
+    <string name="cpHotel">rbHotel</string>
+    <string name="cpCasa">cbCasa</string>
+    <string name="s">getString(R.)</string>
 </resources>

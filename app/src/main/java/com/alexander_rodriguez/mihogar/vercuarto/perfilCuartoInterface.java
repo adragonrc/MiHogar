@@ -2,7 +2,7 @@ package com.alexander_rodriguez.mihogar.vercuarto;
 
 import android.view.View;
 
-public interface ListenerPerfilCuarto {
+public interface perfilCuartoInterface {
 
     void onClickVerInquilino(View view);
 

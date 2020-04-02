@@ -12,7 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.alexander_rodriguez.mihogar.DataBase.DataBaseInterface;
-import com.alexander_rodriguez.mihogar.Modelos.ModelUsuario;
+import com.alexander_rodriguez.mihogar.modelos.ModelUsuario;
 import com.alexander_rodriguez.mihogar.UTILIDADES.Mensualidad;
 import com.alexander_rodriguez.mihogar.UTILIDADES.TAlquiler;
 import com.alexander_rodriguez.mihogar.UTILIDADES.TCuarto;

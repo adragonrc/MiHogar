@@ -323,6 +323,8 @@ public class HistorialUsuarioActivity extends BaseActivity<Interfaz.presenter> i
         salir = findViewById(R.id.button0);
         verPagos = findViewById(R.id.button1);
         salir.setText("SALIR");
-        verPagos.setText("VER PAGOS");
+        verPagos.setText("VER ALQUILERES");
+        salir.setOnClickListener(v -> salir());
+        verPagos.setOnClickListener(this::ocVerMas);
     }
 }

@@ -1,11 +1,14 @@
 package com.alexander_rodriguez.mihogar.UTILIDADES;
 
 public class TAlquiler{
+    public static final long LABEL_MONTH = -1;
+    public static final long LABEL_YEAR = -2;
     public static final String T_NOMBRE = "alquiler";
     public static final String ID = "idAlquiler";
     public static final String FECHA = "fechaAlquiler";
     public static final String FECHA_C = "fecha_c";
     public static final String MOTIVO = "motivo";
+    public static final String PLAZO = "plazo";
     public static final String VAL = "estadoc";
     public static final String ALERT = "alert";
 
@@ -16,11 +19,12 @@ public class TAlquiler{
     public static final int INT_FECHA = 1;
     public static final int INT_FECHA_C = 2;
     public static final int INT_MOTIVO = 3;
-    public static final int INT_VAL = 4;
-    public static final int INT_ALERT = 5;
+    public static final int INT_PLAZO = 4;
+    public static final int INT_VAL = 5;
+    public static final int INT_ALERT = 6;
 
-    public static final int INT_DNI = 6;
-    public static final int INT_NUMERO_C= 7;
+    public static final int INT_DNI = 7;
+    public static final int INT_NUMERO_C= 8;
 
     public static final String CREATE_TABLE =
             "create table " + T_NOMBRE + "(" +
@@ -28,6 +32,7 @@ public class TAlquiler{
                     FECHA + " datetime," +
                     FECHA_C + " datetime," +
                     MOTIVO + " text," +
+                    PLAZO + " long," +
                     VAL + " boolean," +
                     ALERT+ " bool," +
 

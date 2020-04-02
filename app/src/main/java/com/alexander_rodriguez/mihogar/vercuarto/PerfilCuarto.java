@@ -4,7 +4,6 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -13,7 +12,6 @@ import android.widget.TextView;
 
 import androidx.cardview.widget.CardView;
 
-import com.alexander_rodriguez.mihogar.ButtonsAceptarCancelar;
 import com.alexander_rodriguez.mihogar.R;
 import com.alexander_rodriguez.mihogar.UTILIDADES.TAlquiler;
 import com.alexander_rodriguez.mihogar.UTILIDADES.TUsuario;
@@ -23,6 +21,7 @@ public class PerfilCuarto extends ScrollView{
     private TextView tvMensualidad;
     private TextView tvDni;
     private TextView tvDetalles;
+    private TextView tvFechaI;
     private TextView tvFechaC;
 
     private EditText etMensualidad;
@@ -41,7 +40,6 @@ public class PerfilCuarto extends ScrollView{
     private LinearLayout llEditorDetalles;
     private LinearLayout llShowDetalles;
 
-    private ListenerPerfilCuarto lpc;
     public PerfilCuarto(Context context) {
         super(context);
     }
@@ -71,6 +69,7 @@ public class PerfilCuarto extends ScrollView{
         tvNombres.setText(nombes);
         tvMensualidad.setText(mensualidad);
         tvFechaC.setText(alquiler.getAsString(TAlquiler.FECHA_C));
+        tvFechaI.setText(alquiler.getAsString(TAlquiler.FECHA));
 
         cvMensaje.setVisibility(View.GONE);
         cvDetallesAlquiler.setVisibility(View.VISIBLE);
@@ -81,31 +80,11 @@ public class PerfilCuarto extends ScrollView{
         cvMensaje.setVisibility(View.VISIBLE);
     }
 
-    public void onClickVerInquilino(View view) {
-        lpc.onClickVerInquilino(view);
-    }
-
-    public void onClickTerminarAlquiler(View view) {
-        lpc.onClickTerminarAlquiler(view);
-    }
-
-    public void onClickVermas(View view) {
-        lpc.onClickVermas(view);
-    }
-
-    public void onClickEditarMensualidad(View view) {
-        lpc.onClickEditarMensualidad(view);
-    }
-
     public void modoEditaMensualidad(){
         llEditorMensualidad.setVisibility(View.VISIBLE);
         llShowMensualidad.setVisibility(View.GONE);
         etMensualidad.setText(tvMensualidad.getText().toString());
         etMensualidad.requestFocus();
-    }
-
-    public void onClickEditarDetalles(View view) {
-        lpc.onClickEditarDetalles(view);
     }
 
     public void modoEditarDetalles() {
@@ -115,34 +94,13 @@ public class PerfilCuarto extends ScrollView{
         etDetalles.requestFocus();
     }
 
-    public void onClickConfirMensualidad(View view) {
-        lpc.onClickConfirMensualidad(view);
-    }
-
-    public void modoConfirMensualidad(View view) {
-        lpc.onClickConfirMensualidad(view);
-    }
-    public void onClickConfirDetalles(View view) {
-        lpc.onClickConfirDetalles(view);
-    }
-
-    public void onClickPhoto(View view) {
-        lpc.onClickPhoto(view);
-    }
-
-    public void onClickVerAlquileres(View view) {
-        lpc.onClickVerAlquileres(view);
-    }
-
     public void actualizarMensualidad(String mensualidad) {
-    //   ocultarTeclado();
         llEditorMensualidad.setVisibility(View.GONE);
         llShowMensualidad.setVisibility(View.VISIBLE);
         tvMensualidad.setText(mensualidad);
     }
 
     public void actualizarDetalles(String detalles) {
-    //   ocultarTeclado();
         llEditorDetalles.setVisibility(View.GONE);
         llShowDetalles.setVisibility(View.VISIBLE);
 
@@ -171,16 +129,15 @@ public class PerfilCuarto extends ScrollView{
     }
 
     protected void iniciarViews() {
-        //  tvNumeroCuarto = findViewById(R.id.tvNumeroCuarto);
         tvNombres = findViewById(R.id.tvNombres);
         tvMensualidad = findViewById(R.id.vcTvMensualidad);
         tvDni = findViewById(R.id.tvDni);
         tvDetalles = findViewById(R.id.tvDetalles);
+        tvFechaI = findViewById(R.id.tvFechaIngreso);
         tvFechaC = findViewById(R.id.tvFechaDePago);
 
         etDetalles = findViewById(R.id.etDetalles);
         etMensualidad = findViewById(R.id.etMensualidad);
-
 
         cvDetallesAlquiler = findViewById(R.id.cvDetallesAlquiler);
         cvMensaje = findViewById(R.id.cvMensaje);
@@ -241,13 +198,11 @@ public class PerfilCuarto extends ScrollView{
     }
     public boolean checkBack(View currentFocus){
         if (currentFocus.equals(etDetalles)) {
-            llEditorDetalles.setVisibility(View.GONE);
-            llShowDetalles.setVisibility(View.VISIBLE);
+            backDetalles();
             return true;
         } else {
             if (currentFocus.equals(etMensualidad)) {
-                llEditorMensualidad.setVisibility(View.GONE);
-                llShowMensualidad.setVisibility(View.VISIBLE);
+                backMensualidad();
                 return true;
             }
         }

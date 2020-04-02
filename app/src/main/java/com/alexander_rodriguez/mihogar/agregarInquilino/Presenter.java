@@ -1,24 +1,29 @@
 package com.alexander_rodriguez.mihogar.agregarInquilino;
 
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.RadioGroup;
 
 import com.alexander_rodriguez.mihogar.Base.BasePresenter;
-import com.alexander_rodriguez.mihogar.Modelos.ModelUsuario;
+import com.alexander_rodriguez.mihogar.modelos.ModelUsuario;
 import com.alexander_rodriguez.mihogar.MyAdminDate;
 import com.alexander_rodriguez.mihogar.R;
 
 import java.text.ParseException;
 import java.util.Date;
 
-public class Presenter extends BasePresenter<Interfaz.View> implements Interfaz.Presenter{
+public class Presenter extends BasePresenter<Interfaz.View> implements Interfaz.Presenter, AdapterView.OnItemSelectedListener{
     public static String ON_CREATE  = "onCreate";
     public static String ON_RESUME  = "onResume";
     private MyAdminDate myTime;
     private Boolean confirmacion;
+    private MyAdminDate adminDate;
 
     public Presenter(Interfaz.View view){
         super(view);
+        adminDate = new MyAdminDate();
+        adminDate.setFormat(MyAdminDate.FORMAT_DATE_TIME);
     }
     private boolean validarImputs(String ...s){
         for (String s1 : s)
@@ -30,7 +35,7 @@ public class Presenter extends BasePresenter<Interfaz.View> implements Interfaz.
     }
 
     @Override
-    public void agregarUsuario(ModelUsuario mu, String numCuarto, String mensualidad, String fecha, boolean pago) {
+    public void agregarUsuario(ModelUsuario mu, String numCuarto, String mensualidad, int plazo, String fecha, boolean pago) {
 
         if(mu.getUriPhoto() == null ||  mu.getUriPhoto().equals("")){
             view.showMensaje("agrega una foto");
@@ -40,12 +45,10 @@ public class Presenter extends BasePresenter<Interfaz.View> implements Interfaz.
             String fecha_c = null;
             if (pago) {
                 try {
-                    Date date = myTime.getDateFormat().parse(fecha);
-                    date.setMonth(date.getMonth() + 1);
-                    fecha_c = myTime.getDateFormat().format(date);
+                    fecha_c = adminDate.getFechaSiguiente(fecha, 0);
                 } catch (ParseException e) {
                     e.printStackTrace();
-                    view.showError("no se pudo completar la accion");
+                    view.showError("fecha no disponible");
                     return;
                 }
             }
@@ -89,8 +92,6 @@ public class Presenter extends BasePresenter<Interfaz.View> implements Interfaz.
         return radioGroup.getCheckedRadioButtonId() == R.id.rbCancelo;
     }
 
-
-
     @Override
     public void iniciarComandos() {
         myTime = new MyAdminDate();
@@ -99,9 +100,23 @@ public class Presenter extends BasePresenter<Interfaz.View> implements Interfaz.
         if (numeroCuartos.length == 0){
             view.sinCuartos();
         }else{
-            ArrayAdapter<String> adapter= new ArrayAdapter<String>(view.getContext(), R.layout.support_simple_spinner_dropdown_item, numeroCuartos);
+            ArrayAdapter<String> adapter= new ArrayAdapter<>(view.getContext(), R.layout.support_simple_spinner_dropdown_item, numeroCuartos);
             view.prepararSpinsers(adapter);
         }
         confirmacion = false;
+    }
+
+    @Override
+    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+        if (position == P_HORAS || position == P_MINUTOS){
+            this.view.mostrarEtPlazo();
+        }else{
+            this.view.ocultarEtPlazo();
+        }
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> parent) {
+
     }
 }

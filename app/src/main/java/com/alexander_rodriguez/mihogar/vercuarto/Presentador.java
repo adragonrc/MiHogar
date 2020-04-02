@@ -6,6 +6,7 @@ import android.database.Cursor;
 import com.alexander_rodriguez.mihogar.Base.BasePresenter;
 import com.alexander_rodriguez.mihogar.MyAdminDate;
 import com.alexander_rodriguez.mihogar.PDF;
+import com.alexander_rodriguez.mihogar.Preferencias;
 import com.alexander_rodriguez.mihogar.R;
 import com.alexander_rodriguez.mihogar.UTILIDADES.Mensualidad;
 import com.alexander_rodriguez.mihogar.UTILIDADES.TAlquiler;
@@ -16,6 +17,7 @@ import com.itextpdf.text.DocumentException;
 
 import java.io.FileNotFoundException;
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -107,17 +109,28 @@ public class Presentador extends BasePresenter<Interface.view> implements Interf
 
     @Override
     public void realizarPago() {
-        String s = adminDate.getFecha(datosAlquiler.getAsString(TAlquiler.FECHA_C));
+        String  s_modo = sp.getString("list_tiempo", "0");
+        int modo = Integer.parseInt(s_modo);
+        String s ;
+        try {
+            s = adminDate.getFechaSiguiente(datosAlquiler.getAsString(TAlquiler.FECHA_C), modo);
+        } catch (ParseException e) {
+            view.showMensaje("problemas con la fecha");
+            e.printStackTrace();
+            return;
+        }
         String numeroCuarto = datosCuarto.getAsString(TCuarto.NUMERO);
         String fecha;
         String numeroDePago;
         String costo = datosMensualidad.getAsString(Mensualidad.COSTO);
         String direccion = sp.getString(view.getContext().getString(R.string.direccion), "---");
         Cursor pago;
-
-        if(db.agregarPago(adminDate.getDateFormat().format(new Date()),datosMensualidad.getAsLong(Mensualidad.ID), datosUsuario.getAsLong(TUsuario.DNI))){
+        String fechaHoraActual = adminDate.getDateFormat().format(new Date());
+        Long idMensualidad = datosMensualidad.getAsLong(Mensualidad.ID);
+        Long idUsuario = datosUsuario.getAsLong(TUsuario.DNI);
+        if(db.agregarPago(fechaHoraActual, idMensualidad, idUsuario)){
             view.showMensaje("pago agregado");
-            db.upDateAlquiler(TAlquiler.FECHA_C,s,datosAlquiler.getAsInteger(TAlquiler.ID));
+            db.upDateAlquiler(TAlquiler.FECHA_C, s, datosAlquiler.getAsInteger(TAlquiler.ID));
             actualizarDatos();
 
             pago = db.getUltimoPago(Mensualidad.ID);

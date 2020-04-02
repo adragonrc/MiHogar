@@ -6,6 +6,10 @@ import android.preference.PreferenceManager;
 import com.alexander_rodriguez.mihogar.DataBaseAdmin;
 
 public abstract class BasePresenter<V extends BaseView> implements IBasePresenter{
+    public static int P_MENSUAL = 0;
+    public static int P_DIARIO = 1;
+    public static int P_HORAS = 2;
+    public static int P_MINUTOS = 3;
     private V mMvpView;
     protected V view;
     protected DataBaseAdmin db;
