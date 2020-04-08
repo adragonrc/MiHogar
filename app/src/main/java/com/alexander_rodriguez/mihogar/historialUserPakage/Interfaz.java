@@ -19,10 +19,12 @@ public interface Interfaz {
         void actualizarPhoto(String path);
     }
     interface view extends BaseView, interfazAC {
+
         void mostrarAlerta();
         void noMostrarAlerta();
         void mostrarDatosUsuario(ContentValues datos, String i);
         void modoError(String error);
+
 
         void ocEditarNombres(View view);
         void ocEditarApePat(View view);

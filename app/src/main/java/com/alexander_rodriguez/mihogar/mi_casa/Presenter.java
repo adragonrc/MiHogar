@@ -1,6 +1,7 @@
 package com.alexander_rodriguez.mihogar.mi_casa;
 
 import android.database.Cursor;
+import android.os.Bundle;
 
 import com.alexander_rodriguez.mihogar.Base.BasePresenter;
 import com.alexander_rodriguez.mihogar.MyAdminDate;
@@ -31,7 +32,7 @@ public class Presenter extends BasePresenter<Interface.View> implements Interfac
 
     @Override
     public void terminarAlquiler(String motivo, String id) {
-        db.upDateAlquiler(TAlquiler.VAL, "0", id);
+        db.upDateAlquiler(TAlquiler.FECHA_SALIDA, MyAdminDate.getFechaActual(), id);
         db.upDateAlquiler(TAlquiler.MOTIVO, motivo, id);
         //view.mostrarAlquileres(getListAlquileres());
         verTodos();

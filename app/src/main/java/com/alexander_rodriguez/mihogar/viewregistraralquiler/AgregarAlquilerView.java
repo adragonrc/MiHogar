@@ -78,15 +78,17 @@ public class AgregarAlquilerView extends ScrollView {
 
         String fecha =  MyAdminDate.buidFecha(spAnio.getSelectedItem().toString(), spMes.getSelectedItem().toString(), spDia.getSelectedItem().toString());
         boolean pago = radioGroup.getCheckedRadioButtonId() == R.id.rbCancelo;
-
+        int pagosRealizados ;
+        if  (pago) pagosRealizados  = 1;
+        else pagosRealizados = 0;
         ModelAA model = new ModelAA(
                 etPrecio.getText().toString(),
                 etCorreo.getText().toString(),
                 etNumeroTelef.getText().toString(),
                 spNumCuarto.getSelectedItem().toString(),
                 fecha,
-                "0",
-                pago
+                pagosRealizados,
+                "0"
         );
 
         return model;

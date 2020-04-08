@@ -1,6 +1,7 @@
 package com.alexander_rodriguez.mihogar.viewregistraralquiler;
 
 import com.alexander_rodriguez.mihogar.Base.BasePresenter;
+import com.alexander_rodriguez.mihogar.MyAdminDate;
 
 public class ModelAA{
     private String precio;
@@ -12,18 +13,16 @@ public class ModelAA{
 
     private String plazo;
 
-    private String fecha_c;
-    private boolean pago;
+    private int pagosRealizados;
 
-    public ModelAA(String precio, String correo, String numeroTelef, String numCuarto, String fecha, String plazo, boolean pago){
+    public ModelAA(String precio, String correo, String numeroTelef, String numCuarto, String fecha,  int pagosRealizados, String plazo){
         this.precio = precio;
         this.correo = correo;
         this.numeroTelef = numeroTelef;
         this.numCuarto = numCuarto;
         this.fecha = fecha;
         this.plazo = plazo;
-        this.fecha_c = fecha;
-        this.pago = pago;
+        this.pagosRealizados = pagosRealizados;
     }
 
     public String getPrecio() {
@@ -50,19 +49,20 @@ public class ModelAA{
         return plazo;
     }
 
-    public boolean isPago() {
-        return pago;
+    public boolean pago() {
+        return pagosRealizados != 0;
     }
 
     public boolean isCorrect() {
         return  BasePresenter.validarStrings(precio, numCuarto, fecha, plazo);
     }
 
-    public void setFecha_c(String fecha_c) {
-        this.fecha_c = fecha_c;
+
+    public int getPagosRealizados() {
+        return pagosRealizados;
     }
 
-    public String getFechaC() {
-        return fecha_c;
+    public void setFecha(String fecha) {
+        this.fecha = fecha;
     }
 }

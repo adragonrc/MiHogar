@@ -393,7 +393,7 @@ public class VerCuarto2 extends BaseActivity<Interface.Presenter> implements Int
             Bundle datos = new Bundle();
             datos.putString(TUsuario.DNI, presenter.getResponsable());
             datos.putString(TCuarto.NUMERO, numCuarto);
-            datos.putString(TAlquiler.Fecha_PAGO, perfilCuarto.getTvFechaC().getText().toString());
+            datos.putString(TAlquiler.EXTRA_FECHA_PAGO, perfilCuarto.getTvFechaC().getText().toString());
             datos.putString(Mensualidad.COSTO, perfilCuarto.getTvMensualidad().getText().toString());
 
             dialogConfirmPago = new DialogConfirmPago(datos, VerCuarto2.this);

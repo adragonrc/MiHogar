@@ -11,6 +11,7 @@ import java.text.Format;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Locale;
 
 public class ModelAlquilerView {
     private String nombres;
@@ -32,7 +33,7 @@ public class ModelAlquilerView {
     public ModelAlquilerView(Cursor c){
 //        this.nombres = c.getString(c.getColumnIndex(TUsuario.NOMBRES)) + " " +c.getString(c.getColumnIndex(TUsuario.APELLIDO_PAT));
         this.fecha = c.getString(c.getColumnIndex(TAlquiler.FECHA_INICIO));
-        Format f = new SimpleDateFormat(MyAdminDate.FORMAT_DATE);
+        Format f = new SimpleDateFormat(MyAdminDate.FORMAT_DATE, Locale.getDefault());
         fecha = f.format(new Date());
         this.numCuarto = c.getString(c.getColumnIndex(TAlquiler.NUMERO_C));
 //      this.alert = c.getString(TAlquiler.INT_ALERT).equals("1");

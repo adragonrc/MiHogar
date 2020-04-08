@@ -50,9 +50,8 @@ public class Presentador extends BasePresenter<Interface.view> implements Interf
     @Override
     public void deshacerContrato(String motivo) {
         long id = datosAlquiler.getAsLong(TAlquiler.ID);
-        db.upDateAlquiler(TAlquiler.VAL, "0", id);
+        db.upDateAlquiler(TAlquiler.FECHA_SALIDA, MyAdminDate.getFechaActual(), id);
         db.upDateAlquiler(TAlquiler.MOTIVO, motivo, id);
-        db.upDateAlquiler(TAlquiler.Fecha_PAGO, MyAdminDate.getFechaActual(), id);
         mostrarDetalles();
     }
 
@@ -68,12 +67,22 @@ public class Presentador extends BasePresenter<Interface.view> implements Interf
         int num = db.contDniOfAlquilerUsuario(datosAlquiler.getAsString(TAlquiler.ID));
         if (datosAlquiler.size() != 0){
             datosMensualidad = db.getFilaInMensualidadActual("*", datosAlquiler.get(TAlquiler.ID));
-            // datosUsuario = db.getFilaInUsuariosOf("*",datosAlquiler.get(TAlquilerUsiario.DNI));
-            if ((myDate.stringToDate(datosAlquiler.getAsString(TAlquiler.Fecha_PAGO))).before(new Date())) {
-                view.noPago();
-            }else {
-                view.pago();
+
+            int pagosRealizados = datosAlquiler.getAsInteger(TAlquiler.PAGOS_REALIZADOS);
+            String fechaInicio = datosAlquiler.getAsString(TAlquiler.FECHA_INICIO);
+            try {
+                String fechaDePago = MyAdminDate.adelantarPorMeses(fechaInicio, pagosRealizados);
+                datosAlquiler.put(TAlquiler.EXTRA_FECHA_PAGO, fechaDePago);
+                if ((myDate.stringToDate(fechaDePago)).before(new Date())) {
+                    view.noPago();
+                }else {
+                    view.pago();
+                }
+            } catch (ParseException e) {
+                e.printStackTrace();
+                view.showMensaje("Error al actualizar la fecha de pago");
             }
+
             view.showCuartoAlquilado(datosCuarto, num, datosMensualidad.getAsString(Mensualidad.COSTO));
         }else{
             view.showCuartolibre(datosCuarto);
@@ -115,28 +124,33 @@ public class Presentador extends BasePresenter<Interface.view> implements Interf
     @Override
     public void realizarPago() {
         String s_modo;
-        String fechaNueva ;
         int modo = 0;
+        int pagosRealizados;
 
         s_modo = sp.getString("list_tiempo", "0");
         if (s_modo!= null) modo = Integer.parseInt(s_modo);
 
-        try {
-            fechaNueva = myDate.adelantarUnMes(datosAlquiler.getAsString(TAlquiler.Fecha_PAGO), modo);
-        } catch (ParseException e) {
-            view.showMensaje("problemas con la fecha");
-            e.printStackTrace();
-            return;
-        }
+        pagosRealizados = datosAlquiler.getAsInteger(TAlquiler.PAGOS_REALIZADOS);
+        pagosRealizados++;
+        //fechaNueva = myDate.adelantarUnMes(datosAlquiler.getAsString(TAlquiler.EXTRA_FECHA_PAGO), modo);
 
         String fechaHoraActual = myDate.getDateFormat().format(new Date());
         Long idMensualidad = datosMensualidad.getAsLong(Mensualidad.ID);
          int dniResponsable = db.getUsuarioResponsableDe(datosAlquiler.getAsString(TAlquilerUsuario.ID_AL));;
         if(db.agregarPago(fechaHoraActual, idMensualidad, dniResponsable)){
             view.showMensaje("pago agregado");
-            db.upDateAlquiler(TAlquiler.Fecha_PAGO, fechaNueva, datosAlquiler.getAsInteger(TAlquiler.ID));
+            db.upDateAlquiler(TAlquiler.PAGOS_REALIZADOS, pagosRealizados, datosAlquiler.getAsInteger(TAlquiler.ID));
             actualizarDatos();
-            view.actualizarFechaPago(fechaNueva);
+            String fechaInicio = datosAlquiler.getAsString(TAlquiler.FECHA_INICIO);
+            try {
+                String fechaDePago = MyAdminDate.adelantarPorMeses(fechaInicio, pagosRealizados);
+                datosAlquiler.remove(TAlquiler.EXTRA_FECHA_PAGO);
+                datosAlquiler.put(TAlquiler.EXTRA_FECHA_PAGO, fechaDePago);
+                view.actualizarFechaPago(fechaDePago);
+            } catch (ParseException e) {
+                e.printStackTrace();
+                view.showMensaje("Error al actualizar la fecha de pago");
+            }
 
             if(permisoPDF()){
                 crearPDF();

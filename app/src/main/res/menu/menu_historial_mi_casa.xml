@@ -5,10 +5,10 @@
         <menu >
             <item
                 android:id="@+id/iVerUsuario"
-                android:title="Ver usuarios" />
+                android:title="usuarios" />
             <item
                 android:id="@+id/iVerAlquileres"
-                android:title="Ver Alquileres" />
+                android:title="Alquileres" />
         </menu>
     </item>
     <item android:title= "Ordenar">

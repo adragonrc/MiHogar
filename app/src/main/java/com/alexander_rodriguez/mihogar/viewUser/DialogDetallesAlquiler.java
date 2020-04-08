@@ -70,7 +70,7 @@ public class DialogDetallesAlquiler extends AppCompatDialogFragment {
         tvNumCuarto.setText(datos.getAsString(TAlquiler.NUMERO_C));
         tvNumUsuarios.setText(datos.getAsString(NUM_USUARIOS));
         tvFechaInicio.setText(datos.getAsString(TAlquiler.FECHA_INICIO));
-        tvFechaFin.setText(datos.getAsString(TAlquiler.Fecha_PAGO));
+        tvFechaFin.setText(datos.getAsString(TAlquiler.FECHA_SALIDA));
         tvMotivoDeSalida.setText(datos.getAsString(TAlquiler.MOTIVO));
     }
 

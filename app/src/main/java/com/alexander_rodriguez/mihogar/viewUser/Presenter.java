@@ -25,7 +25,7 @@ public class Presenter implements Interfaz.Presenter{
     public void iniciar(){
         try {
             datosAlquiler = db.getFilaAlquilerOf("*", idAlquiler);
-            String fechac = datosAlquiler.getAsString(TAlquiler.Fecha_PAGO);
+            String fechac = datosAlquiler.getAsString(TAlquiler.EXTRA_FECHA_PAGO);
             Date d = myAdminDate.getDateFormat().parse(fechac);
             if (d.before(new Date()))
                 view.doNoPago();

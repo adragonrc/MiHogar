@@ -10,13 +10,11 @@
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:textColor="@color/colorAccent"
-        android:textSize="18sp"
         android:text="asdsa"/>
     <TextView
         android:id="@+id/tvFecha"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:contentDescription="@string/descripcion_fecha_mensualidad"
-        android:textSize="18sp"
         android:text="asdsa"/>
 </TableRow>

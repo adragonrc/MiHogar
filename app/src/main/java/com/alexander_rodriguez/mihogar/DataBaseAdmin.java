@@ -33,12 +33,12 @@ public class DataBaseAdmin extends SQLiteOpenHelper {
 
 
     public DataBaseAdmin(Context context) {
-        super(context, DATABASE_NAME, null, 1);
+        super(context, DATABASE_NAME, null, 2);
         this.context = context;
         cv = new ContentValues();
     }
     public DataBaseAdmin(Context context,  SQLiteDatabase.CursorFactory factory, int version) {
-        super(context, DATABASE_NAME, factory, 1);
+        super(context, DATABASE_NAME, factory, 2);
         this.context = context;
         cv = new ContentValues();
     }
@@ -144,12 +144,12 @@ public class DataBaseAdmin extends SQLiteOpenHelper {
     }
     public TableCursor getAlquileresValidos(String columnas, String key, Object value){
         String sql = "select " + columnas+ " from " + TAlquiler.T_NOMBRE +
-                " where " +key+ "= '" + value + "' and " + TAlquiler.VAL + "= 1;";
+                " where " +key+ "= '" + value + "' and " + TAlquiler.FECHA_SALIDA + " is null;";
         return consultarAll(sql);
     }
 
     public ArrayList<String> getCuartosAlquilados(){
-        String sql = "select " + TAlquiler.NUMERO_C+ " from " + TAlquiler.T_NOMBRE + " where " + TAlquiler.VAL + "= 1;";
+        String sql = "select " + TAlquiler.NUMERO_C+ " from " + TAlquiler.T_NOMBRE + " where " + TAlquiler.FECHA_SALIDA + " is null;";
         ArrayList<String > list = new ArrayList<>();
         SQLiteDatabase editor = getWritableDatabase();
         Cursor cursor = editor.rawQuery(sql,null);
@@ -177,11 +177,11 @@ public class DataBaseAdmin extends SQLiteOpenHelper {
         return null;
     }
 
-    public TableCursor getAllAlquileres(String columnas, String key, Object value){
+    public Cursor getAllAlquileres(String columnas, String key, Object value){
         String sql = "select " + columnas+ " from " + TAlquiler.T_NOMBRE +
                 " natural join " + TUsuario.T_NOMBRE +
                 " where " +key+ "= '" + value + "'; ";
-        return consultarAll(sql);
+        return consultarAll2(sql);
     }
     public Cursor getAllAlquileresJoinUserExept(String columnas, String key, Object value, Object idAlquIgnore){
         String sql = "select " + columnas+ " from " + TAlquiler.T_NOMBRE +
@@ -203,17 +203,17 @@ public class DataBaseAdmin extends SQLiteOpenHelper {
     }
 
     public Cursor getAllCuartosJoinAlquiler(String columnas) {
-        String select = "select * from " + TAlquiler.T_NOMBRE + " where " + TAlquiler.VAL +" = 1";
+        String select = "select * from " + TAlquiler.T_NOMBRE + " where " + TAlquiler.FECHA_SALIDA +" is null";
         String sql = "select " + columnas+ " from " + TCuarto.T_NOMBRE + " left join (" + select + ") using (" + TCuarto.NUMERO + ") ;" ;
         return consultarAll2(sql);
     }
     public Cursor getCuartosLibres(String columnas) {
-        String sql = "select "+columnas +" from "+TCuarto.T_NOMBRE +" where "+TCuarto.NUMERO+" not in (select "+TAlquiler.NUMERO_C+" from "+TAlquiler.T_NOMBRE+" where "+TAlquiler.VAL+" = 1);" ;
+        String sql = "select "+columnas +" from "+TCuarto.T_NOMBRE +" where "+TCuarto.NUMERO+" not in (select "+TAlquiler.NUMERO_C+" from "+TAlquiler.T_NOMBRE+" where "+TAlquiler.FECHA_SALIDA+" is null);" ;
         return consultarAll2(sql);
     }
 
     public Cursor getCuartosAlquilados(String columnas) {
-        String sql = "select " + columnas+ " from " + TCuarto.T_NOMBRE +" natural join " + TAlquiler.T_NOMBRE + " where " +TAlquiler.VAL +" = 1; ";
+        String sql = "select " + columnas+ " from " + TCuarto.T_NOMBRE +" natural join " + TAlquiler.T_NOMBRE + " where " +TAlquiler.FECHA_SALIDA +" is null; ";
         return consultarAll2(sql);
     }
 
@@ -237,7 +237,7 @@ public class DataBaseAdmin extends SQLiteOpenHelper {
 
     public ContentValues getFilaAlquilerByCuartoOf(String columnas, Object numCuarto){
         String sql = "select " + columnas+ " from " + TAlquiler.T_NOMBRE +
-                " where " + TAlquiler.NUMERO_C + "= '" + numCuarto + "' and " + TAlquiler.VAL + "= 1;";
+                " where " + TAlquiler.NUMERO_C + "= '" + numCuarto + "' and " + TAlquiler.FECHA_SALIDA + " is null;";
         return consultaInFila(sql);
     }
 
@@ -262,7 +262,7 @@ public class DataBaseAdmin extends SQLiteOpenHelper {
 
     public ContentValues getFilaAlquilerByUserOf(String columnas, Object DNI){
         String sql = "select " + columnas+ " from " + TAlquiler.T_NOMBRE + " natural join "+ TAlquilerUsuario.T_NOMBRE +
-                " where " + TAlquilerUsuario.DNI+ "= " + DNI+ " and " + TAlquiler.VAL + "= 1;";
+                " where " + TAlquilerUsuario.DNI+ "= " + DNI+ " and " + TAlquiler.FECHA_SALIDA + " is null;";
         return consultaInFila(sql);
     }
 
@@ -281,7 +281,7 @@ public class DataBaseAdmin extends SQLiteOpenHelper {
     }
 
     public String[] getIdOfAllAlquileres(){
-        String consulta ="select "+ TAlquiler.ID+" from " + TAlquiler.T_NOMBRE + " where "+ TAlquiler.VAL + " = 1";
+        String consulta ="select "+ TAlquiler.ID+" from " + TAlquiler.T_NOMBRE + " where "+ TAlquiler.FECHA_SALIDA + " is null;";
         return getCols(consulta);
     }
 
@@ -328,10 +328,10 @@ public class DataBaseAdmin extends SQLiteOpenHelper {
         String consulta = "update "+ TCuarto.T_NOMBRE + " set "+columna +" = '" + valor +"' where "+ TCuarto.NUMERO+" = '"+ numeroDeCuarto + "';";
         upDate(consulta);
     }
-    public void upDateAlquiler(String columna, String valor, Object id){
+    public void upDateAlquiler(String columna, Object valor, Object id){
         upDate("update "+ TAlquiler.T_NOMBRE + " set "+columna +" = '" + valor +"' where "+ TAlquiler.ID+" = '"+ id + "'; ");
     }
-    public void upDateAlquilerUsuario(String columna, String valor, Object idAl, Object dni){
+    public void upDateAlquilerUsuario(String columna, Object valor, Object idAl, Object dni){
         upDate("update "+ TAlquilerUsuario.T_NOMBRE + " set "+columna +" = '" + valor +"' where "+
                 TAlquilerUsuario.DNI+" = '"+ idAl + "' and " + TAlquilerUsuario.DNI + " = '" + dni + "'; ");
     }
@@ -366,12 +366,11 @@ public class DataBaseAdmin extends SQLiteOpenHelper {
         return agregar(TUsuario.T_NOMBRE);
     }
 
-    public boolean agregarAlquiler(String numC, String fecha, String fecha_c, String numTel, String correo){
+    public boolean agregarAlquiler(String numC, String fecha, String pagosRealizados, String numTel, String correo){
         cv.put(TAlquiler.FECHA_INICIO, fecha);
-        cv.put(TAlquiler.Fecha_PAGO, fecha_c);
+        cv.put(TAlquiler.PAGOS_REALIZADOS, pagosRealizados);
         cv.put(TAlquiler.NUMERO_C, numTel);
         cv.put(TAlquiler.CORREO, correo);
-        cv.put(TAlquiler.VAL, "1");
         cv.put(TAlquiler.NUMERO_C, numC);
         cv.put(TAlquiler.ALERT, false);
         return agregar(TAlquiler.T_NOMBRE);
@@ -385,10 +384,9 @@ public class DataBaseAdmin extends SQLiteOpenHelper {
 
     public boolean agregarAlquiler(ModelAA model) {
         cv.put(TAlquiler.FECHA_INICIO, model.getFecha());
-        cv.put(TAlquiler.Fecha_PAGO, model.getFechaC());
+        cv.put(TAlquiler.PAGOS_REALIZADOS, model.getPagosRealizados());
         cv.put(TAlquiler.NUMERO_TEL, model.getNumeroTelef());
         cv.put(TAlquiler.CORREO, model.getCorreo());
-        cv.put(TAlquiler.VAL, "1");
         cv.put(TAlquiler.NUMERO_C, model.getNumCuarto());
         cv.put(TAlquiler.ALERT, false);
         return agregar(TAlquiler.T_NOMBRE);
@@ -453,7 +451,7 @@ public class DataBaseAdmin extends SQLiteOpenHelper {
     }
     public String[] consultarNumerosDeCuartoDisponibles(){
         SQLiteDatabase bd = this.getWritableDatabase();
-        Cursor fila = bd.rawQuery("select "+TCuarto.NUMERO +" from "+TCuarto.T_NOMBRE +" where "+TCuarto.NUMERO+" not in (select "+TAlquiler.NUMERO_C+" from "+TAlquiler.T_NOMBRE+" where "+TAlquiler.VAL+" = 1);", null);
+        Cursor fila = bd.rawQuery("select "+TCuarto.NUMERO +" from "+TCuarto.T_NOMBRE +" where "+TCuarto.NUMERO+" not in (select "+TAlquiler.NUMERO_C+" from "+TAlquiler.T_NOMBRE+" where "+TAlquiler.FECHA_SALIDA+" is null);", null);
         String s[] = new String[fila.getCount()];
         if (fila.moveToFirst()) {
             for (int i = 0; i<s.length; i++, fila.moveToNext()){
@@ -478,13 +476,13 @@ public class DataBaseAdmin extends SQLiteOpenHelper {
     public boolean esUsuarioAntiguo(String dni){
         SQLiteDatabase bd = this.getWritableDatabase();
         Cursor fila = bd.rawQuery("select *  from "+ TAlquiler.T_NOMBRE+
-                " natural join " + TAlquiler.T_NOMBRE+ " where " + TAlquilerUsuario.DNI+" = '" +dni+"' and "+ TAlquiler.VAL + " = 0;",null);
+                " natural join " + TAlquiler.T_NOMBRE+ " where " + TAlquilerUsuario.DNI+" = '" +dni+"' and "+ TAlquiler.FECHA_SALIDA + " is null;",null);
         return fila.moveToFirst();
     }
     public boolean esUsuarioInterno(String dni){
         SQLiteDatabase bd = this.getWritableDatabase();
         Cursor fila = bd.rawQuery("select *  from "+ TAlquiler.T_NOMBRE +
-                " natural join " + TAlquiler.T_NOMBRE + " where "+ TAlquilerUsuario.DNI+" = '" +dni +"' and "+ TAlquiler.VAL + " = 1;",null);
+                " natural join " + TAlquiler.T_NOMBRE + " where "+ TAlquilerUsuario.DNI+" = '" +dni +"' and "+ TAlquiler.FECHA_SALIDA + " is null;",null);
         return fila.moveToFirst();
     }
     public static ContentValues cursorToCV(Cursor cursor){

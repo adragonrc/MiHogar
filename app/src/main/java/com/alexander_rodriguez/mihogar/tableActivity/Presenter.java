@@ -14,6 +14,7 @@ import android.widget.TextView;
 import androidx.core.content.ContextCompat;
 
 import com.alexander_rodriguez.mihogar.Base.BasePresenter;
+import com.alexander_rodriguez.mihogar.DataBaseAdmin;
 import com.alexander_rodriguez.mihogar.PDF;
 import com.alexander_rodriguez.mihogar.R;
 import com.alexander_rodriguez.mihogar.TableCursor;
@@ -31,7 +32,7 @@ public class Presenter extends BasePresenter<Interfaz.view> implements Interfaz.
     private String idAlquiler;
     private boolean tablaFueCreada;
     private TableRowView viewClicked;
-    private Cursor pago;
+    private ContentValues pago;
 
     private View.OnClickListener listener = new View.OnClickListener() {
         @Override
@@ -39,12 +40,14 @@ public class Presenter extends BasePresenter<Interfaz.view> implements Interfaz.
             viewClicked = (TableRowView) v;
             TextView tv = v.findViewById(R.id.tvId);
             if  (tv != null){
-                pago = db.getPago(tv.getText().toString());
+                Cursor p = db.getPago(tv.getText().toString());
+                pago = DataBaseAdmin.cursorToCV(p);
+                p.close();
                 if (pago != null){
 
                     alquiler = db.getFilaAlquilerOf("*", idAlquiler);
 
-                    String path =  pago.getString(TPago.INT_URI_VOUCHER);
+                    String path =  pago.getAsString(TPago.URI_VOUCHER);
 
                     if (path != null) {
                         if (!path.equals("") && (new File(path)).exists()) {
@@ -55,8 +58,6 @@ public class Presenter extends BasePresenter<Interfaz.view> implements Interfaz.
                     }else{
                         view.showDialog("No se encontro el archivo\n¿Desea Crearlo?");
                     }
-
-                    pago.close();
                 }
             }
         }
@@ -67,6 +68,7 @@ public class Presenter extends BasePresenter<Interfaz.view> implements Interfaz.
         this.idAlquiler = idAlquiler;
         tablaFueCreada = false;
     }
+
     public void crearTabla(){
         ViewGroup vg = view.getGrup();
         String columnas = Mensualidad.ID+", "+Mensualidad.COSTO+ ", " +Mensualidad.FECHA_I;
@@ -92,7 +94,6 @@ public class Presenter extends BasePresenter<Interfaz.view> implements Interfaz.
         v.setOnClickListener(listener);
         return v;
     }
-
 
     private View crateTitleMensualidad(String mensualidad, String fecha, ViewGroup vg){
         View v = LayoutInflater.from(view.getContext()).inflate(R.layout.view_mensualidad, vg, false);
@@ -142,7 +143,7 @@ public class Presenter extends BasePresenter<Interfaz.view> implements Interfaz.
         PDF pdf = new PDF();
         String direccion = sp.getString(view.getContext().getString(R.string.direccion), "---");
         try {
-            pdf.crearVoucher(alquiler.getAsString(TAlquiler.NUMERO_C), pago.getString(TPago.INT_DNI), viewClicked.getTextId(), viewClicked.getTextMonto(), direccion, viewClicked.getTextFecha());
+            pdf.crearVoucher(alquiler.getAsString(TAlquiler.NUMERO_C), pago.getAsString(TPago.DNI_RESPONSABLE), viewClicked.getTextId(), viewClicked.getTextMonto(), direccion, viewClicked.getTextFecha());
             db.agregarVoucher(pdf.getPdfFile().getAbsolutePath(), viewClicked.getTextId());
             view.gotoShowPDF(pdf.getPdfFile().getAbsolutePath(), alquiler);
         } catch (FileNotFoundException e) {

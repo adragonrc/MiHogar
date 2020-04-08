@@ -28,7 +28,9 @@ import com.alexander_rodriguez.mihogar.viewUser.DialogDetallesAlquiler;
 import java.util.ArrayList;
 
 public class HistorialCasaActivity extends BaseActivity<Interface.Presenter> implements Interface.View, RvAdapterUser.Interface, RvAdapterAlquiler.Interface{
+
     public static final String MODO_SOLO_USUARIOS = "solo_usuarios";
+
     public static final String MODO_SOLO_ALQUILERES = "solo_alquileres";
 
     public static final String MODO_DEFAULT = "default";
@@ -36,12 +38,17 @@ public class HistorialCasaActivity extends BaseActivity<Interface.Presenter> imp
     public static final String TYPE_MODE = "tipo_modo";
 
     public static final String TAG_MOSTRAR_PAGOS = "tag_table_pagos";
+
     private RecyclerView recyclerView;
+
     private RvAdapterUser adapterUser;
+
     private RvAdapterAlquiler adapterAlquiler;
+
     private RecyclerView.LayoutManager manager;
 
     private int iMenu;
+
     @Override
     protected void iniciarComandos() {
         setTitle("Historial");
@@ -75,7 +82,6 @@ public class HistorialCasaActivity extends BaseActivity<Interface.Presenter> imp
         return super.onOptionsItemSelected(item);
     }
 
-
     @Override
     protected void iniciarViews() {
         recyclerView = findViewById(R.id.recyclerView);
@@ -84,14 +90,18 @@ public class HistorialCasaActivity extends BaseActivity<Interface.Presenter> imp
     @Override
     public void mostarListUsuarios(ArrayList<ModelUserView> list) {
         adapterUser = new RvAdapterUser(this, list);
+
         manager = new LinearLayoutManager(this);
+
         recyclerView.setLayoutManager(manager);
+
         recyclerView.setAdapter(adapterUser);
     }
 
     @Override
     public void mostarListAlquileres(ArrayList<ModelAlquilerView> list) {
         adapterAlquiler = new RvAdapterAlquiler(this, list);
+
         GridLayoutManager manager = new GridLayoutManager(this, 2);
 
         recyclerView.setLayoutManager(manager);

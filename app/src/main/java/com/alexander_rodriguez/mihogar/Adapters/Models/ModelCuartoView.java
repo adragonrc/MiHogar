@@ -1,11 +1,13 @@
 package com.alexander_rodriguez.mihogar.Adapters.Models;
 
 import android.database.Cursor;
+import android.os.Bundle;
 
 import com.alexander_rodriguez.mihogar.MyAdminDate;
 import com.alexander_rodriguez.mihogar.UTILIDADES.TAlquiler;
 import com.alexander_rodriguez.mihogar.UTILIDADES.TCuarto;
 
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -29,14 +31,25 @@ public class ModelCuartoView {
         this.numero = c.getString(TCuarto.INT_NUMERO);
         this.descripcion = c.getString(TCuarto.INT_DETALLES);
         this.precio = c.getString(TCuarto.INT_PRECIO_E);
-        this.path = c.getString(TCuarto.INT_URL);
-        int index = c.getColumnIndex(TAlquiler.Fecha_PAGO);
-        this.alert = false;
+        this.path = c.getString(TCuarto.INT_URL); this.alert = false;
         fechaCancelar = "";
-        if (index != -1){
-            fechaCancelar = c.getString(index);
-            if(fechaCancelar != null)
-                this.alert = date.stringToDate(fechaCancelar).before(new Date());
+
+        int index = c.getColumnIndex(TAlquiler.PAGOS_REALIZADOS);
+        int index2 = c.getColumnIndex(TAlquiler.FECHA_INICIO);
+        if (index != -1 && index2 != -1){
+            String fechaInicio = c.getString(index2);
+            if (fechaInicio != null) {
+                int pagos = c.getInt(index);
+                try {
+                    fechaCancelar = MyAdminDate.adelantarPorMeses(fechaInicio, pagos);
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                    fechaCancelar = null;
+                }
+
+                if (fechaCancelar != null)
+                    this.alert = date.stringToDate(fechaCancelar).before(new Date());
+            }
         }
     }
 
@@ -44,6 +57,7 @@ public class ModelCuartoView {
         ArrayList<ModelCuartoView> list = new ArrayList<>();
         if (c.moveToFirst()){
             do{
+                Bundle b = c.getExtras();
                 ModelCuartoView mcv = new ModelCuartoView(c);
                 list.add(mcv);
             }while(c.moveToNext());

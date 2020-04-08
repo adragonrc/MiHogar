@@ -27,6 +27,7 @@ import com.alexander_rodriguez.mihogar.R;
 import com.alexander_rodriguez.mihogar.Save;
 import com.alexander_rodriguez.mihogar.UTILIDADES.TUsuario;
 import com.alexander_rodriguez.mihogar.alquilerusuario.AlquilerUsuarioActivity;
+import com.alexander_rodriguez.mihogar.historialcasa.HistorialCasaActivity;
 import com.alexander_rodriguez.mihogar.menu_photo.MenuIterator;
 import com.alexander_rodriguez.mihogar.menu_photo.interfazMenu;
 import com.alexander_rodriguez.mihogar.vercuarto.view_perfil_cuarto.ProfileView;
@@ -245,8 +246,6 @@ public class HistorialUsuarioActivity extends BaseActivity<Interfaz.presenter> i
         intent.putExtra(TUsuario.DNI, dni);
         intent.putExtra(ActivityShowImage.DATA_IMAGE, path);
         startActivity(intent, options.toBundle());
-
-
     }
 
 
@@ -313,8 +312,9 @@ public class HistorialUsuarioActivity extends BaseActivity<Interfaz.presenter> i
 
     @Override
     public void onClickPositive(View v) {
-        Intent i = new Intent(this, AlquilerUsuarioActivity.class);
-        i.putExtra(AlquilerUsuarioActivity.EXTRA_DNI, Integer.valueOf(dni));
+        Intent i = new Intent(this, HistorialCasaActivity.class);
+        i.putExtra(HistorialCasaActivity.TYPE_MODE, HistorialCasaActivity.MODO_SOLO_ALQUILERES);
+        i.putExtra(TUsuario.DNI,  Integer.valueOf(dni));
         startActivity(i);
     }
 

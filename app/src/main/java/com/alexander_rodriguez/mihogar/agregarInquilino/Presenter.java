@@ -13,8 +13,12 @@ import com.alexander_rodriguez.mihogar.UTILIDADES.TAlquilerUsuario;
 import com.alexander_rodriguez.mihogar.UTILIDADES.TUsuario;
 import com.alexander_rodriguez.mihogar.modelos.ModelUsuario;
 
+import java.text.DateFormat;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 
 public class Presenter extends BasePresenter<Interfaz.view> implements Interfaz.presenter {
     static final String SIN_REGISTROS = "-1";
@@ -112,19 +116,7 @@ public class Presenter extends BasePresenter<Interfaz.view> implements Interfaz.
             return;
         }
         if(model.isCorrect()){
-            if (model.isPago()){
-                try {
-                    MyAdminDate adminDate = new MyAdminDate();
-                    adminDate.setFormat(MyAdminDate.FORMAT_DATE_TIME);
-                    model.setFecha_c( adminDate.adelantarUnMes(model.getFecha(), 0));
-                } catch (ParseException e) {
-                    e.printStackTrace();
-                    model.setFecha_c("");
-                    view.showError("Corregir fecha");
-                }
-            }
-
-            if (db.agregarAlquiler(model)) {
+                if (db.agregarAlquiler(model)) {
                 long idAlquiler = db.getIdMaxAlquiler();
                 Save s = new Save();
                 int cont = 0;
@@ -137,9 +129,9 @@ public class Presenter extends BasePresenter<Interfaz.view> implements Interfaz.
 
                 if (cont == list.size()) {
                     if (db.agregarMensualidad(Double.parseDouble(model.getPrecio()), model.getFecha(), idAlquiler)) {
-                        if (model.isPago()) {
+                        if (model.pago()) {
                             long idMax = db.getIDMaxMensualidad();
-                            if(!db.agregarPago(model.getFechaC(), idMax, Integer.parseInt(modelSelect.getDni()))){
+                            if(!db.agregarPago(model.getFecha(), idMax, Integer.parseInt(modelSelect.getDni()))){
                                 view.showError("No se pudo agregar el pago");
                             }else {
                                 view.close();

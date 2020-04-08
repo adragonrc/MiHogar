@@ -37,6 +37,23 @@ public class MyAdminDate {
         else return  1;
     }
 
+    public static String adelantarUnMes(String fecha) throws ParseException {
+        DateFormat dateFormat = new SimpleDateFormat(FORMAT_DATE);
+        Date date = dateFormat.parse(fecha);
+        date.setMonth(date.getMonth() + 1);
+        return dateFormat.format(date);
+    }
+
+    public static String adelantarPorMeses(String fecha, int pagos) throws ParseException {
+        DateFormat dateFormat = new SimpleDateFormat(FORMAT_DATE_TIME);
+        Date date = dateFormat.parse(fecha);
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        calendar.add(Calendar.MONTH, pagos);
+        return dateFormat.format(calendar.getTime());
+
+    }
+
     public void setFormat(String format){
         dateFormat = new SimpleDateFormat(format);
     }

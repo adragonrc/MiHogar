@@ -73,7 +73,7 @@ public class PerfilCuarto extends ScrollView{
 
         tvNumeroInquilinos.setText(String.valueOf(cantidadDeUsuarios));
         tvMensualidad.setText(mensualidad);
-        tvFechaC.setText(alquiler.getAsString(TAlquiler.Fecha_PAGO));
+        tvFechaC.setText(alquiler.getAsString(TAlquiler.EXTRA_FECHA_PAGO));
         tvFechaI.setText(alquiler.getAsString(TAlquiler.FECHA_INICIO));
         tvNumeroTel.setText(alquiler.getAsString(TAlquiler.NUMERO_TEL));
         tvCorreo.setText(alquiler.getAsString(TAlquiler.CORREO));

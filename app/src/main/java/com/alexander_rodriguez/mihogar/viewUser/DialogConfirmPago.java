@@ -74,7 +74,7 @@ public class DialogConfirmPago extends AppCompatDialogFragment {
 
        // tvDni.setText(datos.getString(TUsuario.DNI));
         tvCuarto.setText(datos.getString(TCuarto.NUMERO));
-        tvFechaDePago.setText(datos.getString(TAlquiler.Fecha_PAGO));
+        tvFechaDePago.setText(datos.getString(TAlquiler.EXTRA_FECHA_PAGO));
         tvMonto.setText(datos.getString(Mensualidad.COSTO));
     }
 }

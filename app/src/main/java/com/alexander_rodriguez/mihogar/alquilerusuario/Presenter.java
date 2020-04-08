@@ -22,12 +22,12 @@ public class Presenter extends BasePresenter<Interface.Vista> implements Interfa
 
     private ArrayList<Item> getList(){
         ArrayList<Item> arrayList = new ArrayList<>();
-        TableCursor tc = db.getAllAlquileres(TAlquiler.ID + ", " + TAlquiler.MOTIVO, TAlquilerUsuario.DNI, dni);
+       /* TableCursor tc = db.getAllAlquileres(TAlquiler.ID + ", " + TAlquiler.MOTIVO, TAlquilerUsuario.DNI, dni);
         for (int i = 0; i < tc.getCount(); i++) {
             String id = tc.getValue(i, TAlquiler.ID);
             String motivo = tc.getValue(i, TAlquiler.MOTIVO);
             arrayList.add(new Item(id, motivo));
-        }
+        }*/
         return arrayList;
     }
 }

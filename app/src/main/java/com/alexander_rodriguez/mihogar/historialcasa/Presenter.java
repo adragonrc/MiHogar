@@ -11,9 +11,13 @@ import com.alexander_rodriguez.mihogar.Base.BaseActivity;
 import com.alexander_rodriguez.mihogar.Base.BasePresenter;
 import com.alexander_rodriguez.mihogar.MyAdminDate;
 import com.alexander_rodriguez.mihogar.R;
+import com.alexander_rodriguez.mihogar.TableCursor;
 import com.alexander_rodriguez.mihogar.UTILIDADES.TAlquiler;
 import com.alexander_rodriguez.mihogar.Adapters.Models.ModelAlquilerView;
 import com.alexander_rodriguez.mihogar.Adapters.Models.ModelUserView;
+import com.alexander_rodriguez.mihogar.UTILIDADES.TAlquilerUsuario;
+import com.alexander_rodriguez.mihogar.UTILIDADES.TUsuario;
+import com.alexander_rodriguez.mihogar.modelos.ModelAlquiler;
 import com.alexander_rodriguez.mihogar.viewUser.DialogDetallesAlquiler;
 
 import java.util.ArrayList;
@@ -25,6 +29,7 @@ public class Presenter extends BasePresenter<Interface.View> implements Interfac
 
     private String modo;
     private String idAlquiler;
+    private String dni;
 
     private int iMenu;
     private int idItemMenuSelected;
@@ -35,13 +40,16 @@ public class Presenter extends BasePresenter<Interface.View> implements Interfac
 
     private ArrayList<ModelAlquilerView> listAlquileres;
     private ArrayList<ModelUserView> listUsuarios;
+    private Intent mIntent;
 
     public Presenter(Interface.View view, Intent i) {
         super(view);
         myAdminDate = new MyAdminDate();
         this.modo  = i.getStringExtra(HistorialCasaActivity.TYPE_MODE);
         idAlquiler = i.getStringExtra(TAlquiler.ID);
+
         idItemMenuSelected = -1;
+        mIntent = i;
     }
 
     private void mostrarTodo(){
@@ -67,9 +75,23 @@ public class Presenter extends BasePresenter<Interface.View> implements Interfac
         iMenu = 0;
     }
     private void mostrarSoloAlquileres(){
-        mostrarAlquileres();
+        mostrarAlquileresDeUsuario();
         iMenu = 0;
     }
+
+    private void mostrarAlquileresDeUsuario() {
+        int dni = mIntent.getIntExtra(TUsuario.DNI, -1);
+        if (dni != -1) {
+            view.mostarListAlquileres(getListAlquileresDeUsuario(dni));
+        }
+    }
+
+    private ArrayList<ModelAlquilerView> getListAlquileresDeUsuario(int dni) {
+        Cursor c = db.getAllAlquileres("*", TAlquilerUsuario.DNI, dni);
+        listAlquileres = ModelAlquilerView.createListModel(c);
+        return listAlquileres;
+    }
+
     @Override
     public void iniciarComandos(){
         switch (modo){
