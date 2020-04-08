@@ -15,36 +15,21 @@ import androidx.appcompat.app.ActionBar;
 
 import  com.alexander_rodriguez.mihogar.AdministradorCamara;
 import com.alexander_rodriguez.mihogar.Base.BaseActivity;
+import com.alexander_rodriguez.mihogar.ButtonsAC.ButtonsAceptarCancelar;
+import com.alexander_rodriguez.mihogar.ButtonsAC.interfazAC;
 import com.alexander_rodriguez.mihogar.R;
 import com.alexander_rodriguez.mihogar.Save;
 import com.theartofdev.edmodo.cropper.CropImage;
 
-public class AgregarCuarto extends BaseActivity<Interfaz.Presenter> implements Interfaz.View {
+public class AgregarCuarto extends BaseActivity<Interfaz.Presenter> implements Interfaz.view, interfazAC {
     private EditText numeroDeCuarto;
     private EditText precio;
     private EditText detalles;
     private ImageView ivPhoto;
-    private AdministradorCamara adc;
     private String currentPhotoPath;
     private Bitmap bmGuardar;
 
-    public void onClickAgregar(View view){
-        String sNumCuarto = numeroDeCuarto.getText().toString();
-        String sPrecio = precio.getText().toString();
-        String sDetalles= detalles.getText().toString();
-        Save s = new Save();
-        //ivPhoto.buildDrawingCache();
-        currentPhotoPath = s.SaveImage(this, bmGuardar);
-        presenter.insertarCuarto(sNumCuarto,sPrecio,sDetalles, currentPhotoPath);
-        Toast toast1 = Toast.makeText(getApplicationContext(), "Toast por defecto", Toast.LENGTH_SHORT);
-        toast1.show();
-    }
-
-    @Override
-    public void onClickCamara(View view) {
-        Intent i = adc.dispatchTakePictureIntent();
-        startActivityForResult(i, AdministradorCamara.REQUEST_TAKE_PHOTO);
-    }
+    private ButtonsAceptarCancelar ac;
 
     @Override
     public void salir() {
@@ -56,6 +41,8 @@ public class AgregarCuarto extends BaseActivity<Interfaz.Presenter> implements I
         precio = findViewById(R.id.etPrecio);
         detalles = findViewById(R.id.etDetalles);
         ivPhoto = findViewById(R.id.ivPhoto);
+        ac = findViewById(R.id.llBtns);
+        ac.setTextButtons("CANCELAR", "ACEPTAR");
     }
 
     @Override
@@ -75,6 +62,7 @@ public class AgregarCuarto extends BaseActivity<Interfaz.Presenter> implements I
         }
     }
 
+
     @Override
     protected void iniciarComandos() {
         setTitle("Agregar cuarto");
@@ -83,7 +71,6 @@ public class AgregarCuarto extends BaseActivity<Interfaz.Presenter> implements I
             ab.setDisplayHomeAsUpEnabled(true);
         }
         numeroDeCuarto.requestFocus();
-        adc = new AdministradorCamara(this);
     }
 
     @Override
@@ -112,4 +99,20 @@ public class AgregarCuarto extends BaseActivity<Interfaz.Presenter> implements I
                 .start(this);
     }
 
+    @Override
+    public void onClickPositive(View v) {
+
+        String sNumCuarto = numeroDeCuarto.getText().toString();
+        String sPrecio = precio.getText().toString();
+        String sDetalles= detalles.getText().toString();
+        Save s = new Save();
+        //ivPhoto.buildDrawingCache();
+        currentPhotoPath = s.SaveImage(this, bmGuardar);
+        presenter.insertarCuarto(sNumCuarto,sPrecio,sDetalles, currentPhotoPath);
+    }
+
+    @Override
+    public void onClickNegative(View v) {
+        salir();
+    }
 }

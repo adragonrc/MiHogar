@@ -14,7 +14,9 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.alexander_rodriguez.mihogar.R;
 import com.alexander_rodriguez.mihogar.Adapters.Models.ModelCuartoView;
+import com.squareup.picasso.Picasso;
 
+import java.io.File;
 import java.util.ArrayList;
 
 public class RvAdapterCuartos extends RecyclerView.Adapter<RvAdapterCuartos.Holder> {
@@ -40,11 +42,10 @@ public class RvAdapterCuartos extends RecyclerView.Adapter<RvAdapterCuartos.Hold
         holder.tvDetalles.setText(item.getDescripcion());
         holder.id = item.getNumero();
         String path = item.getPath();
-        if(path != null )
-            if(!path.equals("")) {
-                Bitmap bm = BitmapFactory.decodeFile(path);
-                holder.ivPhoto.setImageBitmap(bm);
-            }
+
+        File f = new File(path);
+        if (f.exists())       Picasso.get().load(f).into(holder.ivPhoto);
+
         if (item.isAlert()){
             holder.ivAlert.setImageDrawable(mInterface.getContext().getResources().getDrawable(R.drawable.ic_add_alert_black_24dp));
         }else{

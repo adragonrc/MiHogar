@@ -21,7 +21,7 @@ public class DialogOptions extends AppCompatDialogFragment {
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-        mView = getActivity().getLayoutInflater().inflate(R.layout.option_dialog, null);
+        mView = getLayoutInflater().inflate(R.layout.option_dialog, null);
         b1 = mView.findViewById(R.id.btn1);
         b2 = mView.findViewById(R.id.btn2);
         b3 = mView.findViewById(R.id.btn3);

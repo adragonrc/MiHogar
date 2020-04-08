@@ -1,9 +1,14 @@
 package com.alexander_rodriguez.mihogar.registrarcasa;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.view.View;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
 import com.alexander_rodriguez.mihogar.Base.BaseActivity;
 import com.alexander_rodriguez.mihogar.R;
@@ -19,6 +24,7 @@ public class RegistrarCasaActivity extends BaseActivity<interfaz.presentador> im
     @Override
     protected void iniciarComandos() {
         setTitle("Registro");
+        permisos();
         if(getIntent().getBooleanExtra(ON_EXIT, false)){
             finish();
         }
@@ -63,4 +69,18 @@ public class RegistrarCasaActivity extends BaseActivity<interfaz.presentador> im
         startActivity(new Intent(this, MenuPricipal.class));
     }
 
+    protected void permisos(){
+        int permissionCheck = ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE);
+        if (permissionCheck != PackageManager.PERMISSION_GRANTED){
+            if (!ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.WRITE_EXTERNAL_STORAGE))
+                ActivityCompat. requestPermissions(this, PERMISOS, MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE);
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        if (!(grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED)){
+            Toast.makeText(this, "Los vouchers no seran crados", Toast.LENGTH_SHORT).show();
+        }
+    }
 }

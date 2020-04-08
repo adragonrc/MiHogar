@@ -1,51 +1,203 @@
 package com.alexander_rodriguez.mihogar.agregarInquilino;
 
-import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.RadioGroup;
 
+import com.alexander_rodriguez.mihogar.Adapters.RvAdapterUser;
 import com.alexander_rodriguez.mihogar.Base.BasePresenter;
-import com.alexander_rodriguez.mihogar.modelos.ModelUsuario;
 import com.alexander_rodriguez.mihogar.MyAdminDate;
 import com.alexander_rodriguez.mihogar.R;
+import com.alexander_rodriguez.mihogar.viewregistraralquiler.ModelAA;
+import com.alexander_rodriguez.mihogar.Save;
+import com.alexander_rodriguez.mihogar.UTILIDADES.TAlquiler;
+import com.alexander_rodriguez.mihogar.UTILIDADES.TAlquilerUsuario;
+import com.alexander_rodriguez.mihogar.UTILIDADES.TUsuario;
+import com.alexander_rodriguez.mihogar.modelos.ModelUsuario;
 
 import java.text.ParseException;
-import java.util.Date;
+import java.util.ArrayList;
 
-public class Presenter extends BasePresenter<Interfaz.View> implements Interfaz.Presenter, AdapterView.OnItemSelectedListener{
-    public static String ON_CREATE  = "onCreate";
-    public static String ON_RESUME  = "onResume";
-    private MyAdminDate myTime;
+public class Presenter extends BasePresenter<Interfaz.view> implements Interfaz.presenter {
+    static final String SIN_REGISTROS = "-1";
+
     private Boolean confirmacion;
     private MyAdminDate adminDate;
+    private String [] cuartosDisponibles;
 
-    public Presenter(Interfaz.View view){
+    private ArrayList<ModelUsuario> list;
+
+    private ModelUsuario modelSelect;
+
+    private RvAdapterUser.Holder holderSelect;
+
+    public Presenter(Interfaz.view view) {
         super(view);
         adminDate = new MyAdminDate();
         adminDate.setFormat(MyAdminDate.FORMAT_DATE_TIME);
+        list = new ArrayList<>();
+        confirmacion = false;
     }
-    private boolean validarImputs(String ...s){
-        for (String s1 : s)
-            if (s1.equals("")) {
-                view.showError("Campo vacio");
+
+    private boolean isNuevo(String dni){
+        for (ModelUsuario m: list ){
+            if (m.getDni().equals(dni)){
                 return false;
             }
+        }
         return true;
     }
 
     @Override
-    public void agregarUsuario(ModelUsuario mu, String numCuarto, String mensualidad, int plazo, String fecha, boolean pago) {
+    public void iniciarComandos() {
+        cuartosDisponibles = db.consultarNumerosDeCuartoDisponibles();
+        if (cuartosDisponibles.length == 0) {
+            view.sinCuartos();
+        }
+    }
 
-        if(mu.getUriPhoto() == null ||  mu.getUriPhoto().equals("")){
-            view.showMensaje("agrega una foto");
+    public ArrayAdapter<String> getAdapterCuartos () {
+        return new ArrayAdapter<>(view.getContext(), R.layout.support_simple_spinner_dropdown_item, cuartosDisponibles);
+    }
+
+    @Override
+    public void confirmar() {
+        this.confirmacion = true;
+    }
+
+    @Override
+    public void onClickAddUser() {
+        view.startRegistroUsuario();
+    }
+
+    @Override
+    public void agregarUsuario(ModelUsuario m) {
+        if (!validarStrings(m.getDni(), m.getNombre(), m.getApellidoPat(), m.getApellidoMat())) {
+            view.showError("Campo vacio");
             return;
         }
-        if (validarImputs(mu.getDni(), mu.getNombres(), mu.getApellidoPat(), mu.getApellidoMat(), numCuarto, mensualidad)){
+        if (!isNuevo(m.getDni())){
+            view.showError("Usuario ya esta en lista: DNI");
+            return;
+        }
+        if (db.existeUsuario(m.getDni())) {
+            if (confirmacion){
+                guardarModel(m);
+            }else{
+                if (db.esUsuarioAntiguo(m.getDni())){
+                    view.showMensaje("número DNI ya esta registrado");
+                    view.showDialog("Usuario Antiguo");
+                }else {
+                    if (db.esUsuarioInterno(m.getDni())) {
+                        view.showMensaje("Usuario ya se encuentra en casa ;v");
+                    }
+                }
+            }
+        }else {
+            guardarModel(m);
+        }
+    }
+
+    @Override
+    public void avanzar() {
+
+    }
+
+    @Override
+    public void agregarAlquilerNuevo(ModelAA model) {
+        if  (list.isEmpty()){
+            view.showMensaje("No hay usuarios en la lista");
+            return;
+        }
+        if(modelSelect == null || holderSelect == null ){
+            view.showMensaje("Seleccione un usuario responsable");
+            return;
+        }
+        if(model.isCorrect()){
+            if (model.isPago()){
+                try {
+                    MyAdminDate adminDate = new MyAdminDate();
+                    adminDate.setFormat(MyAdminDate.FORMAT_DATE_TIME);
+                    model.setFecha_c( adminDate.adelantarUnMes(model.getFecha(), 0));
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                    model.setFecha_c("");
+                    view.showError("Corregir fecha");
+                }
+            }
+
+            if (db.agregarAlquiler(model)) {
+                long idAlquiler = db.getIdMaxAlquiler();
+                Save s = new Save();
+                int cont = 0;
+                for (ModelUsuario m : list) {
+                    m.setPath(s.SaveImage(view.getContext(), m.getPath()));
+                    if(!db.agregarInquilino(m)) break;
+                    if (!db.agregarAlquilerUsuario(idAlquiler, m.getDni(), m.isMain())) break;
+                    cont ++ ;
+                }
+
+                if (cont == list.size()) {
+                    if (db.agregarMensualidad(Double.parseDouble(model.getPrecio()), model.getFecha(), idAlquiler)) {
+                        if (model.isPago()) {
+                            long idMax = db.getIDMaxMensualidad();
+                            if(!db.agregarPago(model.getFechaC(), idMax, Integer.parseInt(modelSelect.getDni()))){
+                                view.showError("No se pudo agregar el pago");
+                            }else {
+                                view.close();
+                            }
+                        }else view.close();
+                    }else{
+                        view.showError("No se pudo agregar la mensualidad.");
+                        db.revertir(TAlquiler.T_NOMBRE, TAlquiler.ID, String.valueOf(idAlquiler));
+                    }
+                }else{
+                    db.revertir(TAlquilerUsuario.T_NOMBRE, TAlquilerUsuario.ID_AL, idAlquiler);
+                    for (int i = 0; i < cont; i++) {
+                        ModelUsuario m = list.get(i);
+                        db.revertir(TUsuario.T_NOMBRE, TUsuario.DNI, m.getDni());
+                    }
+                    view.showError("No se pudo agregar los usuarios");
+                }
+            }else{
+                view.showError("No se pudo agregar el alquiler, intente con nuevos datos");
+            }
+        }else{
+            view.showError("Campos vacios");
+        }
+    }
+
+    @Override
+    public void doMain(RvAdapterUser.Holder holder) {
+        if (holderSelect == null || modelSelect == null){
+            holderSelect = holder;
+            modelSelect = list.get(holder.getAdapterPosition());
+            view.doPrincipal(holder);
+            modelSelect.setMain(true);
+        }else{
+            modelSelect.setMain(false);
+            ModelUsuario m  = list.get(holder.getAdapterPosition());
+            view.cambiarPrincipal(holderSelect, holder);
+            m.setMain(true);
+
+            holderSelect = holder;
+            modelSelect = m;
+        }
+    }
+
+    private void guardarModel(ModelUsuario m){
+        list.add(m);
+        view.mostrarNuevoUsuario(m);
+    }
+}
+/*
+    @Override
+    public void agregarUsuario(ModelUsuario mu, String numCuarto, String mensualidad, int plazo, String fecha, boolean pago) {
+
+            if (validarImputs(mu.getDni(), mu.getNombres(), mu.getApellidoPat(), mu.getApellidoMat(), numCuarto, mensualidad)){
+
             String fecha_c = null;
             if (pago) {
                 try {
-                    fecha_c = adminDate.getFechaSiguiente(fecha, 0);
+                    fecha_c = adminDate.adelantarUnMes(fecha, 0);
                 } catch (ParseException e) {
                     e.printStackTrace();
                     view.showError("fecha no disponible");
@@ -65,11 +217,11 @@ public class Presenter extends BasePresenter<Interfaz.View> implements Interfaz.
                     if (db.esUsuarioAntiguo(mu.getDni())){
                         view.showMensaje("número DNI ya esta registrado");
                         view.showDialog("Usuario Antiguo");
-                }else {
-                    if (db.esUsuarioInterno(mu.getDni())) {
-                        view.showMensaje("Usuario ya se encuentra en casa ;v");
+                    }else {
+                        if (db.esUsuarioInterno(mu.getDni())) {
+                            view.showMensaje("Usuario ya se encuentra en casa ;v");
+                        }
                     }
-                }
                 }
             }else{
                 try {
@@ -82,41 +234,4 @@ public class Presenter extends BasePresenter<Interfaz.View> implements Interfaz.
             }
         }
     }
-
-    public void confirmar() {
-        this.confirmacion = true;
-    }
-
-    @Override
-    public boolean doPago(RadioGroup radioGroup) {
-        return radioGroup.getCheckedRadioButtonId() == R.id.rbCancelo;
-    }
-
-    @Override
-    public void iniciarComandos() {
-        myTime = new MyAdminDate();
-        String []numeroCuartos = db.consultarNumerosDeCuartoDisponibles();
-
-        if (numeroCuartos.length == 0){
-            view.sinCuartos();
-        }else{
-            ArrayAdapter<String> adapter= new ArrayAdapter<>(view.getContext(), R.layout.support_simple_spinner_dropdown_item, numeroCuartos);
-            view.prepararSpinsers(adapter);
-        }
-        confirmacion = false;
-    }
-
-    @Override
-    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-        if (position == P_HORAS || position == P_MINUTOS){
-            this.view.mostrarEtPlazo();
-        }else{
-            this.view.ocultarEtPlazo();
-        }
-    }
-
-    @Override
-    public void onNothingSelected(AdapterView<?> parent) {
-
-    }
-}
+*/

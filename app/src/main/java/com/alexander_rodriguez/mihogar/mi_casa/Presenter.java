@@ -7,10 +7,15 @@ import com.alexander_rodriguez.mihogar.MyAdminDate;
 import com.alexander_rodriguez.mihogar.UTILIDADES.TAlquiler;
 import com.alexander_rodriguez.mihogar.Adapters.Models.ModelCuartoView;
 
+import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 
 public class Presenter extends BasePresenter<Interface.View> implements Interface.Presenter {
     private MyAdminDate myAdminDate;
+    private ArrayList<ModelCuartoView> lista;
     public Presenter(Interface.View view) {
         super(view);
         myAdminDate = new MyAdminDate();
@@ -34,16 +39,37 @@ public class Presenter extends BasePresenter<Interface.View> implements Interfac
 
     @Override
     public void verTodos() {
-        view.mostratCuartos(getListCuartos());
+        lista = getListCuartos();
+        view.mostratCuartos(lista);
     }
 
     @Override
     public void verCuartosAlquilados() {
-        view.mostratCuartos(getListCuartosAlquilados());
+        lista = getListCuartosAlquilados();
+        view.mostratCuartos(lista);
     }
 
     @Override
-    public void verCuartosLibres() {view.mostratCuartos(getListCuartosLibres());}
+    public void verCuartosLibres() {
+        lista = getListCuartosLibres();
+        view.mostratCuartos(lista);}
+
+    @Override
+    public void ordenarPorFecha() {
+        Collections.sort(lista, new Comparator<ModelCuartoView>() {
+            @Override
+            public int compare(ModelCuartoView o1, ModelCuartoView o2) {
+                try {
+                    return MyAdminDate.comparar(o1.getFechaCancelar(), o2.getFechaCancelar());
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                    view.showMensaje("Error con la fecha");
+                    return 0;
+                }
+            }
+        });
+        view.mostratCuartos(lista);
+    }
 
     private ArrayList<ModelCuartoView> getListCuartosLibres(){
         String columnas = "*";

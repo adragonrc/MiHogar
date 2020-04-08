@@ -25,13 +25,13 @@ public class Presenter implements Interfaz.Presenter{
     public void iniciar(){
         try {
             datosAlquiler = db.getFilaAlquilerOf("*", idAlquiler);
-            String fechac = datosAlquiler.getAsString(TAlquiler.FECHA_C);
+            String fechac = datosAlquiler.getAsString(TAlquiler.Fecha_PAGO);
             Date d = myAdminDate.getDateFormat().parse(fechac);
             if (d.before(new Date()))
                 view.doNoPago();
             else
                 view.doPago();
-            view.setAttributes(datosAlquiler.getAsString(TAlquiler.DNI), fechac);
+          //  view.setAttributes(datosAlquiler.getAsString(TAlquiler.DNI), fechac);
         } catch (ParseException e) {
             view.setAttributes("error", "en paseToDate");
         }

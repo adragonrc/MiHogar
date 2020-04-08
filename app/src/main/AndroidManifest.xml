@@ -22,7 +22,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".AgregarAlquilerActivity"/>
+        <activity android:name=".viewregistraralquiler.AgregarAlquilerView"/>
         <activity android:name=".ViewPdfActivity" />
         <activity
             android:name=".ActivityShowImage"
@@ -41,37 +41,38 @@
         <activity android:name=".tableActivity.TableActivity" />
 
         <activity
-            android:label=""
-            android:name=".vercuarto.ProfileView"
-            android:theme="@style/AppTheme.StatusBarTransparent"/>
-
-        <activity
-            android:name=".vercuarto.VerCuartoActivity"
-            android:label=""
-            android:configChanges="orientation"
-            android:theme="@style/AppTheme.StatusBarTransparent"/>
-        <activity
             android:name=".vercuarto.VerCuarto2"
             android:label=""
             android:configChanges="orientation"
             android:theme="@style/AppTheme.StatusBarTransparent"/>
-        <activity android:name=".verusuario.DialogConfirmPago" />
+        <activity android:name=".viewUser.DialogConfirmPago" />
+
         <activity
             android:name=".agregarcuarto.AgregarCuarto"
             android:windowSoftInputMode="stateAlwaysVisible" />
+
         <activity android:name=".verInquilinos.VerInquilinos" />
+
         <activity android:name=".menuPrincipal.MenuPricipal"/>
 
         <activity android:name=".mainactivity.MainActivity">
+
         </activity>
+
         <activity
-            android:name=".agregarInquilino.AgregarInquilino"
+            android:name=".view_registrar_usuario.RegistroUsuarioView"
             android:theme="@style/AppTheme" />
+
         <activity
             android:name=".Preferencias"
             android:configChanges="orientation"
             android:label="@string/title_activity_settings"
             android:theme="@style/Theme.Preferences" />
+
+        <activity android:name=".agregarInquilino.AgregarAlquilerActivity"
+            android:theme="@style/ThemeAddList"
+            android:configChanges="orientation|screenSize"/>
+
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="com.alexander_rodriguez.mihogar.android.fileprovider"

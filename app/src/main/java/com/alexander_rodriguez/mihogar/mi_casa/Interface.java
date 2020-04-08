@@ -12,6 +12,8 @@ public interface Interface{
         void verTodos();
         void verCuartosAlquilados();
         void verCuartosLibres();
+
+        void ordenarPorFecha();
     }
 
     interface View extends BaseView {
@@ -21,5 +23,7 @@ public interface Interface{
 
         void showDialogOptions(String idAlquiler);
         void showDialogImput(String idAlquiler);
+
+        void actualizarLista();
     }
 }

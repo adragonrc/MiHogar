@@ -1,7 +1,6 @@
 package com.alexander_rodriguez.mihogar.Adapters.Models;
 
 import android.database.Cursor;
-import android.graphics.drawable.Drawable;
 
 import com.alexander_rodriguez.mihogar.MyAdminDate;
 import com.alexander_rodriguez.mihogar.UTILIDADES.TAlquiler;
@@ -15,6 +14,7 @@ public class ModelCuartoView {
     private String descripcion;
     private String precio;
     private String path;
+    private String fechaCancelar;
     private boolean alert;
 
     public ModelCuartoView(String numero, String descripcion, String precio, String path) {
@@ -30,9 +30,14 @@ public class ModelCuartoView {
         this.descripcion = c.getString(TCuarto.INT_DETALLES);
         this.precio = c.getString(TCuarto.INT_PRECIO_E);
         this.path = c.getString(TCuarto.INT_URL);
-        String fecha = c.getString(c.getColumnIndex(TAlquiler.FECHA_C));
-        if(fecha != null)
-            this.alert = date.stringToDate(fecha).before(new Date());
+        int index = c.getColumnIndex(TAlquiler.Fecha_PAGO);
+        this.alert = false;
+        fechaCancelar = "";
+        if (index != -1){
+            fechaCancelar = c.getString(index);
+            if(fechaCancelar != null)
+                this.alert = date.stringToDate(fechaCancelar).before(new Date());
+        }
     }
 
     public static ArrayList<ModelCuartoView> createListModel(Cursor c){
@@ -64,5 +69,9 @@ public class ModelCuartoView {
 
     public boolean isAlert() {
         return alert;
+    }
+
+    public String getFechaCancelar() {
+        return fechaCancelar;
     }
 }

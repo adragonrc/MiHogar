@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.alexander_rodriguez.mihogar.ButtonsAceptarCancelar xmlns:android="http://schemas.android.com/apk/res/android"
+<com.alexander_rodriguez.mihogar.ButtonsAC.ButtonsAceptarCancelar xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/llBtns"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="?attr/actionBarSize"
     android:layout_margin="4dp"
     android:gravity="center"
 
@@ -12,20 +12,22 @@
     android:orientation="horizontal">
 
     <Button
-        android:id="@+id/button0"
+        android:id="@+id/negativeButton"
         style="@style/Widget.AppCompat.Button.Borderless.Colored"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:onClick="onClickNegative"
         android:layout_marginEnd="10dp"
-        android:layout_weight="1"
-        android:text="Quitar Alquiler" />
+        android:text="@string/sBtCancelar"
+        android:layout_weight="1"/>
 
     <Button
-        android:id="@+id/button1"
+        android:id="@+id/positiveButton"
         style="@style/Widget.AppCompat.Button.Colored"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:onClick="onClickPositive"
+        android:text="@string/sBtAgregar"
         android:layout_marginStart="10dp"
-        android:layout_weight="1"
-        android:text="PAGAR ALQUILER"/>
-</com.alexander_rodriguez.mihogar.ButtonsAceptarCancelar>
+        android:layout_weight="1"/>
+</com.alexander_rodriguez.mihogar.ButtonsAC.ButtonsAceptarCancelar>

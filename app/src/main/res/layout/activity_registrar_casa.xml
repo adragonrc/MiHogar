@@ -37,12 +37,13 @@
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/etDireccion"
-                style="@style/TextImputStyle"
+                style="@style/styleMargin"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:ems="10"
                 android:hint="Direccion de casa"
-                android:inputType="textPersonName"
+                android:text="Los pinos Mz xx Lt yy, viru"
+                android:inputType="textPersonName|textCapSentences"
                 android:maxLength="50"
                 android:textColor="@color/primaryTextColor" />
         </com.google.android.material.textfield.TextInputLayout>
@@ -54,10 +55,11 @@
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/etCorreo"
-                style="@style/TextImputStyle"
+                style="@style/styleMargin"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:ems="10"
+                android:text="dasdasda"
                 android:hint="@string/sCorreoEl"
                 android:inputType="textEmailAddress"
                 android:maxLength="50" />
@@ -66,14 +68,16 @@
 
     <Button
         android:id="@+id/button"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
         android:layout_weight="1"
         android:backgroundTint="@color/colorAccent"
         android:onClick="ocAceptar"
         android:text="INGRESAR"
         android:textColor="@color/secondaryTextColor"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

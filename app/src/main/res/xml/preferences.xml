@@ -12,10 +12,12 @@
             android:defaultValue="false"
             android:key="@string/cpHotel"
             android:title="Hotel" />
+
         <PreferenceScreen
             android:title="Preferencias de hotel"
             android:key="psModHotel"
-            android:enabled="true">
+            android:enabled="false">
+
             <ListPreference
                 android:defaultValue="0"
                 android:entries="@array/key_tiempo_pago"
@@ -26,7 +28,9 @@
             <CheckBoxPreference
                 android:defaultValue="false"
                 android:key="@string/cpHotel"
-                android:title="Remover alquiler automaticament" />
+                android:enabled="false"
+                android:title="Remover alquiler automaticament"
+                android:summary="Proximamente"/>
         </PreferenceScreen>
     </PreferenceCategory>
 </PreferenceScreen>

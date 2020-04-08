@@ -1,44 +1,61 @@
 package com.alexander_rodriguez.mihogar.modelos;
 
+import android.content.Intent;
+
+import com.alexander_rodriguez.mihogar.UTILIDADES.TUsuario;
+
 public class ModelUsuario {
     private String dni;
-    private String nombres;
+    private String nombre;
     private String apellidoPat;
     private String apellidoMat;
-    private String numero;
-    private String correo;
-    private String alert;
-    private String uriPhoto;
+    private String path;
+    private boolean main;
 
-    public ModelUsuario(String dni, String nombres, String apellidoPat, String apellidoMat, String numero, String correo, String alert, String uriPhoto) {
+    public ModelUsuario(String dni, String nombre, String apellidoPat, String apellidoMat, String path) {
         this.dni = dni;
-        this.nombres = nombres;
+        this.nombre = nombre;
         this.apellidoPat = apellidoPat;
         this.apellidoMat = apellidoMat;
-        this.numero = numero;
-        this.correo = correo;
-        this.alert = alert;
-        this.uriPhoto = uriPhoto;
+        if (path == null ) this.path = "";
+        else    this. path = path;
+        main = false;
     }
 
-    public String getAlert() {
-        return alert;
+    public ModelUsuario(String dni, String nombre, String apellidoPat, String apellidoMat, String path, boolean main) {
+        this.dni = dni;
+        this.nombre = nombre;
+        this.apellidoPat = apellidoPat;
+        this.apellidoMat = apellidoMat;
+        if (path == null ) this.path = "";
+        else   this. path = path;
+        this.main = main;
     }
 
-    public String getDni() {
-        return dni;
+    public ModelUsuario(Intent i) {
+        this.dni = i.getStringExtra(TUsuario.DNI);
+        this.nombre = i.getStringExtra(TUsuario.NOMBRES);
+        this.apellidoPat = i.getStringExtra(TUsuario.APELLIDO_PAT);
+        this.apellidoMat = i.getStringExtra(TUsuario.APELLIDO_MAT);
+        this.path = i.getStringExtra(TUsuario.URI);
+        main = false;
+
     }
 
-    public String getNombres() {
-        return nombres;
+    public String[] toArray(){
+        return new String[]{dni, nombre, apellidoPat, apellidoMat, path};
     }
 
-    public String getCorreo() {
-        return correo;
+    public void setMain(boolean main) {
+        this.main = main;
     }
 
-    public String getNumero() {
-        return numero;
+    public boolean isMain() {
+        return main;
+    }
+
+    public String getPath() {
+        return path;
     }
 
     public String getApellidoMat() {
@@ -49,8 +66,15 @@ public class ModelUsuario {
         return apellidoPat;
     }
 
-    public String getUriPhoto() {
-        return uriPhoto;
+    public String getDni() {
+        return dni;
     }
 
+    public String getNombre() {
+        return nombre;
+    }
+
+    public void setPath(String path) {
+        this.path = path;
+    }
 }

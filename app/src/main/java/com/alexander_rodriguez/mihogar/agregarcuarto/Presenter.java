@@ -1,22 +1,20 @@
 package com.alexander_rodriguez.mihogar.agregarcuarto;
-import android.content.Intent;
 
-import com.alexander_rodriguez.mihogar.AdministradorCamara;
 import com.alexander_rodriguez.mihogar.Base.BasePresenter;
-import com.alexander_rodriguez.mihogar.menuPrincipal.MenuPricipal;
 
 
-public class Presenter extends BasePresenter<Interfaz.View> implements Interfaz.Presenter {
-    public Presenter(Interfaz.View view) {
+public class Presenter extends BasePresenter<Interfaz.view> implements Interfaz.Presenter {
+    public Presenter(Interfaz.view view) {
         super(view);
     }
 
-    public void insertarCuarto(String numCuarto, String precio, String detalles, String URL){
+    public void insertarCuarto(String numCuarto, String precio, String detalles, String path){
+        if (path == null ) path = "";
         if (!numCuarto.equals("") && !precio.equals("")) {
             if (db.existIntoCuarto(numCuarto)) {
                 view.showMensaje("Numero de cuarto ya existe");
             } else {
-                db.agregarCuarto(numCuarto, detalles, precio, URL);
+                db.agregarCuarto(numCuarto, detalles, precio, path);
                 view.showMensaje("Agregado");
                 view.salir();
             }

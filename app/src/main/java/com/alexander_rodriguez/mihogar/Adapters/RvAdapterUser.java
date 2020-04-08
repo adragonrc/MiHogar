@@ -1,7 +1,9 @@
 package com.alexander_rodriguez.mihogar.Adapters;
 
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,7 +16,10 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.alexander_rodriguez.mihogar.R;
 import com.alexander_rodriguez.mihogar.Adapters.Models.ModelUserView;
+import com.squareup.picasso.Picasso;
+import com.squareup.picasso.PicassoProvider;
 
+import java.io.File;
 import java.util.ArrayList;
 
 public class RvAdapterUser extends RecyclerView.Adapter<RvAdapterUser.Holder> {
@@ -40,14 +45,42 @@ public class RvAdapterUser extends RecyclerView.Adapter<RvAdapterUser.Holder> {
         holder.DNI.setText(item.getDni());
         holder.nombres.setText(item.getNombres());
         String path = item.getPath();
-        if(path != null )
-            if(!path.equals("")) {
-                Bitmap bm = BitmapFactory.decodeFile(path);
-                holder.ivPhoto.setImageBitmap(bm);
-            }
+
+        File f = new File(path);
+        if (f.exists())       Picasso.get().load(f).into(holder.ivPhoto);
+
         if(item.getAlert())
             holder.ivAlert.setImageDrawable(mInterface.getContext().getResources().getDrawable(R.drawable.ic_add_alert_black_24dp));
         else holder.ivAlert.setVisibility(View.GONE);
+
+        if (item.isMain()){
+            isMain(holder);
+        }
+    }
+
+    public void isMain(Holder h){
+        if (h != null) {
+            Context c = mInterface.getContext();
+            h.nombres.setTextColor(c.getResources().getColor(R.color.colorPrimary));
+            h.DNI.setTextColor(c.getResources().getColor(R.color.colorAccent));
+        }
+    }
+
+    public void removeMain(Holder h){
+        if  (h != null ){
+            Context c = mInterface.getContext();
+            h.DNI.setTextColor(c.getResources().getColor(R.color.primaryTextColor));
+            h.nombres.setTextColor(c.getResources().getColor(android.R.color.secondary_text_light));
+        }
+    }
+
+    public void addItem(ModelUserView mu){
+        list.add(mu);
+        if(list.size() == 1){
+            notifyDataSetChanged();
+        }else{
+            notifyItemInserted(list.size() -1);
+        }
     }
 
     public View getViewSelect() {
@@ -75,12 +108,7 @@ public class RvAdapterUser extends RecyclerView.Adapter<RvAdapterUser.Holder> {
             ivPhoto = itemView.findViewById(R.id.ivPhoto);
             ivAlert = itemView.findViewById(R.id.ivAlert);
             itemView.setOnCreateContextMenuListener(this);
-            itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    mInterface.onClickUsuario(DNI);
-                }
-            });
+            itemView.setOnClickListener(v -> mInterface.onClickUsuario(Holder.this));
         }
         @Override
         public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
@@ -88,9 +116,13 @@ public class RvAdapterUser extends RecyclerView.Adapter<RvAdapterUser.Holder> {
             viewSelect = v;
             dniSelect = DNI.getText().toString();
         }
+
+        public TextView getDNI() {
+            return DNI;
+        }
     }
     public interface Interface extends AdapterInterface{
-        void onClickUsuario(View view);
+        void onClickUsuario(Holder holder);
     }
 
 }

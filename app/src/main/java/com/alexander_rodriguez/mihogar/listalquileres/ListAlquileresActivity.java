@@ -3,6 +3,7 @@ package com.alexander_rodriguez.mihogar.listalquileres;
 import android.content.Intent;
 
 import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -25,6 +26,7 @@ public class ListAlquileresActivity extends BaseActivity<IBasePresenter> impleme
     protected void iniciarComandos() {
         setTitle("Lista Alquileres");
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
+
     }
 
     @Override
@@ -46,6 +48,7 @@ public class ListAlquileresActivity extends BaseActivity<IBasePresenter> impleme
     @Override
     public void mostarListAlquileres(ArrayList<ModelAlquilerView> list) {
         adapterAlquiler = new RvAdapterAlquiler(this, list);
+        recyclerView.setLayoutManager(new GridLayoutManager(this, 2));
         recyclerView.setAdapter(adapterAlquiler);
     }
 

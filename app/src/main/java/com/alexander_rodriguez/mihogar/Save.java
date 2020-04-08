@@ -2,6 +2,7 @@ package com.alexander_rodriguez.mihogar;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.media.MediaScannerConnection;
 import android.net.Uri;
 import android.os.Environment;
@@ -19,20 +20,26 @@ import java.util.Calendar;
 public class Save {
 
     private Context context;
-    private String NameOfFile = "IMG_";
-    private String currentFile = "";
-    public String SaveImage(Context context,@NonNull Bitmap ImageToSave) {
-        if(ImageToSave == null) return  "";
+
+    public String SaveImage(Context context, String  path){
+        if (path == null || path.equals("")) return "";
+        Bitmap bm = BitmapFactory.decodeFile(path);
+        return SaveImage(context, bm);
+    }
+    public String SaveImage(Context context, Bitmap ImageToSave) {
+        if(ImageToSave == null ) return "";
 
         this.context = context;
         //  String file_path = Environment.getExternalStorageDirectory().getAbsolutePath() + NameOfFolder;
         String CurrentDateAndTime = getCurrentDateAndTime();
         //  File dir = new File(file_path);
         File dir = this.context.getExternalFilesDir(Environment.DIRECTORY_PICTURES);
-        if (!dir.exists()) {
-            dir.mkdirs();
-        }
-        File file = new File(dir, NameOfFile + CurrentDateAndTime + ".jpg");
+        if (dir != null)
+            if (!dir.exists()) {
+                dir.mkdirs();
+            }
+        String nameOfFile = "IMG_";
+        File file = new File(dir, nameOfFile + CurrentDateAndTime + ".jpg");
 
         try {
             FileOutputStream fOut = new FileOutputStream(file);
@@ -42,14 +49,8 @@ public class Save {
             fOut.close();
             MakeSureFileWasCreatedThenMakeAvabile(file);
             AbleToSave();
-            currentFile = file.getAbsolutePath();
-            return currentFile;
-        }
-
-        catch(FileNotFoundException e) {
-            UnableToSave();
-        }
-        catch(IOException e) {
+            return file.getAbsolutePath();
+        } catch(IOException e) {
             UnableToSave();
         }
         return "";
@@ -68,8 +69,7 @@ public class Save {
     private String getCurrentDateAndTime() {
         Calendar c = Calendar.getInstance();
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd-HH-mm-­ss");
-        String formattedDate = df.format(c.getTime());
-        return formattedDate;
+        return df.format(c.getTime());
     }
 
     private void UnableToSave() {

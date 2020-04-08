@@ -21,7 +21,9 @@ import androidx.appcompat.app.AppCompatDelegate;
 import androidx.appcompat.widget.Toolbar;
 
 public class Preferencias extends PreferenceActivity implements SharedPreferences.OnSharedPreferenceChangeListener {
+
     private AppCompatDelegate mDelegate;
+
     protected void onCreate(Bundle saveInstanceState) {
         getDelegate().installViewFactory();
         getDelegate().onCreate(saveInstanceState);
@@ -136,27 +138,28 @@ public class Preferencias extends PreferenceActivity implements SharedPreference
             cpCasa.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
                 @Override
                 public boolean onPreferenceChange(Preference preference, Object newValue) {
-                    if ((Boolean)newValue){
+                    /*if ((Boolean)newValue){
                         cpHotel.setChecked(false);
                         findPreference("psModHotel").setEnabled(false);
                     }else{
                         cpHotel.setChecked(true);
                         findPreference("psModHotel").setEnabled(true);
                     }
-                    return true;
+                     */
+                    return false;
                 }
             });
             cpHotel.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
                 @Override
                 public boolean onPreferenceChange(Preference preference, Object newValue) {
-                    if ((Boolean)newValue){
+                    /*if ((Boolean)newValue){
                         cpCasa.setChecked(false);
                         findPreference("psModHotel").setEnabled(true);
                     }else{
                         cpCasa.setChecked(true);
                         findPreference("psModHotel").setEnabled(false);
-                    }
-                    return true;
+                    }*/
+                    return false;
                 }
             });
         }

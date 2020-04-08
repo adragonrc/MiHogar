@@ -6,8 +6,8 @@ import android.database.Cursor;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.alexander_rodriguez.mihogar.modelos.ModelUsuario;
 import com.alexander_rodriguez.mihogar.TableCursor;
+import com.alexander_rodriguez.mihogar.modelos.ModelUsuario;
 
 public interface DataBaseInterface {
     ContentValues getFilaInCuarto(String columnas, Object numCuarto);

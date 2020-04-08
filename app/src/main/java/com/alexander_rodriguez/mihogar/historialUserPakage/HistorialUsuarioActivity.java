@@ -2,10 +2,12 @@ package com.alexander_rodriguez.mihogar.historialUserPakage;
 
 import android.content.ContentValues;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
@@ -13,20 +15,24 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.core.app.ActivityOptionsCompat;
 import androidx.core.view.ViewCompat;
 
 import com.alexander_rodriguez.mihogar.ActivityShowImage;
 import com.alexander_rodriguez.mihogar.Base.BaseActivity;
+import com.alexander_rodriguez.mihogar.ButtonsAC.ButtonsAceptarCancelar;
 import com.alexander_rodriguez.mihogar.R;
+import com.alexander_rodriguez.mihogar.Save;
 import com.alexander_rodriguez.mihogar.UTILIDADES.TUsuario;
 import com.alexander_rodriguez.mihogar.alquilerusuario.AlquilerUsuarioActivity;
-import com.alexander_rodriguez.mihogar.vercuarto.ProfileView;
+import com.alexander_rodriguez.mihogar.menu_photo.MenuIterator;
+import com.alexander_rodriguez.mihogar.menu_photo.interfazMenu;
+import com.alexander_rodriguez.mihogar.vercuarto.view_perfil_cuarto.ProfileView;
+import com.theartofdev.edmodo.cropper.CropImage;
 
 import java.util.Objects;
-
-import javax.xml.validation.Validator;
 
 
 public class HistorialUsuarioActivity extends BaseActivity<Interfaz.presenter> implements Interfaz.view {
@@ -34,43 +40,35 @@ public class HistorialUsuarioActivity extends BaseActivity<Interfaz.presenter> i
     private TextView tvNombres;
     private TextView tvApellidoPat;
     private TextView tvApellidoMat;
-    private TextView tvNumeroTel;
-    private TextView tvCorreo;
     private TextView tvNumAlquiler;
 
     private EditText etNombres;
     private EditText etApellidoPat;
     private EditText etApellidoMat;
-    private EditText etNumeroTel;
-    private EditText etCorreo;
 
     private LinearLayout llEditarNombres;
     private LinearLayout llEditarApePat;
     private LinearLayout llEditarApeMat;
-    private LinearLayout llEditarNumTel;
-    private LinearLayout llEditarCorreo;
 
     private LinearLayout llConfirNombres;
     private LinearLayout llConfirApePat;
     private LinearLayout llConfirApeMat;
-    private LinearLayout llConfirNumTel;
-    private LinearLayout llConfirCorreo;
-
 
     private ProfileView profileView;
 
-    private String uriPhoto;
-
+    private String path;
     private String dni;
 
-    private Button verPagos;
-    private Button salir;
+    private interfazMenu interfazMenu;
+
+    private ButtonsAceptarCancelar ac;
 
     @Override
     protected void iniciarComandos() {
 
         //setTitle("Inquilino");
         setSupportActionBar(profileView.getToolbar());
+        interfazMenu = new MenuIterator(this);
         ActionBar ab =  getSupportActionBar();
         if (ab != null){
             ab.setDisplayHomeAsUpEnabled(true);
@@ -100,6 +98,53 @@ public class HistorialUsuarioActivity extends BaseActivity<Interfaz.presenter> i
     }
 
     @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_photo_show, menu);
+        return true;
+    }
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE){
+            CropImage.ActivityResult result = CropImage.getActivityResult(data);
+            if(resultCode == RESULT_OK && result != null){
+                resultOk(result);
+            }else{
+                if(resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE){
+                    Exception e = result.getError();
+                    Toast.makeText(this, "Posible Error es: "+ e, Toast.LENGTH_SHORT).show();
+                }
+            }
+        }
+    }
+    private void resultOk(CropImage.ActivityResult result){
+        Save s = new Save();
+        Bitmap bm = BitmapFactory.decodeFile(result.getUri().getPath());
+        path = s.SaveImage(this, bm);
+        presenter.actualizarPhoto(path);
+        profileView.setPhotoImage(path);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        switch (id){
+            case R.id.app_bar_edit:{
+                interfazMenu.onEdit();
+                break;
+            }
+            case R.id.app_bar_shared:{
+                interfazMenu.onShared(path);
+                break;
+            }
+            case BACK_PRESSED:{
+                onBackPressed();
+                break;
+            }
+        }
+        return super.onOptionsItemSelected(item);
+    }
+    @Override
     public void mostrarDatosUsuario(ContentValues datos, String i) {
         profileView.setSubTitle(datos.getAsString(TUsuario.DNI));
         profileView.setTitle(datos.getAsString(TUsuario.NOMBRES));
@@ -107,10 +152,12 @@ public class HistorialUsuarioActivity extends BaseActivity<Interfaz.presenter> i
         tvNombres.setText(datos.getAsString(TUsuario.NOMBRES));
         tvApellidoPat.setText(datos.getAsString(TUsuario.APELLIDO_PAT));
         tvApellidoMat.setText(datos.getAsString(TUsuario.APELLIDO_MAT));
-        tvNumeroTel.setText(datos.getAsString(TUsuario.NUMERO_TEL));
-        tvCorreo.setText(datos.getAsString(TUsuario.CORREO));
-        uriPhoto = datos.getAsString(TUsuario.URI);
-        presenter.setImage(profileView.getIvPhoto(), uriPhoto);
+        //tvNumeroTel.setText(datos.getAsString(TUsuario.NUMERO_TEL));
+        //tvCorreo.setText(datos.getAsString(TUsuario.CORREO));
+
+        path = datos.getAsString(TUsuario.URI);
+
+        profileView.setPhotoImage(path);
         tvNumAlquiler.setText(i);
     }
 
@@ -171,21 +218,6 @@ public class HistorialUsuarioActivity extends BaseActivity<Interfaz.presenter> i
         etApellidoMat.requestFocus();
     }
 
-    @Override
-    public void ocEditarNumTel(View view) {
-        etNumeroTel.setText(tvNumeroTel.getText().toString());
-        llEditarNumTel.setVisibility(View.GONE);
-        llConfirNumTel.setVisibility(View.VISIBLE);
-        etNumeroTel.requestFocus();
-    }
-
-    @Override
-    public void ocEditarCorreo(View view) {
-        etCorreo.setText(tvCorreo.getText().toString());
-        llEditarCorreo.setVisibility(View.GONE);
-        llConfirCorreo.setVisibility(View.VISIBLE);
-        etCorreo.requestFocus();
-    }
 
     @Override
     public void ocConfirNombres(View view) {
@@ -202,17 +234,8 @@ public class HistorialUsuarioActivity extends BaseActivity<Interfaz.presenter> i
         presenter.actualizarApeMat(etApellidoMat.getText().toString());
     }
 
-    @Override
-    public void ocConfirNumTel(View view) {
-        presenter.actualizarNumTel(etNumeroTel.getText().toString());
-    }
-
-    @Override
-    public void ocConfirCorreo(View view) {
-        presenter.actualizarCorreo(etCorreo.getText().toString());
-    }
     public void onClickPhoto(View view){
-        if(Objects.requireNonNull(uriPhoto).equals("")) {
+        if(Objects.requireNonNull(path).equals("")) {
             Toast.makeText(this, "Sin foto", Toast.LENGTH_SHORT).show();
             return;
         }
@@ -220,27 +243,13 @@ public class HistorialUsuarioActivity extends BaseActivity<Interfaz.presenter> i
         ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(this, profileView.getIvPhoto(), ViewCompat.getTransitionName(profileView.getIvPhoto()));
         intent.putExtra(ActivityShowImage.IS_USER_IMAGE, true);
         intent.putExtra(TUsuario.DNI, dni);
-        intent.putExtra(ActivityShowImage.DATA_IMAGE, uriPhoto);
+        intent.putExtra(ActivityShowImage.DATA_IMAGE, path);
         startActivity(intent, options.toBundle());
 
 
     }
 
-    @Override
-    public void ocVerMas(View view){
-        Intent i = new Intent(this, AlquilerUsuarioActivity.class);
-        i.putExtra(AlquilerUsuarioActivity.EXTRA_DNI, Integer.valueOf(dni));
-        startActivity(i);
-    }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-        if (id ==BACK_PRESSED){
-                onBackPressed();
-        }
-        return super.onOptionsItemSelected(item);
-    }
 
     @Override
     public void actualizarNombres(String nombres) {
@@ -267,21 +276,6 @@ public class HistorialUsuarioActivity extends BaseActivity<Interfaz.presenter> i
     }
 
     @Override
-    public void actualizarNumTel(String numTel) {
-        ocultarTeclado();
-        llEditarNumTel.setVisibility(View.VISIBLE);
-        llConfirNumTel.setVisibility(View.GONE);
-        tvNumeroTel.setText(numTel);
-    }
-    @Override
-    public void actualizarCorreo(String correo) {
-        ocultarTeclado();
-        llEditarCorreo.setVisibility(View.VISIBLE);
-        llConfirCorreo.setVisibility(View.GONE);
-        tvCorreo.setText(correo);
-    }
-
-    @Override
     public void salir(){
         onBackPressed();
     }
@@ -292,39 +286,40 @@ public class HistorialUsuarioActivity extends BaseActivity<Interfaz.presenter> i
 
         profileView = findViewById(R.id.profileAppid);
 
-        ScrollView cuerpo = (ScrollView) LayoutInflater.from(this).inflate(R.layout.perfil_usuario_cuerpo, null);
+        ScrollView cuerpo = (ScrollView) LayoutInflater.from(this).inflate(R.layout.view_perfil_usuario_cuerpo, null);
         profileView.addToCuerpo(cuerpo);
 
         tvNombres = findViewById(R.id.hutvNombres);
         tvApellidoPat = findViewById(R.id.hutvApePat);
         tvApellidoMat = findViewById(R.id.hutvApeMat);
-        tvNumeroTel = findViewById(R.id.hutvNumTel);
-        tvCorreo = findViewById(R.id.hutvCorreo);
         tvNumAlquiler = findViewById(R.id.tvNumAlquiler);
 
         etNombres = findViewById(R.id.etNombres);
         etApellidoPat = findViewById(R.id.etApePat);
         etApellidoMat = findViewById(R.id.etApeMat);
-        etNumeroTel = findViewById(R.id.etNumTel);
-        etCorreo = findViewById(R.id.etCorreo);
 
         llEditarNombres = findViewById(R.id.llEditarNombres);
         llEditarApePat = findViewById(R.id.llEditarApellidoPat);
         llEditarApeMat = findViewById(R.id.llEditarMat);
-        llEditarNumTel = findViewById(R.id.llEditarNumTel);
-        llEditarCorreo = findViewById(R.id.llEditarCorreo);
 
         llConfirNombres = findViewById(R.id.llConfirmNombres);
         llConfirApePat = findViewById(R.id.llConfirmApePat);
         llConfirApeMat = findViewById(R.id.llConfirmApeMat);
-        llConfirNumTel = findViewById(R.id.llConfirmNumTel);
-        llConfirCorreo = findViewById(R.id.llConfirmCorreo);
 
-        salir = findViewById(R.id.button0);
-        verPagos = findViewById(R.id.button1);
-        salir.setText("SALIR");
-        verPagos.setText("VER ALQUILERES");
-        salir.setOnClickListener(v -> salir());
-        verPagos.setOnClickListener(this::ocVerMas);
+        ac = findViewById(R.id.llBtns);
+
+        ac.setTextButtons("SALIR", "VER ALQUILERES");
+    }
+
+    @Override
+    public void onClickPositive(View v) {
+        Intent i = new Intent(this, AlquilerUsuarioActivity.class);
+        i.putExtra(AlquilerUsuarioActivity.EXTRA_DNI, Integer.valueOf(dni));
+        startActivity(i);
+    }
+
+    @Override
+    public void onClickNegative(View v) {
+        salir();
     }
 }

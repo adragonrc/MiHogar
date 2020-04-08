@@ -2,6 +2,9 @@ package com.alexander_rodriguez.mihogar.vercuarto;
 
 import android.content.ContentValues;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -19,28 +22,35 @@ import androidx.core.view.ViewCompat;
 
 import com.alexander_rodriguez.mihogar.ActivityShowImage;
 import com.alexander_rodriguez.mihogar.Base.BaseActivity;
-import com.alexander_rodriguez.mihogar.ButtonsAceptarCancelar;
+import com.alexander_rodriguez.mihogar.ButtonsAC.ButtonsAceptarCancelar;
+import com.alexander_rodriguez.mihogar.ButtonsAC.interfazAC;
 import com.alexander_rodriguez.mihogar.R;
+import com.alexander_rodriguez.mihogar.Save;
 import com.alexander_rodriguez.mihogar.UTILIDADES.Mensualidad;
 import com.alexander_rodriguez.mihogar.UTILIDADES.TAlquiler;
 import com.alexander_rodriguez.mihogar.UTILIDADES.TCuarto;
 import com.alexander_rodriguez.mihogar.UTILIDADES.TUsuario;
 import com.alexander_rodriguez.mihogar.ViewPdfActivity;
-import com.alexander_rodriguez.mihogar.agregarInquilino.AgregarInquilino;
-import com.alexander_rodriguez.mihogar.historialUserPakage.HistorialUsuarioActivity;
+import com.alexander_rodriguez.mihogar.historialcasa.HistorialCasaActivity;
 import com.alexander_rodriguez.mihogar.listalquileres.ListAlquileresActivity;
+import com.alexander_rodriguez.mihogar.agregarInquilino.AgregarAlquilerActivity;
+import com.alexander_rodriguez.mihogar.menu_photo.MenuIterator;
+import com.alexander_rodriguez.mihogar.menu_photo.interfazMenu;
 import com.alexander_rodriguez.mihogar.mydialog.DialogImput;
 import com.alexander_rodriguez.mihogar.mydialog.DialogInterfaz;
 import com.alexander_rodriguez.mihogar.mydialog.PresenterDialogImput;
 import com.alexander_rodriguez.mihogar.tableActivity.TableActivity;
-import com.alexander_rodriguez.mihogar.verusuario.DialogConfirmPago;
+import com.alexander_rodriguez.mihogar.vercuarto.view_perfil_cuarto.PerfilCuarto;
+import com.alexander_rodriguez.mihogar.vercuarto.view_perfil_cuarto.ProfileView;
+import com.alexander_rodriguez.mihogar.viewUser.DialogConfirmPago;
+import com.theartofdev.edmodo.cropper.CropImage;
 
 import java.io.File;
 import java.util.Objects;
 
 import butterknife.ButterKnife;
 
-public class VerCuarto2 extends BaseActivity<Interface.Presenter> implements Interface.view {
+public class VerCuarto2 extends BaseActivity<Interface.Presenter> implements Interface.view, interfazAC {
     public static final String TAG_REALIZAR_PAGO = "confirmarPago";
 
     private PerfilCuarto perfilCuarto;
@@ -63,14 +73,16 @@ public class VerCuarto2 extends BaseActivity<Interface.Presenter> implements Int
 
     private int iMenu;
 
-    private String URIPerfil;
-
+    private String path;
     private String numCuarto;
 
     private Menu menu;
+
+    private interfazMenu interfazMenu;
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(this.iMenu, menu);
+        getMenuInflater().inflate(R.menu.menu_photo_show, menu);
         this.menu = menu;
         return true;
     }
@@ -87,9 +99,17 @@ public class VerCuarto2 extends BaseActivity<Interface.Presenter> implements Int
                 break;
             }
             case R.id.iAgregarInquilino: {
-                Intent i = new Intent(this, AgregarInquilino.class);
+                Intent i = new Intent(this, AgregarAlquilerActivity.class);
                 i.putExtra(TCuarto.NUMERO, numCuarto);
                 startActivity(i);
+                break;
+            }
+            case R.id.app_bar_edit:{
+                interfazMenu.onEdit();
+                break;
+            }
+            case R.id.app_bar_shared:{
+                interfazMenu.onShared(path);
                 break;
             }
             case BACK_PRESSED:{
@@ -99,17 +119,46 @@ public class VerCuarto2 extends BaseActivity<Interface.Presenter> implements Int
         }
         return super.onOptionsItemSelected(item);
     }
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE){
+            CropImage.ActivityResult result = CropImage.getActivityResult(data);
+            if(resultCode == RESULT_OK && result != null){
+                resultOk(result);
+            }else{
+                if(resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE){
+                    Exception e = Objects.requireNonNull(result).getError();
+                    Toast.makeText(this, "Posible Error es: "+ e, Toast.LENGTH_SHORT).show();
+                }
+            }
+        }
+    }
 
+    private void resultOk(CropImage.ActivityResult result){
+        Save s = new Save();
+        Bitmap bm = BitmapFactory.decodeFile(result.getUri().getPath());
+        path = s.SaveImage(this, bm);
+        presenter.actualizarPhoto(path);
+        profileCuarto.setPhotoImage(path);
+    }
 
     @Override
     protected void iniciarComandos() {
+        interfazMenu = new MenuIterator(this);
         ButterKnife.bind(this);
-        diseñoPrueba();
+
+        setSupportActionBar(profileCuarto.getToolbar());
+        ActionBar ab =  getSupportActionBar();
+        if (ab != null){
+            ab.setDisplayHomeAsUpEnabled(true);
+        }
+
         dip = new PresenterDialogImput(this, "ALERTA") {
             @Override
             public void positiveButtonListener(@Nullable String s) {
                 presenter.deshacerContrato(s);
-                menu.removeItem(R.id.iVerPagos);
+                removerMenuCuartoSinAlquiler();
                 getMenuInflater().inflate(R.menu.menu_cuarto_no_alquilado, menu);
             }
         };
@@ -143,22 +192,30 @@ public class VerCuarto2 extends BaseActivity<Interface.Presenter> implements Int
     }
 
     @Override
-    public void showCuartoAlquilado(ContentValues cuarto, ContentValues usuario, String mensualidad) {
+    public void showCuartoAlquilado(ContentValues cuarto, int usuario, String mensualidad) {
         perfilCuarto.showCuartoAlquilado(usuario, mensualidad, presenter.getDatosAlquiler());
 
         aceptarCancelar.setVisibility(View.VISIBLE);
         iMenu = R.menu.menu_cuarto;
         if (menu != null) {
-            menu.clear();
+            removerMenuCuartoSinAlquiler();
             getMenuInflater().inflate(iMenu, menu);
         }
         detallesCuarto2(cuarto);
     }
 
-    private void detallesCuarto2(ContentValues cuarto){
-        URIPerfil = cuarto.getAsString(TCuarto.URL);
+    private void removerMenuCuartoSinAlquiler(){
+        menu.removeItem(R.id.iVerPagos);
+    }
 
-        profileCuarto.setPhotoImage(URIPerfil);
+    private void removerMenuCuartoAlquilado(){
+        menu.removeItem(R.id.iVerPagos);
+    }
+
+    private void detallesCuarto2(ContentValues cuarto){
+        path = cuarto.getAsString(TCuarto.URL);
+
+        profileCuarto.setPhotoImage(path);
 
         perfilCuarto.setDetallesText(cuarto.getAsString(TCuarto.DETALLES));
         profileCuarto.setTitle(cuarto.getAsString(TCuarto.NUMERO));
@@ -174,23 +231,19 @@ public class VerCuarto2 extends BaseActivity<Interface.Presenter> implements Int
     }
 
     @Override
-    public void onClickVerInquilino(View view) {
-        Intent i = new Intent(this, DialogConfirmPago.class);
-        i.putExtra(TUsuario.DNI, Integer.parseInt(perfilCuarto.getDniText()));
-        startActivity(i);
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
+            presenter.crearPDF();
+        }
     }
 
-    @Override
-    public void onClickTerminarAlquiler(View view) {
-        DialogImput imput = new DialogImput();
-        imput.showDiaglog(getSupportFragmentManager(), "d", dip);
-        dip.setHintView("Motivo");
-    }
 
     @Override
     public void onClickVermas(View view) {
-        Intent i = new Intent(this, HistorialUsuarioActivity.class);
-        i.putExtra(TUsuario.DNI, perfilCuarto.getDniText());
+        //startActivity(new Intent(this, HistorialCasaActivity.class));
+        Intent i = new Intent(this, HistorialCasaActivity.class);
+        i.putExtra(HistorialCasaActivity.TYPE_MODE, HistorialCasaActivity.MODO_SOLO_USUARIOS);
+        i.putExtra(TAlquiler.ID, presenter.getDatosAlquiler().getAsString(TAlquiler.ID));
         startActivity(i);
     }
 
@@ -205,28 +258,48 @@ public class VerCuarto2 extends BaseActivity<Interface.Presenter> implements Int
     }
 
     @Override
+    public void ocEditarNumTel(View view) {
+        perfilCuarto.modEditarNumTel();
+    }
+
+    @Override
+    public void ocEditarCorreo(View view) {
+        perfilCuarto.modEditarCorreo();
+    }
+
+    @Override
     public void onClickConfirMensualidad(View view) {
         presenter.actualizarMensualidad(perfilCuarto.getMensualidadText());
     }
 
     @Override
     public void onClickConfirDetalles(View view) {
-        presenter.actualizarDetalles(perfilCuarto.getEtDetallesText());
+        presenter.actualizarDetalles(perfilCuarto.getDetallesText());
     }
 
     @Override
-    public void mostrarPDF(File pdfFile, ContentValues datosUsuario) {
+    public void ocConfirNumTel(View view) {
+        presenter.actualizarNumTel(perfilCuarto.getTelefonoText());
+    }
+
+    @Override
+    public void ocConfirCorreo(View view) {
+        presenter.actualizarCorreo(perfilCuarto.getCorreoText());
+    }
+
+    @Override
+    public void mostrarPDF(File pdfFile, ContentValues datosAlquiler) {
         Intent intent = new Intent(this, ViewPdfActivity.class);
         intent.putExtra(ViewPdfActivity.EXTRA_PATH_PDF, pdfFile.getAbsolutePath());
-        intent.putExtra(TUsuario.NUMERO_TEL, datosUsuario.getAsString(TUsuario.NUMERO_TEL));
-        intent.putExtra(TUsuario.CORREO, datosUsuario.getAsString(TUsuario.CORREO));
+        intent.putExtra(TAlquiler.NUMERO_TEL, datosAlquiler.getAsString(TAlquiler.NUMERO_TEL));
+        intent.putExtra(TAlquiler.CORREO, datosAlquiler.getAsString(TAlquiler.CORREO));
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
     }
 
     @Override
     public void onClickPhoto(View view) {
-        if(Objects.requireNonNull(URIPerfil).equals("")) {
+        if(Objects.requireNonNull(path).equals("")) {
             Toast.makeText(this, "Sin foto", Toast.LENGTH_SHORT).show();
             return;
         }
@@ -234,15 +307,27 @@ public class VerCuarto2 extends BaseActivity<Interface.Presenter> implements Int
         ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(this, ivPerfil, ViewCompat.getTransitionName(ivPerfil));
         intent.putExtra(ActivityShowImage.IS_CUARTO_IMAGE, true);
         intent.putExtra(TCuarto.NUMERO, numCuarto);
-        intent.putExtra(ActivityShowImage.DATA_IMAGE, URIPerfil);
+        intent.putExtra(ActivityShowImage.DATA_IMAGE, path);
         startActivity(intent, options.toBundle());
+    }
+
+    @Override
+    public void actualizarNumTel(String numTel) {
+        ocultarTeclado();
+        perfilCuarto.mostrarNumeroTelefonico(numTel);
+    }
+
+    @Override
+    public void actualizarCorreo(String correo) {
+        ocultarTeclado();
+        perfilCuarto.mostrarCorreo(correo);
     }
 
     @Override
     public void onClickVerAlquileres(View view) {
         Intent i = new Intent(this, ListAlquileresActivity.class);
         i.putExtra(TCuarto.NUMERO, numCuarto);
-        i.putExtra(TUsuario.DNI, perfilCuarto.getDniText());
+        i.putExtra(TAlquiler.ID, presenter.getDatosAlquiler().getAsString(TAlquiler.ID));
         startActivity(i);
     }
 
@@ -260,6 +345,11 @@ public class VerCuarto2 extends BaseActivity<Interface.Presenter> implements Int
     }
 
     @Override
+    public void actualizarFechaPago(String fecha) {
+        perfilCuarto.setFechaCText(fecha);
+    }
+
+    @Override
     public void onBackPressed() {
         View currentFocus = getCurrentFocus();
         if (currentFocus != null) {
@@ -274,13 +364,12 @@ public class VerCuarto2 extends BaseActivity<Interface.Presenter> implements Int
     public void noPago() {
         perfilCuarto.noPago(listener);
         btPagarAlquiler.setOnClickListener(listener);
-
     }
 
     @Override
     public void pago() {
         perfilCuarto.pago(listener2);
-        btPagarAlquiler.setText("MOSTRAR PAGOS");
+        btPagarAlquiler.setText(R.string.sMostrarPago);
         btPagarAlquiler.setOnClickListener(listener2);
     }
 
@@ -289,49 +378,46 @@ public class VerCuarto2 extends BaseActivity<Interface.Presenter> implements Int
         modificarTransicion();
         profileCuarto = findViewById(R.id.profileAppid);
 
-        aceptarCancelar = findViewById(R.id.btAceptarCancelar);
+        aceptarCancelar = findViewById(R.id.llBtns);
+        aceptarCancelar.setTextButtons("QUITAR ALQUILER", "PAGAR ALQUILER");
+
         btPagarAlquiler = aceptarCancelar.getButton1();
         ivPerfil = findViewById(R.id.ivPerfil);
 
-        aceptarCancelar.setListenerButtonCancelar(this::onClickTerminarAlquiler);
-
-        perfilCuarto = (PerfilCuarto)LayoutInflater.from(this).inflate(R.layout.activity_perfil_cuarto, null);
+        perfilCuarto = (PerfilCuarto)LayoutInflater.from(this).inflate(R.layout.view_perfil_cuarto, profileCuarto, false);
         profileCuarto.addToCuerpo(perfilCuarto);
     }
 
     private void createListener(){
         listener = v -> {
             Bundle datos = new Bundle();
-            datos.putString(TUsuario.DNI, perfilCuarto.getTvDni().getText().toString());
+            datos.putString(TUsuario.DNI, presenter.getResponsable());
             datos.putString(TCuarto.NUMERO, numCuarto);
-            datos.putString(TAlquiler.FECHA_C, perfilCuarto.getTvFechaC().getText().toString());
+            datos.putString(TAlquiler.Fecha_PAGO, perfilCuarto.getTvFechaC().getText().toString());
             datos.putString(Mensualidad.COSTO, perfilCuarto.getTvMensualidad().getText().toString());
 
             dialogConfirmPago = new DialogConfirmPago(datos, VerCuarto2.this);
 
-            dialogConfirmPago.setOnClickListenerAceptar(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    presenter.realizarPago();
-                    dialogConfirmPago.dismiss();
-                }
+            dialogConfirmPago.setOnClickListenerAceptar(v12 -> {
+                presenter.realizarPago();
+                dialogConfirmPago.dismiss();
             });
-            dialogConfirmPago.setOnClickListenerCancelar(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Toast.makeText(VerCuarto2.this, "transaccion canselada", Toast.LENGTH_SHORT).show();
-                    dialogConfirmPago.dismiss();
-                }
+            dialogConfirmPago.setOnClickListenerCancelar(v1 -> {
+                Toast.makeText(VerCuarto2.this, "transaccion canselada", Toast.LENGTH_SHORT).show();
+                dialogConfirmPago.dismiss();
             });
             dialogConfirmPago.show(getSupportFragmentManager(), TAG_REALIZAR_PAGO);
         };
     }
-    private void diseñoPrueba() {
 
-        setSupportActionBar(profileCuarto.getToolbar());
-        ActionBar ab =  getSupportActionBar();
-        if (ab != null){
-            ab.setDisplayHomeAsUpEnabled(true);
-        }
+    @Override
+    public void onClickPositive(View v) {
+    }
+
+    @Override
+    public void onClickNegative(View v) {
+        DialogImput imput = new DialogImput();
+        imput.showDiaglog(getSupportFragmentManager(), "d", dip);
+        dip.setHintView("Motivo");
     }
 }

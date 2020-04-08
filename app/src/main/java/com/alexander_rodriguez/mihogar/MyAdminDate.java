@@ -1,10 +1,13 @@
 package com.alexander_rodriguez.mihogar;
 
 import java.text.DateFormat;
+import java.text.FieldPosition;
 import java.text.ParseException;
+import java.text.ParsePosition;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 
 public class MyAdminDate {
     private DateFormat dateFormat;
@@ -13,6 +16,27 @@ public class MyAdminDate {
     public MyAdminDate(){
         dateFormat = new SimpleDateFormat(FORMAT_DATE);
     }
+
+    public static int comparar(String fechaCancelar, String fechaCancelar1) throws ParseException {
+        if ((fechaCancelar == null || fechaCancelar.isEmpty())&& (fechaCancelar1 == null || fechaCancelar1.isEmpty())){
+            return 0;
+        }
+        if (fechaCancelar == null || fechaCancelar.isEmpty()){
+            return 1;
+        }
+        if (fechaCancelar1 == null || fechaCancelar1.isEmpty()){
+            return -1;
+        }
+
+        DateFormat dateFormat = new SimpleDateFormat(FORMAT_DATE_TIME);
+        Date d1 = dateFormat.parse(fechaCancelar);
+        Date d2 = dateFormat.parse(fechaCancelar1);
+
+        boolean f = d1.before(d2);
+        if (f) return -1;
+        else return  1;
+    }
+
     public void setFormat(String format){
         dateFormat = new SimpleDateFormat(format);
     }
@@ -31,7 +55,7 @@ public class MyAdminDate {
         return f;
     }
 
-    public String getFechaSiguiente(String fechai, int modo) throws ParseException {
+    public String adelantarUnMes(String fechai, int modo) throws ParseException {
         String f = null;
         Date date = dateFormat.parse(fechai);
         switch (modo){

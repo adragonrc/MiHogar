@@ -1,13 +1,17 @@
 package com.alexander_rodriguez.mihogar.tableActivity;
 
+import android.Manifest;
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TableLayout;
 import android.widget.TextView;
+
+import androidx.core.content.ContextCompat;
 
 import com.alexander_rodriguez.mihogar.Base.BasePresenter;
 import com.alexander_rodriguez.mihogar.PDF;
@@ -23,7 +27,6 @@ import java.io.FileNotFoundException;
 
 public class Presenter extends BasePresenter<Interfaz.view> implements Interfaz.Presenter{
     private ContentValues alquiler;
-    private ContentValues usuario;
 
     private String idAlquiler;
     private boolean tablaFueCreada;
@@ -40,13 +43,12 @@ public class Presenter extends BasePresenter<Interfaz.view> implements Interfaz.
                 if (pago != null){
 
                     alquiler = db.getFilaAlquilerOf("*", idAlquiler);
-                    usuario = db.getFilaInUsuariosOf("*", alquiler.getAsString(TAlquiler.DNI));
 
                     String path =  pago.getString(TPago.INT_URI_VOUCHER);
 
                     if (path != null) {
                         if (!path.equals("") && (new File(path)).exists()) {
-                            view.gotoShowPDF(path, usuario);
+                            view.gotoShowPDF(path, alquiler);
                         } else {
                             view.showDialog("No se encontro el archivo\n¿Desea Crearlo?");
                         }
@@ -77,7 +79,6 @@ public class Presenter extends BasePresenter<Interfaz.view> implements Interfaz.
             tl.addView(crateTitleMensualidad("Mensualidad: "+ idMensualidad, tcMensualidad.getValue(i,Mensualidad.FECHA_I), tl));
             TableCursor tcPagos = db.getPagosOf(TPago.ID+", "+ TPago.FECHA, idMensualidad);
             for (int j = 0; i < tcPagos.getCount(); i++){
-                //tcPagos.getS()[j][0], tcPagos.getS()[j][1], costo
                 View v =creatRowPago(tcPagos.getS()[j][0], tcPagos.getS()[j][1], costo, tl);
                 tl.addView(v);
             }
@@ -124,20 +125,32 @@ public class Presenter extends BasePresenter<Interfaz.view> implements Interfaz.
 
     @Override
     public void onPositive() {
-        if (usuario != null && alquiler != null) {
-            PDF pdf = new PDF();
-            String direccion = sp.getString(view.getContext().getString(R.string.direccion), "---");
-            try {
-                pdf.crearVoucher(alquiler.getAsString(TAlquiler.NUMERO_C), viewClicked.getTextId(), viewClicked.getTextMonto(), direccion, viewClicked.getTextFecha());
-                db.agregarVoucher(pdf.getPdfFile().getAbsolutePath(), viewClicked.getTextId());
-                view.gotoShowPDF(pdf.getPdfFile().getAbsolutePath(), usuario);
-            } catch (FileNotFoundException e) {
-                view.showMensaje("error al crear el archivo");
-                e.printStackTrace();
-            } catch (DocumentException e) {
-                view.showMensaje("error al crear el documento");
-                e.printStackTrace();
+        if (alquiler != null) {
+            if (permisoPDF()){
+                crearPDF();
+            }else{
+                view.solicitarPermiso();
             }
+        }
+    }
+    public boolean permisoPDF(){
+        int permissionCheck = ContextCompat.checkSelfPermission(view.getContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE);
+        return permissionCheck == PackageManager.PERMISSION_GRANTED;
+    }
+
+    public void crearPDF(){
+        PDF pdf = new PDF();
+        String direccion = sp.getString(view.getContext().getString(R.string.direccion), "---");
+        try {
+            pdf.crearVoucher(alquiler.getAsString(TAlquiler.NUMERO_C), pago.getString(TPago.INT_DNI), viewClicked.getTextId(), viewClicked.getTextMonto(), direccion, viewClicked.getTextFecha());
+            db.agregarVoucher(pdf.getPdfFile().getAbsolutePath(), viewClicked.getTextId());
+            view.gotoShowPDF(pdf.getPdfFile().getAbsolutePath(), alquiler);
+        } catch (FileNotFoundException e) {
+            view.showMensaje("error al crear el archivo");
+            e.printStackTrace();
+        } catch (DocumentException e) {
+            view.showMensaje("error al crear el documento");
+            e.printStackTrace();
         }
     }
 }

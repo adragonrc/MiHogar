@@ -13,9 +13,9 @@ import com.alexander_rodriguez.mihogar.Base.BaseActivity;
 import com.alexander_rodriguez.mihogar.Base.IBasePresenter;
 import com.alexander_rodriguez.mihogar.Preferencias;
 import com.alexander_rodriguez.mihogar.R;
-import com.alexander_rodriguez.mihogar.agregarInquilino.AgregarInquilino;
 import com.alexander_rodriguez.mihogar.agregarcuarto.AgregarCuarto;
 import com.alexander_rodriguez.mihogar.historialcasa.HistorialCasaActivity;
+import com.alexander_rodriguez.mihogar.agregarInquilino.AgregarAlquilerActivity;
 import com.alexander_rodriguez.mihogar.mi_casa.MiCasaActivity;
 import com.alexander_rodriguez.mihogar.registrarcasa.RegistrarCasaActivity;
 
@@ -63,12 +63,11 @@ public class MenuPricipal extends BaseActivity<IBasePresenter> implements Interf
     }
 
     public void onClickMasAlquiler(View view) {
-        startActivity(new Intent(this, AgregarInquilino.class));
+        startActivity(new Intent(this, AgregarAlquilerActivity.class));
     }
 
     @Override
     public void onClickMiCasa(View view) {
-
         startActivity(new Intent(this, MiCasaActivity.class));
     }
 
@@ -82,7 +81,9 @@ public class MenuPricipal extends BaseActivity<IBasePresenter> implements Interf
     }
 
     public void onClickHistorialCasa(View view) {
-        startActivity(new Intent(this, HistorialCasaActivity.class));
+        Intent i = new Intent(this, HistorialCasaActivity.class);
+        i.putExtra(HistorialCasaActivity.TYPE_MODE, HistorialCasaActivity.MODO_DEFAULT);
+        startActivity(i);
     }
 
     @Override

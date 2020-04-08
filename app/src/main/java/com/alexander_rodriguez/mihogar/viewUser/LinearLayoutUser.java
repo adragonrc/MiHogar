@@ -21,7 +21,6 @@ import com.alexander_rodriguez.mihogar.mydialog.DialogInterfaz;
 import com.alexander_rodriguez.mihogar.mydialog.DialogOptions;
 import com.alexander_rodriguez.mihogar.mydialog.PresenterDialogImput;
 import com.alexander_rodriguez.mihogar.tableActivity.TableActivity;
-import com.alexander_rodriguez.mihogar.verusuario.DialogConfirmPago;
 
 public class LinearLayoutUser implements Interfaz.View{
     private LayoutInflater inflater;

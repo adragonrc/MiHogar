@@ -7,7 +7,7 @@ import android.view.View;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.alexander_rodriguez.mihogar.Base.BaseActivity;
-import com.alexander_rodriguez.mihogar.UTILIDADES.TUsuario;
+import com.alexander_rodriguez.mihogar.UTILIDADES.TAlquiler;
 import com.github.barteksc.pdfviewer.PDFView;
 
 import java.io.File;
@@ -47,10 +47,10 @@ public class ViewPdfActivity extends AppCompatActivity {
     }
 
     public void onclick(View view){
-        Send.sendForGMail(this, file.getName(), getIntent().getStringExtra(TUsuario.CORREO));
+        Send.sendForGMail(this, file.getName(), getIntent().getStringExtra(TAlquiler.CORREO));
     }
     public void onclick2(View view){
-        Send.sendForWhatsapp(this, file.getName(), getIntent().getStringExtra(TUsuario.NUMERO_TEL));
+        Send.sendForWhatsapp(this, file.getName(), getIntent().getStringExtra(TAlquiler.NUMERO_TEL));
     }
 }
 

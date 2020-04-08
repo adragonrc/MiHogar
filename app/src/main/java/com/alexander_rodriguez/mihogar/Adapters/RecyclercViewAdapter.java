@@ -58,7 +58,7 @@ public class RecyclercViewAdapter extends RecyclerView.Adapter<RecyclercViewAdap
         private TextView tvMotivoSalida;
         public Holder(@NonNull View itemView) {
             super(itemView);
-            tvAlquiler = itemView.findViewById(R.id.tvAlquiler);
+            tvAlquiler = itemView.findViewById(R.id.tvIdAlquiler);
             tvMotivoSalida = itemView.findViewById(R.id.tvMotivoSalida);
             itemView.setOnClickListener(onClickItemListener);
         }

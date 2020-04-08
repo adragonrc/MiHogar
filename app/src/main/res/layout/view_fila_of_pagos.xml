@@ -10,6 +10,8 @@
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:text="TextView"
+        android:textSize="16sp"
+        android:contentDescription="@string/descripcion_id_pago"
         android:gravity="center" />
 
     <TextView
@@ -18,13 +20,17 @@
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:text="TextView"
-        android:gravity="center"/>
+        android:textSize="16sp"
+        android:gravity="center"
+        android:contentDescription="@string/descripcion_fecha_pago"/>
 
     <TextView
         android:id="@+id/tvMonto"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:textSize="16sp"
         android:layout_weight="1"
         android:text="TextView"
+        android:contentDescription="Cantidad pagada"
         android:gravity="center"/>
 </com.alexander_rodriguez.mihogar.tableActivity.TableRowView>

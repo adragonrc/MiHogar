@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.alexander_rodriguez.mihogar.view_registrar_usuario.RegistroUsuarioView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/regCuarto"
+    android:layout_gravity="bottom"
+    android:orientation="vertical"
+    android:background="@drawable/gradient_for_user">
+
+    <LinearLayout
+        android:id="@+id/linearLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+
+            android:orientation="vertical">
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/ivPhoto"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:scaleType="centerCrop"
+                android:src="@drawable/images"
+                android:layout_marginBottom="18dp"
+                android:contentDescription="@string/cdImageView"/>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="12dp"
+                android:text="@string/datos_del_usuario"
+                android:textColor="@color/colorPrimary" />
+
+            <LinearLayout
+                style="@style/styleMargin"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="8dp"
+                    android:layout_weight="1">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/etDNI"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:ems="10"
+                        android:hint="@string/sDni"
+                        android:inputType="number"
+                        android:maxLength="8"
+                        android:singleLine="true"
+                        android:textColorHint="@color/colorAccent" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <ImageButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:background="@android:color/transparent"
+                    android:onClick="onClickTomarFoto"
+                    android:src="@drawable/ic_photo_camera_black_24dp"
+                    android:tint="@color/colorPrimary"
+                    android:contentDescription="@string/toma_foto"/>
+
+            </LinearLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                style="@style/styleMargin"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/etNombre"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ems="10"
+                    android:hint="@string/sNombreUser"
+                    android:inputType="textCapSentences" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                style="@style/styleMargin">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/etApellidoPat"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ems="10"
+                    android:hint="@string/sApePat"
+                    android:inputType="textCapSentences"/>
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                style="@style/styleMargin">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/etApellidoMat"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ems="10"
+                    android:hint="@string/sApeMat"
+                    android:inputType="textCapSentences" />
+            </com.google.android.material.textfield.TextInputLayout>
+        </LinearLayout>
+        <include
+            android:layout_marginTop="12dp"
+
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            layout="@layout/buttons_aceptar_cancelar" />
+    </LinearLayout>
+</com.alexander_rodriguez.mihogar.view_registrar_usuario.RegistroUsuarioView>
+    <!--
+                    <com.google.android.material.textfield.TextInputLayout
+                        style="@style/TextImputStyle"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textColorHint="@color/colorAccent">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/etNumeroTelefono"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:ems="10"
+                            android:hint="@string/sNumTel"
+                            android:inputType="phone"
+                            android:maxLength="15"
+                            android:nextFocusUp="@id/etApellidoMat" />
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        style="@style/TextImputStyle"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textColorHint="@color/colorAccent">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/etCorreo"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:ems="10"
+                            android:hint="@string/sCorreo"
+                            android:inputType="textEmailAddress"
+                            android:maxLength="50" />
+                    </com.google.android.material.textfield.TextInputLayout>
+                    -->

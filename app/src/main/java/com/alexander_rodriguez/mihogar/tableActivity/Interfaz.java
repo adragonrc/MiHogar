@@ -10,6 +10,7 @@ import com.alexander_rodriguez.mihogar.Base.IBasePresenter;
 public interface Interfaz {
     interface Presenter extends IBasePresenter {
         void onPositive();
+        void crearPDF();
     }
     interface view extends BaseView {
         void addRow(String... atts);
@@ -22,5 +23,6 @@ public interface Interfaz {
         ViewGroup getGrup();
 
         void showDialog(String mensaje);
+
     }
 }

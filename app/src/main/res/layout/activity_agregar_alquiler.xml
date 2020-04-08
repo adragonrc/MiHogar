@@ -1,9 +1,231 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.alexander_rodriguez.mihogar.viewregistraralquiler.AgregarAlquilerView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.alexander_rodriguez.mihogar.AgregarAlquilerActivity">
+    android:orientation="vertical"
+    android:id="@+id/agregarAlquiler">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="vertical">
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="12dp"
+                    android:text="@string/detalles_del_representante"
+                    style="@style/styleAgregarAlquiler"
+                    android:textColor="@color/colorPrimary" />
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    style="@style/styleAgregarAlquiler"
+                    android:textColorHint="@color/colorAccent">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/etNumeroTelefono"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:ems="10"
+                        android:hint="@string/NumeroTelf"
+                        android:inputType="number" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    style="@style/styleAgregarAlquiler"
+                    android:textColorHint="@color/colorAccent">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/etCorreo"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:ems="10"
+                        android:hint="@string/correo"
+                        android:inputType="textEmailAddress" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="12dp"
+                    android:text="@string/sDatosAlquile"
+                    style="@style/styleAgregarAlquiler"
+                    android:textColor="@color/colorPrimary" />
+
+                <TableLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    style="@style/styleAgregarAlquiler">
+
+                    <TableRow android:orientation="horizontal"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <TextView
+                            android:layout_weight="1"
+                            android:text="@string/s_num_c"
+                            android:textColor="@color/primaryTextColor"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content" />
+
+                        <Spinner
+                            android:id="@+id/spNumCuartos"
+                            android:entries="@array/dias"
+                            android:spinnerMode="dropdown"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content" />
+                    </TableRow>
+
+                    <TableRow
+                        android:layout_gravity="center"
+                        android:orientation="horizontal"
+                        android:visibility="gone"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <TextView
+                            android:layout_weight="1"
+                            android:text="@string/sPlazoPago"
+                            android:textColor="@color/colorAccent"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content" />
+
+                        <Spinner
+                            android:id="@+id/spPlazo"
+                            android:clickable="false"
+                            android:entries="@array/key_tiempo_pago"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content" />
+                    </TableRow>
+                </TableLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/tilPlazo"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="4dp"
+                    android:textColorHint="@color/colorAccent"
+                    android:visibility="gone">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/etPlazo"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:ems="10"
+                        android:hint="@string/sPlazo"
+                        android:inputType="number"
+                        android:text="@string/s1" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColorHint="@color/colorAccent"
+                    style="@style/styleAgregarAlquiler">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/etPrecio"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:ems="10"
+                        android:hint="@string/sMensualidad"
+                        android:inputType="numberDecimal"
+                        android:singleLine="true" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <TextView
+                    android:id="@+id/textView3"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:text="@string/sfecha_i"
+                    style="@style/styleAgregarAlquiler"
+                    android:textColor="@color/primaryTextColor" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginTop="0dp"
+                    android:layout_marginRight="20dp"
+                    android:orientation="horizontal"
+                    style="@style/styleAgregarAlquiler">
+
+                    <Spinner
+                        android:id="@+id/spDia"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:entries="@array/dias" />
+
+                    <Spinner
+                        android:id="@+id/spMes"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:entries="@array/MesesInt" />
+
+                    <Spinner
+                        android:id="@+id/spAnio"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:entries="@array/Años" />
+                </LinearLayout>
+
+                <RadioGroup
+                    android:id="@+id/radioGrup"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:checkedButton="@id/faltaCancelar"
+                    android:orientation="horizontal"
+                    style="@style/styleAgregarAlquiler"
+                    android:layout_marginBottom="8dp">
+
+                    <RadioButton
+                        android:id="@+id/rbCancelo"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/srbCancelo"
+                        android:textStyle="bold" />
+
+                    <RadioButton
+                        android:id="@+id/faltaCancelar"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/srbFaltaC"
+                        android:textStyle="bold" />
+                </RadioGroup>
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+        <include
+            layout="@layout/buttons_aceptar_cancelar"/>
+    </LinearLayout>
+
+</com.alexander_rodriguez.mihogar.viewregistraralquiler.AgregarAlquilerView>

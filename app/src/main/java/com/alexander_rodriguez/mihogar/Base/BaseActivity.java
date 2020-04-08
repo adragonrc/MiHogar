@@ -1,6 +1,8 @@
 package com.alexander_rodriguez.mihogar.Base;
 
+import android.Manifest;
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -9,13 +11,20 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+
+import com.theartofdev.edmodo.cropper.CropImage;
 
 
 public abstract class BaseActivity<P extends IBasePresenter> extends AppCompatActivity implements BaseView{
     protected P presenter;
 
+    public static final String FILE_PROVIDER = "com.alexander_rodriguez.mihogar.android.fileprovider";
     public static final int BACK_PRESSED = 16908332;
+    public static String[] PERMISOS = {Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE};
+    protected final static int MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE = 1;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -57,6 +66,7 @@ public abstract class BaseActivity<P extends IBasePresenter> extends AppCompatAc
     }
 
     public void modificarTransicion(){
+
     }
 
     protected void ocultarTeclado(){
@@ -66,5 +76,17 @@ public abstract class BaseActivity<P extends IBasePresenter> extends AppCompatAc
             InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
             imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
         }
+    }
+    public void startCropImage(){
+        CropImage.activity().setMaxCropResultSize(0,0)
+                .setAllowFlipping(true)
+                .setAspectRatio(15,10)
+                .setMinCropResultSize(1000,750)
+                .setMaxCropResultSize(3000,2250)
+                .start(this);
+    }
+
+    public void solicitarPermiso(){
+        ActivityCompat. requestPermissions(this, BaseActivity.PERMISOS, MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE);
     }
 }

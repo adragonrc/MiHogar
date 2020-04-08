@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
+import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.alexander_rodriguez.mihogar.R;
@@ -19,14 +20,17 @@ import com.alexander_rodriguez.mihogar.Adapters.Models.ModelAlquilerView;
 import java.util.ArrayList;
 
 public class RvAdapterAlquiler extends RecyclerView.Adapter<RvAdapterAlquiler.Holder>{
+
     private ArrayList<ModelAlquilerView> list;
     private Interface view;
     private View viewSelect;
     private String idAlquilerSelect;
+
     public RvAdapterAlquiler(Interface view, ArrayList<ModelAlquilerView> list){
         this.view = view;
         this.list = list;
     }
+
     @NonNull
     @Override
     public Holder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
@@ -38,18 +42,13 @@ public class RvAdapterAlquiler extends RecyclerView.Adapter<RvAdapterAlquiler.Ho
     public void onBindViewHolder(@NonNull Holder holder, int i) {
         ModelAlquilerView item = list.get(i);
 
-        holder.dni.setText(item.getDni());
+       // holder.dni.setText(item.getDni());
         holder.fecha.setText(item.getFecha());
-        if(!item.getPath().equals(""))holder.ivPhoto.setImageBitmap(BitmapFactory.decodeFile(item.getPath()));
         holder.numCuarto.setText(item.getNumCuarto());
-        holder.nombres.setText(item.getNombres());
         holder.mId  = item.getId();
 
         if (item.isAlert()){
-            holder.nombres.setTextColor(view.getContext().getResources().getColor(R.color.colorPrimary));
-            holder.dni.setTextColor(view.getContext().getResources().getColor(R.color.colorAccent));
-            holder.fecha.setTextColor(view.getContext().getResources().getColor(R.color.colorAccent));
-            holder.numCuarto.setTextColor(view.getContext().getResources().getColor(R.color.colorAccent));
+            holder.cardView.setBackgroundColor(view.getContext().getResources().getColor(R.color.colorPrimaryDark));
         }
     }
     public View getViewSelect() {
@@ -66,22 +65,19 @@ public class RvAdapterAlquiler extends RecyclerView.Adapter<RvAdapterAlquiler.Ho
     }
 
     public class Holder extends RecyclerView.ViewHolder implements View.OnCreateContextMenuListener{
-        private ImageView ivPhoto;
-        private TextView dni;
-        private TextView nombres;
         private TextView fecha;
         private TextView numCuarto;
         private String mId;
+        private CardView cardView;
 
         public Holder(@NonNull View itemView) {
             super(itemView);
-            ivPhoto = itemView.findViewById(R.id.ivPhoto);
-            dni = itemView.findViewById(R.id.vatvDni);
-            fecha = itemView.findViewById(R.id.vatvFecha);
-            nombres = itemView.findViewById(R.id.vatvNombre);
-            numCuarto = itemView.findViewById(R.id.vatvNumeroCuarto);
-            itemView.setOnCreateContextMenuListener(this);
-            itemView.setOnClickListener(new View.OnClickListener() {
+            fecha = itemView.findViewById(R.id.tvFecha);
+            numCuarto = itemView.findViewById(R.id.tvNumCuarto);
+
+            cardView = itemView.findViewById(R.id.idCardView);
+            cardView.setOnCreateContextMenuListener(this);
+            cardView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     view.onClickAlquiler(mId);

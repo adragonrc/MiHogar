@@ -1,18 +1,21 @@
 package com.alexander_rodriguez.mihogar.vercuarto;
 
+import android.Manifest;
 import android.content.ContentValues;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
+
+import androidx.core.content.ContextCompat;
 
 import com.alexander_rodriguez.mihogar.Base.BasePresenter;
 import com.alexander_rodriguez.mihogar.MyAdminDate;
 import com.alexander_rodriguez.mihogar.PDF;
-import com.alexander_rodriguez.mihogar.Preferencias;
 import com.alexander_rodriguez.mihogar.R;
 import com.alexander_rodriguez.mihogar.UTILIDADES.Mensualidad;
 import com.alexander_rodriguez.mihogar.UTILIDADES.TAlquiler;
+import com.alexander_rodriguez.mihogar.UTILIDADES.TAlquilerUsuario;
 import com.alexander_rodriguez.mihogar.UTILIDADES.TCuarto;
 import com.alexander_rodriguez.mihogar.UTILIDADES.TPago;
-import com.alexander_rodriguez.mihogar.UTILIDADES.TUsuario;
 import com.itextpdf.text.DocumentException;
 
 import java.io.FileNotFoundException;
@@ -24,18 +27,19 @@ import java.util.Date;
 public class Presentador extends BasePresenter<Interface.view> implements Interface.Presenter {
 
     private ContentValues datosCuarto;
-    private ContentValues datosUsuario;
+    //private ContentValues datosUsuario;
     private ContentValues datosMensualidad;
     private ContentValues datosAlquiler;
+    private String dni;
 
-    private MyAdminDate adminDate;
+    private MyAdminDate myDate;
     private String numeroCuarto;
 
     public Presentador(Interface.view view, String numeroCuarto) {
         super(view);
         this.numeroCuarto = numeroCuarto;
-        adminDate = new MyAdminDate();
-        adminDate.setFormat(MyAdminDate.FORMAT_DATE_TIME);
+        myDate = new MyAdminDate();
+        myDate.setFormat(MyAdminDate.FORMAT_DATE_TIME);
     }
 
     @Override
@@ -45,10 +49,10 @@ public class Presentador extends BasePresenter<Interface.view> implements Interf
 
     @Override
     public void deshacerContrato(String motivo) {
-        int id = datosAlquiler.getAsInteger(TAlquiler.ID);
+        long id = datosAlquiler.getAsLong(TAlquiler.ID);
         db.upDateAlquiler(TAlquiler.VAL, "0", id);
         db.upDateAlquiler(TAlquiler.MOTIVO, motivo, id);
-        db.upDateAlquiler(TAlquiler.FECHA_C, adminDate.getFechaActual(), id);
+        db.upDateAlquiler(TAlquiler.Fecha_PAGO, MyAdminDate.getFechaActual(), id);
         mostrarDetalles();
     }
 
@@ -61,15 +65,16 @@ public class Presentador extends BasePresenter<Interface.view> implements Interf
     public void mostrarDetalles(){
         datosCuarto = db.getFilaInCuarto("*", numeroCuarto);
         datosAlquiler = db.getFilaAlquilerByCuartoOf("*", numeroCuarto);
-        if (datosAlquiler.size()!=0){
-            datosMensualidad = db.getFilaInMensualidadActual("*",datosAlquiler.get(TAlquiler.ID));
-            datosUsuario = db.getFilaInUsuariosOf("*",datosAlquiler.get(TAlquiler.DNI));
-            if ((adminDate.stringToDate(datosAlquiler.getAsString(TAlquiler.FECHA_C))).before(new Date())) {
+        int num = db.contDniOfAlquilerUsuario(datosAlquiler.getAsString(TAlquiler.ID));
+        if (datosAlquiler.size() != 0){
+            datosMensualidad = db.getFilaInMensualidadActual("*", datosAlquiler.get(TAlquiler.ID));
+            // datosUsuario = db.getFilaInUsuariosOf("*",datosAlquiler.get(TAlquilerUsiario.DNI));
+            if ((myDate.stringToDate(datosAlquiler.getAsString(TAlquiler.Fecha_PAGO))).before(new Date())) {
                 view.noPago();
             }else {
                 view.pago();
             }
-            view.showCuartoAlquilado(datosCuarto, datosUsuario, datosMensualidad.getAsString(Mensualidad.COSTO));
+            view.showCuartoAlquilado(datosCuarto, num, datosMensualidad.getAsString(Mensualidad.COSTO));
         }else{
             view.showCuartolibre(datosCuarto);
         }
@@ -109,55 +114,106 @@ public class Presentador extends BasePresenter<Interface.view> implements Interf
 
     @Override
     public void realizarPago() {
-        String  s_modo = sp.getString("list_tiempo", "0");
-        int modo = Integer.parseInt(s_modo);
-        String s ;
+        String s_modo;
+        String fechaNueva ;
+        int modo = 0;
+
+        s_modo = sp.getString("list_tiempo", "0");
+        if (s_modo!= null) modo = Integer.parseInt(s_modo);
+
         try {
-            s = adminDate.getFechaSiguiente(datosAlquiler.getAsString(TAlquiler.FECHA_C), modo);
+            fechaNueva = myDate.adelantarUnMes(datosAlquiler.getAsString(TAlquiler.Fecha_PAGO), modo);
         } catch (ParseException e) {
             view.showMensaje("problemas con la fecha");
             e.printStackTrace();
             return;
         }
-        String numeroCuarto = datosCuarto.getAsString(TCuarto.NUMERO);
-        String fecha;
-        String numeroDePago;
-        String costo = datosMensualidad.getAsString(Mensualidad.COSTO);
-        String direccion = sp.getString(view.getContext().getString(R.string.direccion), "---");
-        Cursor pago;
-        String fechaHoraActual = adminDate.getDateFormat().format(new Date());
+
+        String fechaHoraActual = myDate.getDateFormat().format(new Date());
         Long idMensualidad = datosMensualidad.getAsLong(Mensualidad.ID);
-        Long idUsuario = datosUsuario.getAsLong(TUsuario.DNI);
-        if(db.agregarPago(fechaHoraActual, idMensualidad, idUsuario)){
+         int dniResponsable = db.getUsuarioResponsableDe(datosAlquiler.getAsString(TAlquilerUsuario.ID_AL));;
+        if(db.agregarPago(fechaHoraActual, idMensualidad, dniResponsable)){
             view.showMensaje("pago agregado");
-            db.upDateAlquiler(TAlquiler.FECHA_C, s, datosAlquiler.getAsInteger(TAlquiler.ID));
+            db.upDateAlquiler(TAlquiler.Fecha_PAGO, fechaNueva, datosAlquiler.getAsInteger(TAlquiler.ID));
             actualizarDatos();
+            view.actualizarFechaPago(fechaNueva);
 
-            pago = db.getUltimoPago(Mensualidad.ID);
-            PDF pdf = new PDF();
-
-            if  (pago != null){
-                if (pago.moveToLast()){
-                    numeroDePago = pago.getString(TPago.INT_ID);
-                    fecha = pago.getString(TPago.INT_FECHA);
-                    try {
-                        pdf.crearVoucher(numeroCuarto, numeroDePago, costo, direccion, fecha);
-                        db.agregarVoucher(pdf.getPdfFile().getAbsolutePath(), pago.getString(TPago.INT_ID));
-                        view.mostrarPDF(pdf.getPdfFile(), datosUsuario);
-                    } catch (FileNotFoundException ex) {
-                        view.showMensaje("error al crear el archivo");
-                        ex.printStackTrace();
-                    } catch (DocumentException ex) {
-                        view.showMensaje("error al crear el documento");
-                        ex.printStackTrace();
-                    }
-                }
-                pago.close();
+            if(permisoPDF()){
+                crearPDF();
+            }else{
+                view.solicitarPermiso();
             }
+
         }else{
             view.showMensaje("Error al pagar");
         }
+    }
 
+    @Override
+    public void actualizarNumTel(String numero) {
+        db.upDateAlquiler(TAlquiler.NUMERO_TEL, numero, datosAlquiler.getAsString(TAlquiler.ID));
+        view.actualizarNumTel(numero);
+    }
+
+    @Override
+    public void actualizarCorreo(String correo) {
+        db.upDateAlquiler(TAlquiler.CORREO, correo, datosAlquiler.getAsString(TAlquiler.ID));
+        view.actualizarCorreo(correo);
+    }
+
+
+    public void crearPDF(){
+        Cursor pago;
+        PDF pdf;
+
+        String numeroDePago;
+        String fecha;
+        String costo;
+        String direccion;
+        String dni;
+
+        pago = db.gePagosRealizados(Mensualidad.ID);
+
+        if  (pago != null){
+            if (pago.moveToLast()){
+                numeroDePago = pago.getString(TPago.INT_ID);
+                fecha = pago.getString(TPago.INT_FECHA);
+                dni = pago.getString(TPago.INT_DNI);
+                try {
+                    pdf= new PDF();
+                    costo = datosMensualidad.getAsString(Mensualidad.COSTO);
+                    direccion = sp.getString(view.getContext().getString(R.string.direccion), "---");
+
+                    pdf.crearVoucher(numeroCuarto, dni, numeroDePago, costo, direccion, fecha);
+                    db.agregarVoucher(pdf.getPdfFile().getAbsolutePath(), pago.getString(TPago.INT_ID));
+                    view.mostrarPDF(pdf.getPdfFile(), datosAlquiler);
+
+                } catch (FileNotFoundException ex) {
+                    view.showMensaje("error al crear el archivo");
+                    ex.printStackTrace();
+                } catch (DocumentException ex) {
+                    view.showMensaje("error al crear el documento");
+                    ex.printStackTrace();
+                }
+            }
+            pago.close();
+        }
+    }
+
+    @Override
+    public String getResponsable() {
+        int dni = db.getUsuarioResponsableDe(datosAlquiler.getAsString(TAlquiler.ID));
+        return String.valueOf(dni);
+    }
+
+    public boolean permisoPDF(){
+        int permissionCheck = ContextCompat.checkSelfPermission(view.getContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE);
+        return permissionCheck == PackageManager.PERMISSION_GRANTED;
+    }
+
+    @Override
+    public void actualizarPhoto(String path) {
+        db.upDateCuarto(TCuarto.URL, path, numeroCuarto);
     }
 
 

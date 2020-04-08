@@ -99,6 +99,9 @@ public class MiCasaActivity extends BaseActivity<Interface.Presenter> implements
                 presenter.verCuartosLibres();
                 break;
             }
+            case R.id.itFecha:{
+                presenter.ordenarPorFecha();
+            }
         }
         return super.onOptionsItemSelected(item);
     }
@@ -155,7 +158,6 @@ public class MiCasaActivity extends BaseActivity<Interface.Presenter> implements
     }
 
     /*
-
         @Override
         public void mostrarUsuarios(ArrayList<ModelUserView> items) {
             adapterUsuarios = new RvAdapterUser(this, items);
@@ -178,6 +180,7 @@ public class MiCasaActivity extends BaseActivity<Interface.Presenter> implements
             startActivity(i);
         }
         */
+
     @Override
     public void showDialogOptions(String idAlquiler) {
         dop.showDiaglog(getSupportFragmentManager(), idAlquiler, dialogOptionPresenter);
@@ -185,6 +188,11 @@ public class MiCasaActivity extends BaseActivity<Interface.Presenter> implements
     public void showDialogImput(final String idAlquiler){
         imput = new DialogImput();
         imput.showDiaglog(getSupportFragmentManager(), idAlquiler,dialogImputPresenter);
+    }
+
+    @Override
+    public void actualizarLista() {
+        adapterCuartos.notifyDataSetChanged();
     }
 
     @Override

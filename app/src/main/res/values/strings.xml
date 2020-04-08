@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">ALQUILER</string>
+    <string name="app_name">Mi Hogar</string>
     <string name="msmAvanzarCont">PRESIONA TRES VECES PARA BORRAR:</string>
     <string-array name="dias">
         <item>01</item>
@@ -76,17 +76,17 @@
 
     <style name="keyTiempo">value_tiempo_pago</style>
     <style name="valueTiempo">key_tiempo_pago</style>
-    <string name="sNombreUser">Nombres: </string>
+    <string name="sNombreUser">Nombres.</string>
     <string name="id">identificador</string>
     <string name="password">password</string>
     <string name="direccion">direccion</string>
-    <string name="correo">correo</string>
+    <string name="correo">Correo electronico</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="title_activity_tabla">TablaActivity</string>
-    <string name="sApeMat">Apellido materno</string>
+    <string name="sApeMat">Apellido materno.</string>
     <string name="sApePat">Apellido paterno.</string>
-    <string name="sDni">DNI:</string>
+    <string name="sDni">DNI.</string>
     <string name="buttonSalir">salir</string>
     <string name="buttonVerPagos">Ver Pagos</string>
     <string name="sBtCancelar">cancelar</string>
@@ -96,12 +96,12 @@
     <string name="sTitleAI">NUEVO INQUILINO</string>
     <string name="srbFaltaC">Falta Cancelar</string>
     <string name="srbCancelo">Cancelo</string>
-    <string name="sMensualidad">Mensualidad</string>
+    <string name="sMensualidad">Mensualidad.</string>
     <string name="cdImageView">Calificativo</string>
     <string name="sMotSalida">MOTIVOS DE SALIDA</string>
     <string name="s_datos_usuario">DATOS DE USUARIO.</string>
     <string name="transition_name">transition_photo</string>
-    <string name="NumeroTelf">Numero Telefonico</string>
+    <string name="NumeroTelf">Numero telefonico</string>
     <string name="sCorreoEl">Correo Electronico</string>
     <string name="start">inicio</string>
     <string name="title_activity_settings">Ajustes</string>
@@ -109,4 +109,22 @@
     <string name="cpHotel">rbHotel</string>
     <string name="cpCasa">cbCasa</string>
     <string name="s">getString(R.)</string>
+    <string name="fotoCuartoDescripcion">Foto para representar el cuarto</string>
+    <string name="etNumCuarto">Numero de cuarto</string>
+    <string name="etDetalles">Detalles</string>
+    <string name="etPrecio">Precio estimado</string>
+    <string name="sMostrarPago">MOSTRAR PAGOS</string>
+    <string name="datos_del_usuario">Datos del usuario.</string>
+    <string name="toma_foto">toma una foto</string>
+    <string name="sNumTel">Número telefonico.</string>
+    <string name="sCorreo">Correo electronico.</string>
+    <string name="sDatosAlquile">Datos del alquiler.</string>
+    <string name="sPlazoPago">Plazo de pago.</string>
+    <string name="sPlazo">Plazo</string>
+    <string name="s1">1</string>
+    <string name="detalles_del_representante">Detalles del representante</string>
+    <string name="campos_vasios">Lista vacia, agrege nuevos usuarios</string>
+    <string name="descripcion_fecha_mensualidad">Fecha y hora de modificacion</string>
+    <string name="descripcion_fecha_pago">fecha y hora de pago</string>
+    <string name="descripcion_id_pago">Identificador del pago</string>
 </resources>

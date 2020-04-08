@@ -2,8 +2,8 @@ package com.alexander_rodriguez.mihogar.tableActivity;
 
 import android.app.AlertDialog;
 import android.content.ContentValues;
-import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
@@ -12,16 +12,15 @@ import android.widget.TableLayout;
 import androidx.annotation.NonNull;
 
 import com.alexander_rodriguez.mihogar.Base.BaseActivity;
-import com.alexander_rodriguez.mihogar.Base.IBasePresenter;
 import com.alexander_rodriguez.mihogar.R;
 import com.alexander_rodriguez.mihogar.UTILIDADES.TAlquiler;
-import com.alexander_rodriguez.mihogar.UTILIDADES.TUsuario;
 import com.alexander_rodriguez.mihogar.ViewMensualidad;
 import com.alexander_rodriguez.mihogar.ViewPdfActivity;
 import com.alexander_rodriguez.mihogar.viewForTable.ViewFilaOfPagos;
 
 
-public class TableActivity extends BaseActivity<Presenter> implements Interfaz.view {
+public class
+TableActivity extends BaseActivity<Interfaz.Presenter> implements Interfaz.view {
     private LinearLayout llPagos;
 
     @Override
@@ -36,8 +35,14 @@ public class TableActivity extends BaseActivity<Presenter> implements Interfaz.v
 
     @NonNull
     @Override
-    protected Presenter createPresenter() {
+    protected Interfaz.Presenter createPresenter() {
         return new Presenter(this,getIntent().getStringExtra(TAlquiler.ID));
+    }
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
+            presenter.crearPDF();
+        }
     }
 
     @Override
@@ -58,11 +63,11 @@ public class TableActivity extends BaseActivity<Presenter> implements Interfaz.v
     }
 
     @Override
-    public void gotoShowPDF(String absolutePath, ContentValues datosUsuario) {
+    public void gotoShowPDF(String absolutePath, ContentValues datosAlquiler) {
         Intent intent = new Intent(this, ViewPdfActivity.class);
         intent.putExtra(ViewPdfActivity.EXTRA_PATH_PDF, absolutePath);
-        intent.putExtra(TUsuario.NUMERO_TEL, datosUsuario.getAsString(TUsuario.NUMERO_TEL));
-        intent.putExtra(TUsuario.CORREO, datosUsuario.getAsString(TUsuario.CORREO));
+        intent.putExtra(TAlquiler.NUMERO_TEL, datosAlquiler.getAsString(TAlquiler.NUMERO_TEL));
+        intent.putExtra(TAlquiler.CORREO, datosAlquiler.getAsString(TAlquiler.CORREO));
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
     }
@@ -81,17 +86,7 @@ public class TableActivity extends BaseActivity<Presenter> implements Interfaz.v
     public void showDialog(String mensaje) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle(mensaje)
-                .setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        presenter.onPositive();
-                    }
-                }).setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-
-            }
-        });
+                .setPositiveButton("Aceptar", (dialog, which) -> presenter.onPositive()).setNegativeButton("Cancelar", (dialog, which) -> {});
         builder.create().show();
     }
 

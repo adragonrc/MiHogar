@@ -50,7 +50,7 @@ public class PDF {
 
     }
 
-    public void crearVoucher(String numCuarto, String numVoucher, String costo, String direccion, String fecha) throws FileNotFoundException, DocumentException {
+    public void crearVoucher(String numCuarto, String dni, String numVoucher,String costo, String direccion, String fecha) throws FileNotFoundException, DocumentException {
         openDocument();
         addMetaData("Alquiler", "voucher", "AlexRodriguez");
 
@@ -59,8 +59,9 @@ public class PDF {
         addParagraph(fecha);
         addParagraph("PAGO REALIZADO N°:  #    "+ numVoucher);
         addParagraph("--------------------------------------------------------");
+        addParagraph("DOCUMENTO          "+ dni);
         addParagraph("VALOR DE PAGO:     S/  "+ costo);
-        addParagraph("ESTE ES UN COMPROVANTE DE PAGO \nDE PRUEBA");
+        addParagraph("ESTE ES UN COMPROVANTE DE PAGO\nRESPALDADO POR \"My House\"");
         addParagraph("--------------------------------------------------------");
         addParagraph("GRACIAS POR PAGAR A TIEMPO");
         closeDocument();
@@ -75,6 +76,7 @@ public class PDF {
         document.addSubject(subject);
         document.addAuthor(autor);
     }
+
     public  void addTitles(String title, String subTitle, String date){
         try {
             paragraph = new Paragraph();

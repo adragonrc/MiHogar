@@ -1,0 +1,422 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.alexander_rodriguez.mihogar.vercuarto.view_perfil_cuarto.PerfilCuarto xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_marginBottom="8dp"
+    tools:context=".vercuarto.VerCuarto2">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:divider="?android:listDivider"
+        android:showDividers="middle">
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cvMensaje"
+            style="@style/styleCardView">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:text="Cuarto libre"
+                android:textColor="@color/primaryTextColor"
+                android:textSize="28dp"
+                android:textStyle="bold" />
+        </androidx.cardview.widget.CardView>
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cvDetallesAlquiler"
+            style="@style/styleCardView"
+            android:visibility="visible">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:divider="?android:dividerVertical"
+                android:orientation="vertical"
+                android:showDividers="middle">
+                <LinearLayout
+                    style="@style/styleLinearLayout"
+                    android:orientation="vertical">
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="Alquiler"
+                            android:textColor="@color/colorPrimary" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:onClick="onClickVermas"
+                            android:text="Ver mas..."
+
+                            android:textColor="@color/colorPrimaryDark" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        style="@style/styleLinearLayoutIntern"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Inquilinos" />
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/tvNumeroInquilinos"
+                            android:layout_weight="1"
+                            android:gravity="right"
+                            android:text="9" />
+                    </LinearLayout>
+                </LinearLayout>
+                <LinearLayout
+                    style="@style/styleLinearLayout"
+                    android:orientation="vertical"
+                    android:id="@+id/llPagoMensual">
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="Fecha de pago."
+                            android:textColor="@color/colorPrimary" />
+
+                        <TextView
+                            android:id="@+id/tvRealizarPago"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Realizar pago..."
+                            android:textColor="@color/colorPrimary" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        style="@style/styleLinearLayoutIntern"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:id="@+id/tvFechaDePago"
+                            android:text="02/09/2019" />
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/ivAlert"
+                            android:src="@drawable/ic_add_alert_black_24dp" />
+                    </LinearLayout>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    style="@style/styleLinearLayout"
+                    android:orientation="vertical">
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Fecha de ingreso"
+                        android:textColor="@color/colorPrimary" />
+
+                    <TextView
+                        android:id="@+id/tvFechaIngreso"
+                        style="@style/styleLinearLayoutIntern"
+                        android:visibility="visible" />
+                </LinearLayout>
+                <LinearLayout
+                    style="@style/styleLinearLayout"
+                    android:orientation="vertical">
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Mensualidad."
+                        android:textColor="@color/colorPrimary"/>
+
+                    <LinearLayout
+                        style="@style/styleLinearLayoutIntern"
+                        android:id="@+id/llShowMensualidad"
+                        android:orientation="horizontal">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="S/" />
+                        <TextView
+                            android:id="@+id/vcTvMensualidad"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="200.00" />
+
+                        <ImageButton
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:background="#00FFFFFF"
+                            android:onClick="onClickEditarMensualidad"
+                            android:src="@drawable/ic_create_black_24dp" />
+                    </LinearLayout>
+                    <LinearLayout
+                        style="@style/styleLinearLayoutIntern"
+                        android:id="@+id/llEditMensualidad"
+                        android:visibility="gone">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="S/ "
+                            android:textColor="@color/primaryTextColor"
+                            android:textSize="18sp" />
+
+                        <EditText
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/etMensualidad"
+                            android:layout_weight="10"
+                            android:inputType="number"
+                            android:text="200.00" />
+
+                        <ImageButton
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:background="@android:color/transparent"
+                            android:onClick="onClickConfirMensualidad"
+                            android:src="@drawable/ic_check_black_24dp" />
+                     </LinearLayout>
+                </LinearLayout>
+
+                <LinearLayout
+                    style="@style/styleLinearLayout"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/NumeroTelf"
+                        android:textColor="@color/colorPrimary"/>
+
+                    <LinearLayout
+                        android:id="@+id/llEditarNumTel"
+                        style="@style/styleLinearLayoutIntern"
+                        android:orientation="horizontal">
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/hutvNumTel"
+                            android:layout_weight="1"
+                            android:gravity="center_vertical"
+                            android:text="123456789" />
+
+                        <ImageButton
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:background="#00000000"
+                            android:onClick="ocEditarNumTel"
+                            android:src="@drawable/ic_create_black_24dp" />
+                    </LinearLayout>
+                    <LinearLayout
+                        style="@style/styleLinearLayoutIntern"
+                        android:id="@+id/llConfirmNumTel"
+                        android:orientation="horizontal"
+                        android:visibility="gone">
+
+                        <EditText
+                            android:id="@+id/etNumTel"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:maxLength="15"
+                            android:gravity="center_vertical"
+                            android:inputType="numberSigned"
+                            android:text="123456789" />
+
+                        <ImageButton
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:background="#00000000"
+                            android:layout_gravity="center"
+                            android:onClick="ocConfirNumTel"
+                            android:src="@drawable/ic_check_black_24dp" />
+
+                    </LinearLayout>
+
+                </LinearLayout>
+                <LinearLayout
+                    style="@style/styleLinearLayout"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/sCorreoEl"
+                        android:textColor="@color/colorPrimary" />
+
+                    <LinearLayout
+                        android:id="@+id/llEditarCorreo"
+                        style="@style/styleLinearLayoutIntern"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/hutvCorreo"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:gravity="center_vertical"
+                            android:text="a@b.com" />
+
+                        <ImageButton
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:background="#00000000"
+                            android:onClick="ocEditarCorreo"
+                            android:src="@drawable/ic_create_black_24dp" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/llConfirmCorreo"
+                        style="@style/styleLinearLayoutIntern"
+                        android:orientation="horizontal"
+                        android:visibility="gone">
+
+                        <EditText
+                            android:id="@+id/etCorreo"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:gravity="center_vertical"
+                            android:inputType="textEmailAddress"
+                            android:text="a@b.com" />
+
+                        <ImageButton
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:background="#00000000"
+                            android:onClick="ocConfirCorreo"
+                            android:layout_gravity="center"
+                            android:src="@drawable/ic_check_black_24dp" />
+                    </LinearLayout>
+                </LinearLayout>
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+
+        <androidx.cardview.widget.CardView
+            style="@style/styleCardView">
+
+            <LinearLayout
+                style="@style/styleLinearLayout"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Detalles."
+                    android:textColor="@color/colorPrimary" />
+
+                <LinearLayout
+                    android:id="@+id/llMostrarDetalles"
+                    style="@style/styleLinearLayoutIntern"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/tvDetalles"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="8x4 metros cuatrados" />
+
+                    <ImageButton
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="#00FFFFFF"
+                        android:onClick="onClickEditarDetalles"
+                        android:src="@drawable/ic_create_black_24dp" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/llEditarDetalles"
+                    style="@style/styleLinearLayoutIntern"
+                    android:orientation="horizontal"
+                    android:visibility="gone">
+
+                    <EditText
+                        android:id="@+id/etDetalles"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="8dp"
+                        android:layout_weight="1"
+                        android:text="8x4 metros cuatrados" />
+
+                    <ImageButton
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="#00FFFFFF"
+                        android:layout_gravity="center"
+                        android:onClick="onClickConfirDetalles"
+                        android:src="@drawable/ic_check_black_24dp" />
+
+                </LinearLayout>
+            </LinearLayout>
+
+        </androidx.cardview.widget.CardView>
+
+        <androidx.cardview.widget.CardView
+            style="@style/styleCardView">
+
+            <LinearLayout
+                style="@style/styleLinearLayout"
+                android:orientation="vertical"
+                android:onClick="onClickVerAlquileres"
+                android:padding="8dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Otros alquileres"
+                        android:textColor="@color/colorPrimary" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Mostrar"
+                        android:textColor="@color/colorPrimary" />
+                </LinearLayout>
+
+                <LinearLayout
+                    style="@style/styleLinearLayoutIntern"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Ver alquileres anteriores." />
+
+                    <TextView
+                        android:id="@+id/tvNumAlquiler"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="8dp" />
+                </LinearLayout>
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+    </LinearLayout>
+</com.alexander_rodriguez.mihogar.vercuarto.view_perfil_cuarto.PerfilCuarto>

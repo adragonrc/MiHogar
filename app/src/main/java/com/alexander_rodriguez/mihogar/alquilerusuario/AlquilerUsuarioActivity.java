@@ -46,7 +46,7 @@ public class AlquilerUsuarioActivity extends BaseActivity<Interface.Presentador>
 
     @Override
     public void onClickItemListener(View v) {
-        String id = ((TextView)v.findViewById(R.id.tvAlquiler)).getText().toString();
+        String id = ((TextView)v.findViewById(R.id.tvIdAlquiler)).getText().toString();
         Intent i = new Intent(this, TableActivity.class);
         i.putExtra(TAlquiler.ID,id);
         startActivity(i);

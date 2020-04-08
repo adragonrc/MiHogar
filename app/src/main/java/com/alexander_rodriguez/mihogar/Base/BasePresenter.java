@@ -33,4 +33,10 @@ public abstract class BasePresenter<V extends BaseView> implements IBasePresente
         return mMvpView != null;
     }
 
+    public static boolean validarStrings(String ...s){
+        for (String s1: s) {
+            if (s1 == null || s1.equals("")) return false;
+        }
+        return true;
+    }
 }

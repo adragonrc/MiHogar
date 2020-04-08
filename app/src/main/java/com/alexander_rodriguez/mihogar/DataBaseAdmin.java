@@ -11,7 +11,8 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.alexander_rodriguez.mihogar.DataBase.DataBaseInterface;
+import com.alexander_rodriguez.mihogar.viewregistraralquiler.ModelAA;
+import com.alexander_rodriguez.mihogar.UTILIDADES.TAlquilerUsuario;
 import com.alexander_rodriguez.mihogar.modelos.ModelUsuario;
 import com.alexander_rodriguez.mihogar.UTILIDADES.Mensualidad;
 import com.alexander_rodriguez.mihogar.UTILIDADES.TAlquiler;
@@ -21,7 +22,7 @@ import com.alexander_rodriguez.mihogar.UTILIDADES.TUsuario;
 
 import java.util.ArrayList;
 
-public class DataBaseAdmin extends SQLiteOpenHelper implements DataBaseInterface {
+public class DataBaseAdmin extends SQLiteOpenHelper {
     private Context context;
     public static final String DATABASE_NAME = "alquiler";
     public static final String KEY_START_SCRIPS = "start_scrips";
@@ -47,9 +48,11 @@ public class DataBaseAdmin extends SQLiteOpenHelper implements DataBaseInterface
         try {
             db.execSQL(TUsuario.CREATE_TABLE);
             db.execSQL(TCuarto.CREATE_TABLE);
-            db.execSQL(TPago.CREATE_TABLE);
             db.execSQL(TAlquiler.CREATE_TABLE);
+            db.execSQL(TAlquilerUsuario.CREATE_TABLE);
             db.execSQL(Mensualidad.CREATE_TABLE);
+            db.execSQL(TPago.CREATE_TABLE);
+
             Toast.makeText(context, "Base de datos creada..", Toast.LENGTH_SHORT).show();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -66,7 +69,7 @@ public class DataBaseAdmin extends SQLiteOpenHelper implements DataBaseInterface
         SQLiteDatabase editor = this.getWritableDatabase();
         Cursor cursor = editor.rawQuery(sql, null);
         ContentValues cv= new ContentValues();
-        if (cursor.moveToFirst()) cv=cursorToCV(cursor);
+        if (cursor.moveToFirst()) cv= cursorToCV(cursor);
         editor.close();
         cursor.close();
         return cv;
@@ -81,7 +84,9 @@ public class DataBaseAdmin extends SQLiteOpenHelper implements DataBaseInterface
     }
     private Cursor consultarAll2(String sql){
         SQLiteDatabase editor = getWritableDatabase();
-        return editor.rawQuery(sql, null);
+        Cursor c =  editor.rawQuery(sql, null);
+
+        return c;
     }
 
     private boolean agregar(String tableName){
@@ -92,7 +97,7 @@ public class DataBaseAdmin extends SQLiteOpenHelper implements DataBaseInterface
         return l != -1;
     }
 
-    private boolean revertir(String tableName, String columKey, String key){
+    public boolean revertir(String tableName, String columKey, Object key){
         SQLiteDatabase sql = getWritableDatabase();
         int i =  sql.delete(tableName, columKey + " = " + key, null);
         sql.close();
@@ -155,8 +160,9 @@ public class DataBaseAdmin extends SQLiteOpenHelper implements DataBaseInterface
         }
         return list;
     }
+
     public ArrayList<String> getDniEnCasa(){
-        String sql = "select " + TAlquiler.DNI+ " from " + TAlquiler.T_NOMBRE + " where " + TAlquiler.VAL + "= 1;";
+     /*   String sql = "select " + TAlquiler.DNI+ " from " + TAlquiler.T_NOMBRE + " where " + TAlquiler.VAL + "= 1;";
         ArrayList<String > list = new ArrayList<>();
         SQLiteDatabase editor = getWritableDatabase();
         Cursor cursor = editor.rawQuery(sql,null);
@@ -165,17 +171,21 @@ public class DataBaseAdmin extends SQLiteOpenHelper implements DataBaseInterface
                 list.add(cursor.getString(0));
             }while (cursor.moveToNext());
         }
+
         return list;
+      */
+        return null;
     }
 
     public TableCursor getAllAlquileres(String columnas, String key, Object value){
         String sql = "select " + columnas+ " from " + TAlquiler.T_NOMBRE +
+                " natural join " + TUsuario.T_NOMBRE +
                 " where " +key+ "= '" + value + "'; ";
         return consultarAll(sql);
     }
-    public Cursor getAllAlquileresJoinUserExept(String columnas, String key, Object value, Object dniIgnore){
-        String sql = "select " + columnas+ " from " + TAlquiler.T_NOMBRE + " natural join " + TUsuario.T_NOMBRE+
-                " where " +key+ " = '" + value + "' and " + TUsuario.DNI + " <> '" + dniIgnore +"' ; ";
+    public Cursor getAllAlquileresJoinUserExept(String columnas, String key, Object value, Object idAlquIgnore){
+        String sql = "select " + columnas+ " from " + TAlquiler.T_NOMBRE +
+                " where " +key+ " = '" + value + "' and " + TAlquiler.ID + " <> '" + idAlquIgnore + "' ; ";
         return consultarAll2(sql);
     }
     public Cursor getAllAlquileres(String columnas){
@@ -183,11 +193,10 @@ public class DataBaseAdmin extends SQLiteOpenHelper implements DataBaseInterface
         return consultarAll2(sql);
     }
     public Cursor getAllAlquilerJoinUser(String columnas){
-        String sql = "select " + columnas + " from " + TAlquiler.T_NOMBRE + " natural join "+ TUsuario.T_NOMBRE;
+        String sql = "select " + columnas + " from (" + TAlquiler.T_NOMBRE + " natural join "+ TAlquilerUsuario.T_NOMBRE + ") natural join " + TUsuario.T_NOMBRE;
         return consultarAll2(sql);
     }
 
-    @Override
     public Cursor getAllCuartos(String columnas) {
         String sql = "select " + columnas+ " from " + TCuarto.T_NOMBRE;
         return consultarAll2(sql);
@@ -208,16 +217,22 @@ public class DataBaseAdmin extends SQLiteOpenHelper implements DataBaseInterface
         return consultarAll2(sql);
     }
 
-    @Override
     public Cursor getallUsuarios(String columnas) {
         String sql = "select " + columnas + " from " + TUsuario.T_NOMBRE ;
         return consultarAll2(sql);
     }
 
     public Cursor getAllUsuariosADDAlert(String columnas){
-        String select = "select * from "+ TAlquiler.T_NOMBRE  + " where " + TAlquiler.ALERT + " = '1'";
+        String select = "select * from "+ TAlquiler.T_NOMBRE  + " natural join "+ TAlquilerUsuario.T_NOMBRE +" where " + TAlquiler.ALERT + " = '1'";
         String sql ="select distinct "+TUsuario.T_NOMBRE+".*, "+TAlquiler.ALERT+" from "+TUsuario.T_NOMBRE + " left join ("+ select + ") using("+TUsuario.DNI+"); ";
+
         return  consultarAll2(sql);
+    }
+
+    public Cursor getUsuariosForAlquiler(String columnas, String ida){
+        String consulta = "select "+ columnas + " from " + TUsuario.T_NOMBRE + " natural join "+ TAlquilerUsuario.T_NOMBRE  +
+                " where " + TAlquilerUsuario.ID_AL + " = '" + ida + "' ;";
+        return consultarAll2(consulta);
     }
 
     public ContentValues getFilaAlquilerByCuartoOf(String columnas, Object numCuarto){
@@ -225,14 +240,29 @@ public class DataBaseAdmin extends SQLiteOpenHelper implements DataBaseInterface
                 " where " + TAlquiler.NUMERO_C + "= '" + numCuarto + "' and " + TAlquiler.VAL + "= 1;";
         return consultaInFila(sql);
     }
+
+    public String[] getDniOfAlquilerUser(Object idAlquiler){
+        String sql = "select " + TAlquilerUsuario.DNI + " from " + TAlquilerUsuario.T_NOMBRE + " where " + TAlquilerUsuario.ID_AL + " = '"+ idAlquiler+ "'; ";
+
+        SQLiteDatabase editor = getWritableDatabase();
+        Cursor c = editor.rawQuery(sql, null);
+        String[] dni = new String[c.getCount()];
+        if (c.moveToFirst()) {
+            for (int i = 0; i < dni.length; i++) {
+                dni[i] = c.getString(TAlquilerUsuario.INT_DNI);
+            }
+        }
+        return dni;
+    }
     public ContentValues getFilaAlquilerOf(String columnas, Object id){
         String sql = "select " + columnas+ " from " + TAlquiler.T_NOMBRE +
-                " where " + TAlquiler.ID+ "= " + id + " and " + TAlquiler.VAL + "= 1;";
+                " where " + TAlquiler.ID+ " = '" + id + "'; ";
         return consultaInFila(sql);
     }
+
     public ContentValues getFilaAlquilerByUserOf(String columnas, Object DNI){
-        String sql = "select " + columnas+ " from " + TAlquiler.T_NOMBRE +
-                " where " + TAlquiler.DNI+ "= " + DNI+ " and " + TAlquiler.VAL + "= 1;";
+        String sql = "select " + columnas+ " from " + TAlquiler.T_NOMBRE + " natural join "+ TAlquilerUsuario.T_NOMBRE +
+                " where " + TAlquilerUsuario.DNI+ "= " + DNI+ " and " + TAlquiler.VAL + "= 1;";
         return consultaInFila(sql);
     }
 
@@ -270,12 +300,24 @@ public class DataBaseAdmin extends SQLiteOpenHelper implements DataBaseInterface
     public String contAlquileresOf(String key, Object value){
         SQLiteDatabase editor = getWritableDatabase();
 
-        Cursor cursor = editor.rawQuery(SELECT +"count(*)" +FROM+ TAlquiler.T_NOMBRE + WHERE + key + " ='" + value +"'; ", null);
+        Cursor cursor = editor.rawQuery(SELECT +"count(*)" +FROM+ TAlquilerUsuario.T_NOMBRE + WHERE + key + " ='" + value +"'; ", null);
         String s = "-1";
         if (cursor.moveToFirst()){
             s = cursor.getString(0);
         }
         return  s;
+    }
+
+    public int contDniOfAlquilerUsuario(String idAlquiler) {
+        SQLiteDatabase editor = getWritableDatabase();
+
+        Cursor cursor = editor.rawQuery("SELECT * FROM " + TAlquilerUsuario.T_NOMBRE +
+                " where  " + TAlquilerUsuario.ID_AL  + " = '" + idAlquiler +"'; ", null);
+        int n = -1;
+        if (cursor.moveToFirst()){
+            n = cursor.getCount();
+        }
+        return  n;
     }
 
     public void upDateUsuario(String columna, Object valor, Object DNI){
@@ -287,21 +329,25 @@ public class DataBaseAdmin extends SQLiteOpenHelper implements DataBaseInterface
         upDate(consulta);
     }
     public void upDateAlquiler(String columna, String valor, Object id){
-        upDate("update "+ TAlquiler.T_NOMBRE + " set "+columna +" = '" + valor +"' where "+ TAlquiler.ID+" = "+ id);
+        upDate("update "+ TAlquiler.T_NOMBRE + " set "+columna +" = '" + valor +"' where "+ TAlquiler.ID+" = '"+ id + "'; ");
     }
-    public boolean agregarCuarto(String numCuarto, String detalles, String precio, String URL){
+    public void upDateAlquilerUsuario(String columna, String valor, Object idAl, Object dni){
+        upDate("update "+ TAlquilerUsuario.T_NOMBRE + " set "+columna +" = '" + valor +"' where "+
+                TAlquilerUsuario.DNI+" = '"+ idAl + "' and " + TAlquilerUsuario.DNI + " = '" + dni + "'; ");
+    }
+    public boolean agregarCuarto(String numCuarto, String detalles, String precio, String path){
         cv.put(TCuarto.NUMERO, numCuarto);
         cv.put(TCuarto.DETALLES, detalles);
         cv.put(TCuarto.PRECIO_E, precio);
-        cv.put(TCuarto.URL, URL);
+        cv.put(TCuarto.URL, path);
         return agregar(TCuarto.T_NOMBRE);
     }
     public boolean usuarioAlertado(Object DNI){
         SQLiteDatabase editor = getWritableDatabase();
-        Cursor c = editor.rawQuery("select * from "+TAlquiler.T_NOMBRE + " where " + TAlquiler.DNI + " = '" + DNI + "' and " + TAlquiler.ALERT +"= 1;", null);
+        Cursor c = editor.rawQuery("select * from "+TAlquiler.T_NOMBRE + " natural join "+ TAlquiler.T_NOMBRE + " where " + TAlquilerUsuario.DNI + " = '" + DNI + "' and " + TAlquiler.ALERT +"= 1;", null);
         return  c.moveToNext();
     }
-    @Override
+
     public boolean agregarInquilino(String DNI,String nombres, String apellidoPat, String apellidoMat, String URI){
         cv.put(TUsuario.DNI, DNI);
         cv.put(TUsuario.NOMBRES, nombres);
@@ -310,23 +356,40 @@ public class DataBaseAdmin extends SQLiteOpenHelper implements DataBaseInterface
         cv.put(TUsuario.URI, URI);
         return agregar(TUsuario.T_NOMBRE);
     }
+
     public boolean agregarInquilino(ModelUsuario mu){
         cv.put(TUsuario.DNI, mu.getDni());
-        cv.put(TUsuario.NOMBRES, mu.getNombres());
+        cv.put(TUsuario.NOMBRES, mu.getNombre());
         cv.put(TUsuario.APELLIDO_PAT, mu.getApellidoPat());
         cv.put(TUsuario.APELLIDO_MAT, mu.getApellidoMat());
-        cv.put(TUsuario.NUMERO_TEL, mu.getNumero());
-        cv.put(TUsuario.CORREO, mu.getCorreo());
-        cv.put(TUsuario.URI, mu.getUriPhoto());
+        cv.put(TUsuario.URI, mu.getPath());
         return agregar(TUsuario.T_NOMBRE);
     }
 
-    public boolean agregarAlquiler(String DNI, String numC, String fecha, String fecha_c){
-        cv.put(TAlquiler.FECHA, fecha);
-        cv.put(TAlquiler.FECHA_C, fecha_c);
+    public boolean agregarAlquiler(String numC, String fecha, String fecha_c, String numTel, String correo){
+        cv.put(TAlquiler.FECHA_INICIO, fecha);
+        cv.put(TAlquiler.Fecha_PAGO, fecha_c);
+        cv.put(TAlquiler.NUMERO_C, numTel);
+        cv.put(TAlquiler.CORREO, correo);
         cv.put(TAlquiler.VAL, "1");
-        cv.put(TAlquiler.DNI, DNI);
         cv.put(TAlquiler.NUMERO_C, numC);
+        cv.put(TAlquiler.ALERT, false);
+        return agregar(TAlquiler.T_NOMBRE);
+    }
+    public boolean agregarAlquilerUsuario(long idAlquiler, String dni, boolean isMain) {
+        cv.put(TAlquilerUsuario.DNI, dni);
+        cv.put(TAlquilerUsuario.ID_AL, idAlquiler);
+        cv.put(TAlquilerUsuario.IS_ENCARGADO, isMain);
+        return agregar(TAlquilerUsuario.T_NOMBRE);
+    }
+
+    public boolean agregarAlquiler(ModelAA model) {
+        cv.put(TAlquiler.FECHA_INICIO, model.getFecha());
+        cv.put(TAlquiler.Fecha_PAGO, model.getFechaC());
+        cv.put(TAlquiler.NUMERO_TEL, model.getNumeroTelef());
+        cv.put(TAlquiler.CORREO, model.getCorreo());
+        cv.put(TAlquiler.VAL, "1");
+        cv.put(TAlquiler.NUMERO_C, model.getNumCuarto());
         cv.put(TAlquiler.ALERT, false);
         return agregar(TAlquiler.T_NOMBRE);
     }
@@ -339,17 +402,17 @@ public class DataBaseAdmin extends SQLiteOpenHelper implements DataBaseInterface
     public boolean agregarPago(String fecha, long idM, long DNI){
         cv.put(TPago.FECHA, fecha);
         cv.put(TPago.ID_M, idM);
-        cv.put(TPago.DNI, DNI);
+        cv.put(TPago.DNI_RESPONSABLE, DNI);
         return agregar(TPago.T_NOMBRE);
     }
 
-    public boolean agregarInquilinoExist(String DNI, String numC, double costo, @NonNull String fecha_i, @Nullable String fecha_c){
+    public boolean agregarInquilinoExist(String DNI, String numC, double costo, @NonNull String fecha_i, @Nullable String fecha_c, String numTel, String correo){
         boolean f = true;
         if (fecha_c == null) {
             fecha_c = fecha_i;
             f =false;
         }
-        if (agregarAlquiler(DNI, numC, fecha_i,fecha_c)){
+        if (agregarAlquiler(numC, fecha_i,fecha_c, numTel, correo)){
             long idMax = getIdMaxAlquiler();
             if (agregarMensualidad(costo, fecha_i, idMax)) {
                 if (f) {
@@ -369,9 +432,9 @@ public class DataBaseAdmin extends SQLiteOpenHelper implements DataBaseInterface
         return false;
 
     }
-    public boolean agregarNuevoInquilino(ModelUsuario mu, String numC, double costo, @NonNull String fecha_i, @Nullable String fecha_c) {
+    public boolean agregarNuevoInquilino(ModelUsuario mu, String numC, double costo, @NonNull String fecha_i, @Nullable String fecha_c, String numTel, String correo) {
         if (agregarInquilino(mu)){
-            return agregarInquilinoExist(mu.getDni(), numC, costo, fecha_i, fecha_c);
+            return agregarInquilinoExist(mu.getDni(), numC, costo, fecha_i, fecha_c, numTel, correo);
         }
         return false;
     }
@@ -415,16 +478,16 @@ public class DataBaseAdmin extends SQLiteOpenHelper implements DataBaseInterface
     public boolean esUsuarioAntiguo(String dni){
         SQLiteDatabase bd = this.getWritableDatabase();
         Cursor fila = bd.rawQuery("select *  from "+ TAlquiler.T_NOMBRE+
-                " where "+ TAlquiler.DNI+" = '" +dni+"' and "+ TAlquiler.VAL + " = 0;",null);
+                " natural join " + TAlquiler.T_NOMBRE+ " where " + TAlquilerUsuario.DNI+" = '" +dni+"' and "+ TAlquiler.VAL + " = 0;",null);
         return fila.moveToFirst();
     }
     public boolean esUsuarioInterno(String dni){
         SQLiteDatabase bd = this.getWritableDatabase();
-        Cursor fila = bd.rawQuery("select *  from "+ TAlquiler.T_NOMBRE+
-                " where "+ TAlquiler.DNI+" = '" +dni +"' and "+ TAlquiler.VAL + " = 1;",null);
+        Cursor fila = bd.rawQuery("select *  from "+ TAlquiler.T_NOMBRE +
+                " natural join " + TAlquiler.T_NOMBRE + " where "+ TAlquilerUsuario.DNI+" = '" +dni +"' and "+ TAlquiler.VAL + " = 1;",null);
         return fila.moveToFirst();
     }
-    private ContentValues cursorToCV(Cursor cursor){
+    public static ContentValues cursorToCV(Cursor cursor){
         ContentValues cv = new ContentValues();
         for (int i = 0; i<cursor.getColumnCount(); i++){
             cv.put(cursor.getColumnName(i),cursor.getString(i));
@@ -534,7 +597,7 @@ public class DataBaseAdmin extends SQLiteOpenHelper implements DataBaseInterface
         agregarPago("24/07/2020",15);*/
     }
 
-    public Cursor getUltimoPago(String idMensualidad) {
+    public Cursor gePagosRealizados(String idMensualidad) {
         String consulta = "select * from " + TPago.T_NOMBRE + " where " + TPago.ID_M  + "=" +  idMensualidad;
         SQLiteDatabase bd = getWritableDatabase();
         Cursor c = bd.rawQuery(consulta, null);
@@ -558,4 +621,17 @@ public class DataBaseAdmin extends SQLiteOpenHelper implements DataBaseInterface
         return null;
     }
 
+
+    public int getUsuarioResponsableDe(String idAlquiler) {
+        String consulta = "select " + TAlquilerUsuario.DNI + " from " + TAlquilerUsuario.T_NOMBRE +
+                " where " + TAlquilerUsuario.ID_AL + " = '" + idAlquiler + "' and "+TAlquilerUsuario.IS_ENCARGADO+" = '1'; ";
+
+        Cursor c = consultarAll2(consulta);
+        int dni = -1;
+        if  (c.moveToNext()) {
+            dni =  c.getInt(TAlquilerUsuario.INT_DNI);
+        }
+        c.close();
+        return dni;
+    }
 }
