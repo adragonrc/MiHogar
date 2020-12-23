@@ -13,12 +13,7 @@ import com.alexander_rodriguez.mihogar.UTILIDADES.TAlquilerUsuario;
 import com.alexander_rodriguez.mihogar.UTILIDADES.TUsuario;
 import com.alexander_rodriguez.mihogar.modelos.ModelUsuario;
 
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 
 public class Presenter extends BasePresenter<Interfaz.view> implements Interfaz.presenter {
     static final String SIN_REGISTROS = "-1";
@@ -105,18 +100,33 @@ public class Presenter extends BasePresenter<Interfaz.view> implements Interfaz.
 
     }
 
+    private ModelUsuario  reviewUsersOld(){
+        for (ModelUsuario m: list ) {
+            if(db.existeUsuario(m.getDni())){
+                return m;
+            };
+        }
+        return null;
+    }
     @Override
     public void agregarAlquilerNuevo(ModelAA model) {
         if  (list.isEmpty()){
             view.showMensaje("No hay usuarios en la lista");
             return;
         }
+
         if(modelSelect == null || holderSelect == null ){
             view.showMensaje("Seleccione un usuario responsable");
             return;
         }
+
+        if(reviewUsersOld() != null){
+
+            return;
+        }
+
         if(model.isCorrect()){
-                if (db.agregarAlquiler(model)) {
+            if (db.agregarAlquiler(model)) {
                 long idAlquiler = db.getIdMaxAlquiler();
                 Save s = new Save();
                 int cont = 0;
@@ -175,9 +185,15 @@ public class Presenter extends BasePresenter<Interfaz.view> implements Interfaz.
         }
     }
 
+    @Override
+    public boolean saveChanges() {
+        return list.isEmpty();
+    }
+
     private void guardarModel(ModelUsuario m){
         list.add(m);
         view.mostrarNuevoUsuario(m);
+
     }
 }
 /*

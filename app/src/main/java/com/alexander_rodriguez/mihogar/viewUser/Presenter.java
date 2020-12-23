@@ -2,7 +2,7 @@ package com.alexander_rodriguez.mihogar.viewUser;
 
 import android.content.ContentValues;
 
-import com.alexander_rodriguez.mihogar.DataBaseAdmin;
+import com.alexander_rodriguez.mihogar.DataBase.DataBaseAdmin;
 import com.alexander_rodriguez.mihogar.MyAdminDate;
 import com.alexander_rodriguez.mihogar.UTILIDADES.TAlquiler;
 

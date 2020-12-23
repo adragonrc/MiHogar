@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "1060475592379",
+    "firebase_url": "https://alquileres-8d9ed.firebaseio.com",
+    "project_id": "alquileres-8d9ed",
+    "storage_bucket": "alquileres-8d9ed.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1060475592379:android:9005ae980c1f97cff4539e",
+        "android_client_info": {
+          "package_name": "com.alexander_rodriguez.mihogar"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1060475592379-ht1q7lpkr06927f2ukh9g8ordd86opna.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.alexander_rodriguez.mihogar",
+            "certificate_hash": "bfbca275b7ec005d4319ddccfdfb4ce5b116a09a"
+          }
+        },
+        {
+          "client_id": "1060475592379-4jmca7cjjs7fcllgb3rlt4lo3q23mmvt.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBt_OmWRdLDAHbDir4nfBmwRy2iFgju9dg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1060475592379-4jmca7cjjs7fcllgb3rlt4lo3q23mmvt.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

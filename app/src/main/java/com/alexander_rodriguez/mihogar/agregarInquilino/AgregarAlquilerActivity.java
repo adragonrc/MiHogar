@@ -151,11 +151,23 @@ public class AgregarAlquilerActivity extends BaseActivity<Interfaz.presenter> im
 
     }
 
+    private void exit(){
+        super.onBackPressed();
+    }
     @Override
     public void onBackPressed() {
         SlidingUpPanelLayout.PanelState mSlideState = sliding.getPanelState();
         if (mSlideState != SlidingUpPanelLayout.PanelState.EXPANDED && mSlideState != SlidingUpPanelLayout.PanelState.ANCHORED && mSlideState != SlidingUpPanelLayout.PanelState.DRAGGING) {
-            super.onBackPressed();
+            if(presenter.saveChanges())
+                super.onBackPressed();
+            else{
+                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                builder.setTitle("¿Deseas salir?").
+                        setMessage("Es posible que los cambios que implementaste no se puedan guardar.").
+                        setPositiveButton("Aceptar", (dialogInterface, i) -> exit()).
+                        setNegativeButton("Cancelar", (dialogInterface, i) -> {});
+                builder.create().show();
+            }
         } else {
             sliding.setPanelState(SlidingUpPanelLayout.PanelState.EXPANDED);
             sliding.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);

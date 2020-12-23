@@ -11,7 +11,6 @@ import com.alexander_rodriguez.mihogar.Base.BaseActivity;
 import com.alexander_rodriguez.mihogar.Base.BasePresenter;
 import com.alexander_rodriguez.mihogar.MyAdminDate;
 import com.alexander_rodriguez.mihogar.R;
-import com.alexander_rodriguez.mihogar.TableCursor;
 import com.alexander_rodriguez.mihogar.UTILIDADES.TAlquiler;
 import com.alexander_rodriguez.mihogar.Adapters.Models.ModelAlquilerView;
 import com.alexander_rodriguez.mihogar.Adapters.Models.ModelUserView;
@@ -22,7 +21,6 @@ import com.alexander_rodriguez.mihogar.viewUser.DialogDetallesAlquiler;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 
 public class Presenter extends BasePresenter<Interface.View> implements Interface.Presenter {
     private MyAdminDate myAdminDate;

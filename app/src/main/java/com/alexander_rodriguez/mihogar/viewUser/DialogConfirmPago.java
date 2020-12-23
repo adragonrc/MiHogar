@@ -34,6 +34,10 @@ public class DialogConfirmPago extends AppCompatDialogFragment {
 
     private Context context;
 
+    public DialogConfirmPago(){
+
+    }
+
     public DialogConfirmPago(Bundle datos, Context context){
         super();
         this.datos = datos;

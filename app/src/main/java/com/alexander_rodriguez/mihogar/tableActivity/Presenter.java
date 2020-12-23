@@ -14,7 +14,8 @@ import android.widget.TextView;
 import androidx.core.content.ContextCompat;
 
 import com.alexander_rodriguez.mihogar.Base.BasePresenter;
-import com.alexander_rodriguez.mihogar.DataBaseAdmin;
+import com.alexander_rodriguez.mihogar.DataBase.DataBaseAdmin;
+import com.alexander_rodriguez.mihogar.DataBase.DataBaseInterface;
 import com.alexander_rodriguez.mihogar.PDF;
 import com.alexander_rodriguez.mihogar.R;
 import com.alexander_rodriguez.mihogar.TableCursor;
@@ -41,12 +42,11 @@ public class Presenter extends BasePresenter<Interfaz.view> implements Interfaz.
             TextView tv = v.findViewById(R.id.tvId);
             if  (tv != null){
                 Cursor p = db.getPago(tv.getText().toString());
-                pago = DataBaseAdmin.cursorToCV(p);
+                pago = DataBaseInterface.cursorToCV(p);
                 p.close();
                 if (pago != null){
 
                     alquiler = db.getFilaAlquilerOf("*", idAlquiler);
-
                     String path =  pago.getAsString(TPago.URI_VOUCHER);
 
                     if (path != null) {

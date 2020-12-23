@@ -3,7 +3,7 @@ package com.alexander_rodriguez.mihogar.Base;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
-import com.alexander_rodriguez.mihogar.DataBaseAdmin;
+import com.alexander_rodriguez.mihogar.DataBase.DataBaseAdmin;
 
 public abstract class BasePresenter<V extends BaseView> implements IBasePresenter{
     public static int P_MENSUAL = 0;

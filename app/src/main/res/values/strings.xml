@@ -127,4 +127,12 @@
     <string name="descripcion_fecha_mensualidad">Fecha y hora de modificacion</string>
     <string name="descripcion_fecha_pago">fecha y hora de pago</string>
     <string name="descripcion_id_pago">Identificador del pago</string>
+
+    //Collection's name
+    <string name="cHogar">hogar</string>
+    <string name="cUsers">users</string>
+    <string name="cAlquileres">alquileres</string>
+    <string name="cCuartos">cuartos</string>
+    <string name="cPagos">pagos</string>
+    <string name="fAlquilerCurrent">alquilerCurrent</string>
 </resources>

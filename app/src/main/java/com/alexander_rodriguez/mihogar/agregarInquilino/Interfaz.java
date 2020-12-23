@@ -25,6 +25,8 @@ public interface Interfaz {
         void agregarAlquilerNuevo(ModelAA list);
 
         void doMain(RvAdapterUser.Holder holder);
+
+        boolean saveChanges();
     }
     interface view extends BaseView, interfazUserView {
 

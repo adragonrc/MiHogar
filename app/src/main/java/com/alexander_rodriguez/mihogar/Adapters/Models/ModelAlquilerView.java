@@ -3,7 +3,8 @@ package com.alexander_rodriguez.mihogar.Adapters.Models;
 import android.content.ContentValues;
 import android.database.Cursor;
 
-import com.alexander_rodriguez.mihogar.DataBaseAdmin;
+import com.alexander_rodriguez.mihogar.DataBase.DataBaseAdmin;
+import com.alexander_rodriguez.mihogar.DataBase.DataBaseInterface;
 import com.alexander_rodriguez.mihogar.MyAdminDate;
 import com.alexander_rodriguez.mihogar.UTILIDADES.TAlquiler;
 
@@ -45,7 +46,7 @@ public class ModelAlquilerView {
         ArrayList<ModelAlquilerView> list = new ArrayList<>();
         if (c.moveToFirst()){
             do{
-                ContentValues cv = DataBaseAdmin.cursorToCV(c);
+                ContentValues cv = DataBaseInterface.cursorToCV(c);
                 ModelAlquilerView mav = new ModelAlquilerView(c);
                 list.add(mav);
             }while(c.moveToNext());

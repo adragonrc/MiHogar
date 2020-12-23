@@ -1,32 +1,21 @@
 package com.alexander_rodriguez.mihogar.menu_photo;
 
-import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Environment;
-import android.widget.Toast;
 
-import androidx.annotation.Nullable;
 import androidx.core.content.FileProvider;
 
-import com.alexander_rodriguez.mihogar.ActivityShowImage;
 import com.alexander_rodriguez.mihogar.Base.BaseActivity;
-import com.alexander_rodriguez.mihogar.DataBaseAdmin;
-import com.alexander_rodriguez.mihogar.Save;
-import com.alexander_rodriguez.mihogar.UTILIDADES.TCuarto;
-import com.alexander_rodriguez.mihogar.UTILIDADES.TUsuario;
-import com.theartofdev.edmodo.cropper.CropImage;
+import com.alexander_rodriguez.mihogar.DataBase.DataBaseAdmin;
+import com.alexander_rodriguez.mihogar.DataBase.DataBaseInterface;
 
 import java.io.File;
-import java.io.IOError;
 
 
 public class MenuIterator implements interfazMenu{
     private BaseActivity mActivity;
-    private DataBaseAdmin db ;
+    private DataBaseInterface db ;
 
     public MenuIterator(BaseActivity mActivity){
         this.mActivity = mActivity;
