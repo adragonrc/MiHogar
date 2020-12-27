@@ -18,6 +18,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.alexander_rodriguez.mihogar.Adapters.Models.ModelUserView;
 import com.alexander_rodriguez.mihogar.Adapters.RvAdapterUser;
 import com.alexander_rodriguez.mihogar.Base.BaseActivity;
+import com.alexander_rodriguez.mihogar.DataBase.items.ItemUser;
 import com.alexander_rodriguez.mihogar.R;
 import com.alexander_rodriguez.mihogar.viewregistraralquiler.AgregarAlquilerView;
 import com.alexander_rodriguez.mihogar.UTILIDADES.TCuarto;
@@ -38,7 +39,7 @@ public class AgregarAlquilerActivity extends BaseActivity<Interfaz.presenter> im
 
     private RecyclerView recyclerView;
 
-    private ArrayList<ModelUsuario> listUsuarios;
+    private ArrayList<ItemUser> listUsuarios;
 
     private ArrayList<ModelUserView> rvAdapter;
 
@@ -271,7 +272,7 @@ public class AgregarAlquilerActivity extends BaseActivity<Interfaz.presenter> im
         onBackPressed();
     }
 
-    public void mostrarNuevoUsuario(ModelUsuario m){
+    public void mostrarNuevoUsuario(ItemUser m){
         if (tvAviso.getVisibility() == View.VISIBLE){
             tvAviso.setVisibility(View.GONE);
             recyclerView.setVisibility(View.VISIBLE);

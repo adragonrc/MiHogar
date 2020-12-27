@@ -16,7 +16,6 @@ import com.alexander_rodriguez.mihogar.Adapters.Models.ModelAlquilerView;
 import com.alexander_rodriguez.mihogar.Adapters.Models.ModelUserView;
 import com.alexander_rodriguez.mihogar.UTILIDADES.TAlquilerUsuario;
 import com.alexander_rodriguez.mihogar.UTILIDADES.TUsuario;
-import com.alexander_rodriguez.mihogar.modelos.ModelAlquiler;
 import com.alexander_rodriguez.mihogar.viewUser.DialogDetallesAlquiler;
 
 import java.util.ArrayList;

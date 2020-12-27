@@ -131,8 +131,21 @@
     //Collection's name
     <string name="cHogar">hogar</string>
     <string name="cUsers">users</string>
-    <string name="cAlquileres">alquileres</string>
-    <string name="cCuartos">cuartos</string>
-    <string name="cPagos">pagos</string>
-    <string name="fAlquilerCurrent">alquilerCurrent</string>
+    <string name="cAlquileres">rentals</string>
+    <string name="cCuartos">rooms</string>
+    <string name="cPayment">payment</string>
+    <string name="cTenant">tenant</string>
+    <string name="cRentalTenant">rentalTenant</string>
+    <string name="cMonthlyPayment">monthlyPayment</string>
+
+    //room document metadata
+    <string name="mdRentalCurrentId">rentalCurrentId</string>
+    <string name="mdRoomDescription">description</string>
+    <string name="mdRoomPrice">price_e</string>
+    <string name="mdRoomPathImage">pathImage</string>
+    <string name="mdTenantsNumber">tenantsNumber</string>
+
+    //rental document metadata
+    <string name="mdCurrentMP">currentMP</string>
+
 </resources>

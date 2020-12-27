@@ -1,11 +1,57 @@
 package com.alexander_rodriguez.mihogar.DataBase.models;
 
-public class TPayments {
+public class TPayment {
     String date;
     String rentalId;
     String romNumber;
     String monthlyPaymentId;
-    String 
+    String amount;
 
-    modelToSave.getFecha(), idMax, Integer.parseInt(modelSelect.getDni()))
+    public TPayment(String date, String rentalId, String romNumber, String monthlyPaymentId, String amount) {
+        this.date = date;
+        this.rentalId = rentalId;
+        this.romNumber = romNumber;
+        this.monthlyPaymentId = monthlyPaymentId;
+        this.amount = amount;
+    }
+
+    public String getDate() {
+        return date;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
+    }
+
+    public String getRentalId() {
+        return rentalId;
+    }
+
+    public void setRentalId(String rentalId) {
+        this.rentalId = rentalId;
+    }
+
+    public String getRomNumber() {
+        return romNumber;
+    }
+
+    public void setRomNumber(String romNumber) {
+        this.romNumber = romNumber;
+    }
+
+    public String getMonthlyPaymentId() {
+        return monthlyPaymentId;
+    }
+
+    public void setMonthlyPaymentId(String monthlyPaymentId) {
+        this.monthlyPaymentId = monthlyPaymentId;
+    }
+
+    public String getAmount() {
+        return amount;
+    }
+
+    public void setAmount(String amount) {
+        this.amount = amount;
+    }
 }

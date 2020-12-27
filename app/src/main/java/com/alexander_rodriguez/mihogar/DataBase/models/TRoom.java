@@ -1,14 +1,16 @@
 package com.alexander_rodriguez.mihogar.DataBase.models;
 
-public class TCuarto {
+public class TRoom {
     protected String details;
-    protected String currentRental;
+    protected String currentRentalId;
+    protected int numberTenants;
     protected String price_e;
     protected String pathImage;
 
-    public TCuarto(String details, String currentRental, String price_e, String pathImage) {
+    public TRoom(String details, String currentRentalId, int numberTenants, String price_e, String pathImage) {
         this.details = details;
-        this.currentRental = currentRental;
+        this.currentRentalId = currentRentalId;
+        this.numberTenants = numberTenants;
         this.price_e = price_e;
         this.pathImage = pathImage;
     }
@@ -21,12 +23,12 @@ public class TCuarto {
         this.details = details;
     }
 
-    public String getCurrentRental() {
-        return currentRental;
+    public String getCurrentRentalId() {
+        return currentRentalId;
     }
 
-    public void setCurrentRental(String currentRental) {
-        this.currentRental = currentRental;
+    public void setCurrentRentalId(String currentRentalId) {
+        this.currentRentalId = currentRentalId;
     }
 
     public String getPrice_e() {
@@ -45,4 +47,11 @@ public class TCuarto {
         this.pathImage = pathImage;
     }
 
+    public int getNumberTenants() {
+        return numberTenants;
+    }
+
+    public void setNumberTenants(int numberTenants) {
+        this.numberTenants = numberTenants;
+    }
 }

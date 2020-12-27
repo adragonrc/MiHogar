@@ -5,8 +5,8 @@ import android.widget.ArrayAdapter;
 import com.alexander_rodriguez.mihogar.Adapters.RvAdapterUser;
 import com.alexander_rodriguez.mihogar.Base.BaseView;
 import com.alexander_rodriguez.mihogar.Base.IBasePresenter;
+import com.alexander_rodriguez.mihogar.DataBase.items.ItemUser;
 import com.alexander_rodriguez.mihogar.viewregistraralquiler.ModelAA;
-import com.alexander_rodriguez.mihogar.modelos.ModelUsuario;
 import com.alexander_rodriguez.mihogar.view_registrar_usuario.interfazUserView;
 
 public interface Interfaz {
@@ -18,7 +18,7 @@ public interface Interfaz {
 
         void onClickAddUser();
 
-        void agregarUsuario(ModelUsuario datos);
+        void agregarUsuario(ItemUser datos);
 
         void avanzar();
 
@@ -40,7 +40,7 @@ public interface Interfaz {
 
         void sinCuartos();
 
-        void mostrarNuevoUsuario(ModelUsuario m);
+        void mostrarNuevoUsuario(ItemUser m);
 
         void cambiarPrincipal(RvAdapterUser.Holder adapterPosition, RvAdapterUser.Holder adapterPosition1);
 

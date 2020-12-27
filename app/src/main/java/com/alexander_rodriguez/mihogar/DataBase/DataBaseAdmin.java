@@ -370,7 +370,7 @@ public class DataBaseAdmin extends SQLiteOpenHelper implements DataBaseInterface
                 TAlquilerUsuario.DNI+" = '"+ idAl + "' and " + TAlquilerUsuario.DNI + " = '" + dni + "'; ");
     }
     @Override
-    public boolean agregarCuarto(String numCuarto, String detalles, String precio, String path){
+    public boolean agregarCuarto(String  numCuarto,  String detalles, String precio, String path){
         cv.put(TCuarto.NUMERO, numCuarto);
         cv.put(TCuarto.DETALLES, detalles);
         cv.put(TCuarto.PRECIO_E, precio);

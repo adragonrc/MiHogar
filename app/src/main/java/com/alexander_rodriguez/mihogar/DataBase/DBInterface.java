@@ -6,9 +6,18 @@ import android.database.Cursor;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.alexander_rodriguez.mihogar.DataBase.items.ItemRoom;
+import com.alexander_rodriguez.mihogar.DataBase.items.ItemUser;
+import com.alexander_rodriguez.mihogar.DataBase.models.TMonthlyPayment;
+import com.alexander_rodriguez.mihogar.DataBase.models.TPayment;
+import com.alexander_rodriguez.mihogar.DataBase.models.TRental;
 import com.alexander_rodriguez.mihogar.TableCursor;
 import com.alexander_rodriguez.mihogar.modelos.ModelUsuario;
-import com.alexander_rodriguez.mihogar.viewregistraralquiler.ModelAA;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -25,9 +34,18 @@ public interface DBInterface {
         return cv;
     }
 
+    DocumentReference getCuartoDR(String numCuarto);
+
+    CollectionReference getCuartoCR();
+    CollectionReference getAlquilerCR();
+    DocumentReference getRentalDR(String rentalId);
+    CollectionReference getUserCR();
+    CollectionReference getAlquilerUserCR();
+    CollectionReference getMonthlyPaymentCR(String rentalId);
+    CollectionReference getPaymentCR();
     boolean revertir(String tableName, String columKey, Object key);
 
-    ContentValues getFilaInCuarto(String columnas, Object numCuarto);
+    Task<DocumentSnapshot> getRoom(String numCuarto);
 
     ContentValues getFilaInMensualidadActual(String columnas, Object idAlquiler);
 
@@ -65,7 +83,7 @@ public interface DBInterface {
 
     Cursor getUsuariosForAlquiler(String columnas, String ida);
 
-    ContentValues getFilaAlquilerByCuartoOf(String columnas, Object numCuarto);
+    ContentValues getRentByRoom(String columnas, Object numCuarto);
 
     String[] getDniOfAlquilerUser(Object idAlquiler);
 
@@ -91,23 +109,25 @@ public interface DBInterface {
 
     void upDateAlquilerUsuario(String columna, Object valor, Object idAl, Object dni);
 
-    boolean agregarCuarto(String numCuarto, String detalles, String precio, String path);
+    Task<Void> agregarCuarto(ItemRoom room);
 
     boolean usuarioAlertado(Object DNI);
 
     boolean agregarInquilino(String DNI, String nombres, String apellidoPat, String apellidoMat, String URI);
 
-    boolean agregarInquilino(ModelUsuario mu);
+    Task<Void> agregarInquilino(ItemUser mu);
+
+    Task<Void> agregarInquilinos(ArrayList<ItemUser> list, String  idAlquiler);
 
     boolean agregarAlquiler(String numC, String fecha, String pagosRealizados, String numTel, String correo);
 
     boolean agregarAlquilerUsuario(long idAlquiler, String dni, boolean isMain);
 
-    boolean agregarAlquiler(ModelAA model);
+    Task<DocumentReference> agregarAlquiler(TRental model);
 
-    boolean agregarMensualidad(double costo, String fecha_i, long idA);
+    Task<DocumentReference> agregarMensualidad( TMonthlyPayment monthlyPayment );
 
-    boolean agregarPago(String fecha, long idM, long DNI);
+    Task<DocumentReference> agregarPago(TPayment payment);
 
     boolean agregarInquilinoExist(String DNI, String numC, double costo, @NonNull String fecha_i, @Nullable String fecha_c, String numTel, String correo);
 
@@ -117,7 +137,7 @@ public interface DBInterface {
 
     long getIdMaxAlquiler();
 
-    String[] consultarNumerosDeCuartoDisponibles();
+    Task<QuerySnapshot> consultarNumerosDeCuartoDisponibles();
 
     boolean existIntoCuarto(String valor);
 
@@ -136,4 +156,12 @@ public interface DBInterface {
     Cursor getPago(String id);
 
     int getUsuarioResponsableDe(String idAlquiler);
+
+    void updateCurrentRoomRent(String numCuarto, String rentalId);
+
+    void updateTenantRoomNum(String numCuarto, int size);
+
+    void updateCurrentRentMP(String rentalId, DocumentReference id);
+
+    DocumentReference getDocument(DocumentReference currentMP);
 }

@@ -7,26 +7,35 @@ import android.database.Cursor;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.alexander_rodriguez.mihogar.DataBase.items.ItemRoom;
+import com.alexander_rodriguez.mihogar.DataBase.items.ItemUser;
+import com.alexander_rodriguez.mihogar.DataBase.models.TMonthlyPayment;
+import com.alexander_rodriguez.mihogar.DataBase.models.TPayment;
+import com.alexander_rodriguez.mihogar.DataBase.models.TRental;
+import com.alexander_rodriguez.mihogar.DataBase.models.TRentalTenant;
 import com.alexander_rodriguez.mihogar.R;
 import com.alexander_rodriguez.mihogar.TableCursor;
 import com.alexander_rodriguez.mihogar.modelos.ModelUsuario;
-import com.alexander_rodriguez.mihogar.viewregistraralquiler.ModelAA;
-import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.firestore.WriteBatch;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 
 public class FDAdministrator implements DBInterface{
     public final static int GOOGLE_SING = 123;
-
+    public final static String TAG_SUCCESS = "tag_success";
+    public final static String TAG_FAILURE = "tag_failure";
     private FirebaseFirestore firestore;
     private FirebaseAuth mAuth;
     private Context mContext;
@@ -39,6 +48,7 @@ public class FDAdministrator implements DBInterface{
         this.mContext = mContext;
 
         firestore = FirebaseFirestore.getInstance();
+
         mAuth = FirebaseAuth.getInstance();
         usuario = mAuth.getCurrentUser();
 
@@ -61,8 +71,8 @@ public class FDAdministrator implements DBInterface{
     }
 
     @Override
-    public ContentValues getFilaInCuarto(String columnas, Object numCuarto) {
-        return null;
+    public Task<DocumentSnapshot> getRoom(String numCuarto) {
+        return getCuartoDR(numCuarto).get();
     }
 
     @Override
@@ -90,7 +100,8 @@ public class FDAdministrator implements DBInterface{
         return null;
     }
 
-    private Iterator<QueryDocumentSnapshot> getIteratorForTask(Task<QuerySnapshot> t){
+    @Nullable
+    public static  Iterator<QueryDocumentSnapshot> getTasksIterator(@NotNull Task<QuerySnapshot> t){
         if(t.isSuccessful()) {
             QuerySnapshot query = t.getResult();
             if (query != null && !query.isEmpty()) {
@@ -103,15 +114,16 @@ public class FDAdministrator implements DBInterface{
     public ArrayList<String> getCuartosAlquilados() {
         ArrayList<String> mList = new ArrayList<>();
         hogarDocument.collection(mContext.getString(R.string.cCuartos))
-                .whereEqualTo(mContext.getString(R.string.fAlquilerCurrent), null)
+                .whereEqualTo(mContext.getString(R.string.mdRentalCurrentId), null)
                 .get()
                 .addOnCompleteListener(task -> {
 
-                    Iterator<QueryDocumentSnapshot> iterator = getIteratorForTask(task);
-                    while (iterator.hasNext()){
-                        QueryDocumentSnapshot document = iterator.next();
-                        mList.add(document.getId());
-                    }
+                    Iterator<QueryDocumentSnapshot> iterator = getTasksIterator(task);
+                    if(iterator != null)
+                        while (iterator.hasNext()){
+                            QueryDocumentSnapshot document = iterator.next();
+                            mList.add(document.getId());
+                        }
                 });
         return mList;
     }
@@ -126,7 +138,7 @@ public class FDAdministrator implements DBInterface{
         hogarDocument.collection(mContext.getString(R.string.cAlquileres))
                 .get()
                 .addOnCompleteListener(task -> {
-                   Iterator<QueryDocumentSnapshot> iterator = getIteratorForTask(task);
+                   Iterator<QueryDocumentSnapshot> iterator = getTasksIterator(task);
 
                 });
 
@@ -184,7 +196,7 @@ public class FDAdministrator implements DBInterface{
     }
 
     @Override
-    public ContentValues getFilaAlquilerByCuartoOf(String columnas, Object numCuarto) {
+    public ContentValues getRentByRoom(String columnas, Object numCuarto) {
         return null;
     }
 
@@ -249,8 +261,67 @@ public class FDAdministrator implements DBInterface{
     }
 
     @Override
-    public boolean agregarCuarto(String numCuarto, String detalles, String precio, String path) {
-        return false;
+    public void updateCurrentRoomRent(String numCuarto, String rentalId){
+        getCuartoDR(numCuarto).update(mContext.getString(R.string.mdRentalCurrentId), rentalId);
+    }
+
+    @Override
+    public void updateTenantRoomNum(String numCuarto, int num){
+        getCuartoDR(numCuarto).update(mContext.getString(R.string.mdTenantsNumber), num);
+    }
+
+    @Override
+    public void updateCurrentRentMP(String rentalID, DocumentReference id){
+        getRentalDR(rentalID).update(mContext.getString(R.string.mdCurrentMP), id);
+    }
+
+    public DocumentReference getDocument(DocumentReference documentReference){
+        return firestore.document(documentReference.getPath());
+    }
+    @Override
+    public Task<Void> agregarCuarto(ItemRoom room) {
+
+        return getCuartoDR(room.getRoomNumber()).set(room.getCuartoRoot());
+    }
+
+    @Override
+    public CollectionReference getAlquilerCR(){
+        return hogarDocument.collection(mContext.getString(R.string.cAlquileres));
+    }
+
+    @Override
+    public DocumentReference getRentalDR(String rentalId) {
+        return getAlquilerCR().document(rentalId);
+    }
+
+    @Override
+    public CollectionReference getUserCR() {
+        return hogarDocument.collection(mContext.getString(R.string.cTenant));
+    }
+
+    @Override
+    public CollectionReference getAlquilerUserCR(){
+        return hogarDocument.collection(mContext.getString(R.string.cRentalTenant));
+    }
+
+    @Override
+    public CollectionReference getCuartoCR() {
+        return hogarDocument.collection(mContext.getString(R.string.cCuartos));
+    }
+
+    @Override
+    public DocumentReference getCuartoDR(String numCuarto) {
+        return getCuartoCR().document(numCuarto);
+    }
+
+    @Override
+    public CollectionReference getMonthlyPaymentCR(String rentalId){
+        return getRentalDR(rentalId).collection(mContext.getString(R.string.cMonthlyPayment));
+    }
+
+    @Override
+    public CollectionReference getPaymentCR() {
+        return hogarDocument.collection(mContext.getString(R.string.cPayment));
     }
 
     @Override
@@ -264,8 +335,24 @@ public class FDAdministrator implements DBInterface{
     }
 
     @Override
-    public boolean agregarInquilino(ModelUsuario mu) {
-        return false;
+    public Task<Void> agregarInquilino(ItemUser mu) {
+        WriteBatch batch = firestore.batch();
+
+        batch.set(getUserCR().document(mu.getDni()), mu);
+
+        return getUserCR().document(mu.getDni()).set(mu);
+    }
+
+
+    @Override
+    public Task<Void> agregarInquilinos(ArrayList<ItemUser> list, String rentalId) {
+        WriteBatch batch = firestore.batch();
+        for (ItemUser u: list) {
+            TRentalTenant tRentalTenant = new TRentalTenant(rentalId, u.getDni(), u.isMain(), true);
+            batch.set(getUserCR().document(u.getDni()), u);
+            batch.set(getAlquilerUserCR().document(), tRentalTenant);
+        }
+        return batch.commit();
     }
 
     @Override
@@ -279,18 +366,21 @@ public class FDAdministrator implements DBInterface{
     }
 
     @Override
-    public boolean agregarAlquiler(ModelAA model) {
-        return false;
+    public Task<DocumentReference> agregarAlquiler(TRental model) {
+        return getAlquilerCR().add(model);
+    }
+
+    //Recordar analizar posicion de mensualidad
+    @Override
+    public Task<DocumentReference> agregarMensualidad(TMonthlyPayment monthlyPayment) {
+
+        return getMonthlyPaymentCR(monthlyPayment.getRentalId()).add(monthlyPayment);
     }
 
     @Override
-    public boolean agregarMensualidad(double costo, String fecha_i, long idA) {
-        return false;
-    }
+    public Task<DocumentReference> agregarPago(TPayment payment) {
+        return getPaymentCR().add(payment);
 
-    @Override
-    public boolean agregarPago(String fecha, long idM, long DNI) {
-        return false;
     }
 
     @Override
@@ -314,17 +404,24 @@ public class FDAdministrator implements DBInterface{
     }
 
     @Override
-    public String[] consultarNumerosDeCuartoDisponibles() {
-        return new String[0];
+    public Task<QuerySnapshot> consultarNumerosDeCuartoDisponibles() {
+        return getCuartoCR().whereEqualTo(mContext.getString(R.string.mdRentalCurrentId), null).get();
     }
 
     @Override
-    public boolean existIntoCuarto(String valor) {
+    public boolean existIntoCuarto(String nCuarto) {
+        getCuartoDR(nCuarto)
+        .get()
+        .addOnCompleteListener(task -> {
+
+        });
+
         return false;
     }
 
     @Override
     public boolean existeUsuario(String dni) {
+
         return false;
     }
 
@@ -361,5 +458,10 @@ public class FDAdministrator implements DBInterface{
     @Override
     public int getUsuarioResponsableDe(String idAlquiler) {
         return 0;
+    }
+
+    public interface CallBack{
+        void onSuccess(String tag);
+        void onFailure(String tag);
     }
 }

@@ -4,6 +4,10 @@ import android.widget.ArrayAdapter;
 
 import com.alexander_rodriguez.mihogar.Adapters.RvAdapterUser;
 import com.alexander_rodriguez.mihogar.Base.BasePresenter;
+import com.alexander_rodriguez.mihogar.DataBase.FDAdministrator;
+import com.alexander_rodriguez.mihogar.DataBase.items.ItemUser;
+import com.alexander_rodriguez.mihogar.DataBase.models.TMonthlyPayment;
+import com.alexander_rodriguez.mihogar.DataBase.models.TPayment;
 import com.alexander_rodriguez.mihogar.MyAdminDate;
 import com.alexander_rodriguez.mihogar.R;
 import com.alexander_rodriguez.mihogar.viewregistraralquiler.ModelAA;
@@ -11,23 +15,30 @@ import com.alexander_rodriguez.mihogar.Save;
 import com.alexander_rodriguez.mihogar.UTILIDADES.TAlquiler;
 import com.alexander_rodriguez.mihogar.UTILIDADES.TAlquilerUsuario;
 import com.alexander_rodriguez.mihogar.UTILIDADES.TUsuario;
-import com.alexander_rodriguez.mihogar.modelos.ModelUsuario;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 
 public class Presenter extends BasePresenter<Interfaz.view> implements Interfaz.presenter {
     static final String SIN_REGISTROS = "-1";
 
     private Boolean confirmacion;
     private MyAdminDate adminDate;
-    private String [] cuartosDisponibles;
+    private ArrayList<String> cuartosDisponibles;
 
-    private ArrayList<ModelUsuario> list;
+    private ArrayList<ItemUser> list;
 
-    private ModelUsuario modelSelect;
+    private ItemUser modelSelect;
 
     private RvAdapterUser.Holder holderSelect;
 
+    private ModelAA modelToSave;
+
+    private String rentalId;
     public Presenter(Interfaz.view view) {
         super(view);
         adminDate = new MyAdminDate();
@@ -37,7 +48,7 @@ public class Presenter extends BasePresenter<Interfaz.view> implements Interfaz.
     }
 
     private boolean isNuevo(String dni){
-        for (ModelUsuario m: list ){
+        for (ItemUser m: list ){
             if (m.getDni().equals(dni)){
                 return false;
             }
@@ -45,12 +56,22 @@ public class Presenter extends BasePresenter<Interfaz.view> implements Interfaz.
         return true;
     }
 
+    private void getRoomAvailableComplete(Task<QuerySnapshot> task){
+        if(task.isSuccessful()){
+            Iterator<QueryDocumentSnapshot> iterator = FDAdministrator.getTasksIterator(task);
+            cuartosDisponibles = new ArrayList<>();
+            if(iterator != null)
+                while (iterator.hasNext()){
+                    QueryDocumentSnapshot documentSnapshot = iterator.next();
+                    cuartosDisponibles.add(documentSnapshot.getId());
+                }
+        }
+    }
     @Override
     public void iniciarComandos() {
-        cuartosDisponibles = db.consultarNumerosDeCuartoDisponibles();
-        if (cuartosDisponibles.length == 0) {
-            view.sinCuartos();
-        }
+        /*cuartosDisponibles ;*/
+        db.consultarNumerosDeCuartoDisponibles().addOnCompleteListener(this::getRoomAvailableComplete);
+
     }
 
     public ArrayAdapter<String> getAdapterCuartos () {
@@ -68,9 +89,10 @@ public class Presenter extends BasePresenter<Interfaz.view> implements Interfaz.
     }
 
     @Override
-    public void agregarUsuario(ModelUsuario m) {
-        if (!validarStrings(m.getDni(), m.getNombre(), m.getApellidoPat(), m.getApellidoMat())) {
-            view.showError("Campo vacio");
+    public void agregarUsuario(ItemUser m) {
+        int err = m.getErrorIfExist();
+        if (err != -1) {
+            view.showMensaje("Campo vacio en el campo: " + ItemUser.getLabelName(err));
             return;
         }
         if (!isNuevo(m.getDni())){
@@ -100,16 +122,87 @@ public class Presenter extends BasePresenter<Interfaz.view> implements Interfaz.
 
     }
 
-    private ModelUsuario  reviewUsersOld(){
-        for (ModelUsuario m: list ) {
+    private ItemUser reviewUsersOld(){
+        for (ItemUser m: list ) {
             if(db.existeUsuario(m.getDni())){
                 return m;
             };
         }
         return null;
     }
+
+    private void addTenantSuccess(Void v){
+        TMonthlyPayment monthlyPayment = new TMonthlyPayment(modelToSave.getPrecio(), modelToSave.getFecha(), rentalId);
+        db.agregarMensualidad(monthlyPayment)
+                .addOnSuccessListener(this::addMonthlyPaymentSuccess)
+                .addOnFailureListener(this::addMonthlyPaymentFailure);
+
+    }
+
+    private void addMonthlyPaymentSuccess(DocumentReference document) {
+        if (modelToSave.wasPaid()) {
+            TPayment payment = new TPayment(modelToSave.getFecha(), rentalId, modelToSave.getRoomNumber(), document.getId(), modelToSave.getPrecio());
+            db.agregarPago(payment)
+                    .addOnSuccessListener(this::addPaymentSuccess)
+                    .addOnFailureListener(this::addPaymentFailure);
+
+            db.updateCurrentRentMP(rentalId, document);
+        } else {
+            view.close();
+        }
+    }
+
+    private void addMonthlyPaymentFailure(Exception e) {
+        view.showError("No se pudo agregar la mensualidad.");
+        db.revertir(TAlquiler.T_NOMBRE, TAlquiler.ID, String.valueOf(rentalId));
+    }
+    private void addPaymentSuccess(DocumentReference documentReference) {
+        db.updateCurrentRoomRent(modelToSave.getNumCuarto(), rentalId);
+        db.updateTenantRoomNum(modelToSave.getNumCuarto(), list.size());
+
+        view.showMensaje("OK");
+        view.close();
+    }
+    private void addPaymentFailure(Exception e) {
+        view.showError("No se pudo agregar el pago");
+        e.printStackTrace();
+    }
+
+    private void addTentalFailure(Exception e){
+        view.showMensaje("Could not add");
+        e.printStackTrace();
+    }
+    private void revertir(int cont, int idAlquiler){
+        if (cont < list.size()-1) {
+            db.revertir(TAlquilerUsuario.T_NOMBRE, TAlquilerUsuario.ID_AL, idAlquiler);
+            for (int i = 0; i < cont; i++) {
+                ItemUser m = list.get(i);
+                db.revertir(TUsuario.T_NOMBRE, TUsuario.DNI, m.getDni());
+            }
+            view.showError("No se pudo agregar los usuarios");
+        }
+    }
+    private void addRentalWasSuccess(DocumentReference document){
+        /*long idAlquiler = db.getIdMaxAlquiler();*/
+        rentalId = document.getId();
+        Save s = new Save();
+        int cont = 0;
+
+        for (ItemUser m : list) {
+            m.setPath(s.SaveImage(view.getContext(), m.getPath()));
+        }
+        db.agregarInquilinos(list, rentalId)
+                .addOnSuccessListener(this::addTenantSuccess)
+                .addOnFailureListener(this::addTentalFailure);
+
+    }
+    private void addRentalWasFailure(Exception e){
+        view.showError("No se pudo agregar el alquiler, intente con nuevos datos");
+    }
+
     @Override
     public void agregarAlquilerNuevo(ModelAA model) {
+        modelToSave = model;
         if  (list.isEmpty()){
             view.showMensaje("No hay usuarios en la lista");
             return;
@@ -119,49 +212,17 @@ public class Presenter extends BasePresenter<Interfaz.view> implements Interfaz.
             view.showMensaje("Seleccione un usuario responsable");
             return;
         }
-
+/*
         if(reviewUsersOld() != null){
 
             return;
-        }
+        }*/
 
-        if(model.isCorrect()){
-            if (db.agregarAlquiler(model)) {
-                long idAlquiler = db.getIdMaxAlquiler();
-                Save s = new Save();
-                int cont = 0;
-                for (ModelUsuario m : list) {
-                    m.setPath(s.SaveImage(view.getContext(), m.getPath()));
-                    if(!db.agregarInquilino(m)) break;
-                    if (!db.agregarAlquilerUsuario(idAlquiler, m.getDni(), m.isMain())) break;
-                    cont ++ ;
-                }
+        if(modelToSave.isCorrect()){
+            db.agregarAlquiler(modelToSave.getRoot())
+                    .addOnSuccessListener(this::addRentalWasSuccess)
+                    .addOnFailureListener(this::addRentalWasFailure);
 
-                if (cont == list.size()) {
-                    if (db.agregarMensualidad(Double.parseDouble(model.getPrecio()), model.getFecha(), idAlquiler)) {
-                        if (model.pago()) {
-                            long idMax = db.getIDMaxMensualidad();
-                            if(!db.agregarPago(model.getFecha(), idMax, Integer.parseInt(modelSelect.getDni()))){
-                                view.showError("No se pudo agregar el pago");
-                            }else {
-                                view.close();
-                            }
-                        }else view.close();
-                    }else{
-                        view.showError("No se pudo agregar la mensualidad.");
-                        db.revertir(TAlquiler.T_NOMBRE, TAlquiler.ID, String.valueOf(idAlquiler));
-                    }
-                }else{
-                    db.revertir(TAlquilerUsuario.T_NOMBRE, TAlquilerUsuario.ID_AL, idAlquiler);
-                    for (int i = 0; i < cont; i++) {
-                        ModelUsuario m = list.get(i);
-                        db.revertir(TUsuario.T_NOMBRE, TUsuario.DNI, m.getDni());
-                    }
-                    view.showError("No se pudo agregar los usuarios");
-                }
-            }else{
-                view.showError("No se pudo agregar el alquiler, intente con nuevos datos");
-            }
         }else{
             view.showError("Campos vacios");
         }
@@ -176,7 +237,7 @@ public class Presenter extends BasePresenter<Interfaz.view> implements Interfaz.
             modelSelect.setMain(true);
         }else{
             modelSelect.setMain(false);
-            ModelUsuario m  = list.get(holder.getAdapterPosition());
+            ItemUser m  = list.get(holder.getAdapterPosition());
             view.cambiarPrincipal(holderSelect, holder);
             m.setMain(true);
 
@@ -190,10 +251,9 @@ public class Presenter extends BasePresenter<Interfaz.view> implements Interfaz.
         return list.isEmpty();
     }
 
-    private void guardarModel(ModelUsuario m){
+    private void guardarModel(ItemUser m){
         list.add(m);
         view.mostrarNuevoUsuario(m);
-
     }
 }
 /*

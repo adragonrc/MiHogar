@@ -24,6 +24,7 @@ import com.alexander_rodriguez.mihogar.ActivityShowImage;
 import com.alexander_rodriguez.mihogar.Base.BaseActivity;
 import com.alexander_rodriguez.mihogar.ButtonsAC.ButtonsAceptarCancelar;
 import com.alexander_rodriguez.mihogar.ButtonsAC.interfazAC;
+import com.alexander_rodriguez.mihogar.DataBase.items.ItemRoom;
 import com.alexander_rodriguez.mihogar.R;
 import com.alexander_rodriguez.mihogar.Save;
 import com.alexander_rodriguez.mihogar.UTILIDADES.Mensualidad;
@@ -192,7 +193,7 @@ public class VerCuarto2 extends BaseActivity<Interface.Presenter> implements Int
     }
 
     @Override
-    public void showCuartoAlquilado(ContentValues cuarto, int usuario, String mensualidad) {
+    public void showCuartoAlquilado(ItemRoom cuarto, int usuario, String mensualidad) {
         perfilCuarto.showCuartoAlquilado(usuario, mensualidad, presenter.getDatosAlquiler());
 
         aceptarCancelar.setVisibility(View.VISIBLE);
@@ -212,17 +213,15 @@ public class VerCuarto2 extends BaseActivity<Interface.Presenter> implements Int
         menu.removeItem(R.id.iVerPagos);
     }
 
-    private void detallesCuarto2(ContentValues cuarto){
-        path = cuarto.getAsString(TCuarto.URL);
-
+    private void detallesCuarto2(ItemRoom room){
+        path = room.getPathImage();
         profileCuarto.setPhotoImage(path);
-
-        perfilCuarto.setDetallesText(cuarto.getAsString(TCuarto.DETALLES));
-        profileCuarto.setTitle(cuarto.getAsString(TCuarto.NUMERO));
-        profileCuarto.setSubTitle(cuarto.getAsString(TCuarto.DETALLES));
+        perfilCuarto.setDetallesText(room.getDetails());
+        profileCuarto.setTitle(room.getRoomNumber());
+        profileCuarto.setSubTitle(room.getDetails());
 
     }
-    public void showCuartolibre(ContentValues cuarto) {
+    public void showCuartolibre(ItemRoom cuarto) {
         perfilCuarto.showCuartolibre();
         iMenu = R.menu.menu_cuarto_no_alquilado;
 

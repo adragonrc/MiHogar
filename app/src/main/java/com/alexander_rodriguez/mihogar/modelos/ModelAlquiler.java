@@ -1,4 +1,4 @@
-package com.alexander_rodriguez.mihogar.DataBase.items;
+package com.alexander_rodriguez.mihogar.modelos;
 
 public class ModelAlquiler {
 

@@ -4,13 +4,15 @@ import android.content.ContentValues;
 
 import com.alexander_rodriguez.mihogar.Base.BaseView;
 import com.alexander_rodriguez.mihogar.Base.IBasePresenter;
+import com.alexander_rodriguez.mihogar.DataBase.items.ItemRental;
+import com.alexander_rodriguez.mihogar.DataBase.items.ItemRoom;
 import com.alexander_rodriguez.mihogar.vercuarto.view_perfil_cuarto.perfilCuartoInterface;
 
 import java.io.File;
 
 public interface Interface {
     interface Presenter extends IBasePresenter {
-        ContentValues getDatosAlquiler();
+        ItemRental getDatosAlquiler();
 
         void mostrarDetalles();
 
@@ -37,9 +39,9 @@ public interface Interface {
 
         void pago();
 
-        void showCuartolibre(ContentValues cuarto);
+        void showCuartolibre(ItemRoom cuarto);
 
-        void showCuartoAlquilado(ContentValues cuarto, int numCuarto, String mensualidad);
+        void showCuartoAlquilado(ItemRoom cuarto, int numCuarto, String mensualidad);
 
         void mostrarPDF(File pdfFile, ContentValues datosUsuario);
 

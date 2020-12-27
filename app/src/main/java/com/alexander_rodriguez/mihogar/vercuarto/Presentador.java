@@ -8,6 +8,11 @@ import android.database.Cursor;
 import androidx.core.content.ContextCompat;
 
 import com.alexander_rodriguez.mihogar.Base.BasePresenter;
+import com.alexander_rodriguez.mihogar.DataBase.items.ItemRental;
+import com.alexander_rodriguez.mihogar.DataBase.items.ItemRoom;
+import com.alexander_rodriguez.mihogar.DataBase.models.TMonthlyPayment;
+import com.alexander_rodriguez.mihogar.DataBase.models.TRental;
+import com.alexander_rodriguez.mihogar.DataBase.models.TRoom;
 import com.alexander_rodriguez.mihogar.MyAdminDate;
 import com.alexander_rodriguez.mihogar.PDF;
 import com.alexander_rodriguez.mihogar.R;
@@ -16,6 +21,9 @@ import com.alexander_rodriguez.mihogar.UTILIDADES.TAlquiler;
 import com.alexander_rodriguez.mihogar.UTILIDADES.TAlquilerUsuario;
 import com.alexander_rodriguez.mihogar.UTILIDADES.TCuarto;
 import com.alexander_rodriguez.mihogar.UTILIDADES.TPago;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.itextpdf.text.DocumentException;
 
 import java.io.FileNotFoundException;
@@ -26,10 +34,12 @@ import java.util.Date;
 
 public class Presentador extends BasePresenter<Interface.view> implements Interface.Presenter {
 
-    private ContentValues datosCuarto;
+    private ItemRoom room;
+    private ItemRental rental;
+    private TMonthlyPayment monthlyPayment;
     //private ContentValues datosUsuario;
-    private ContentValues datosMensualidad;
-    private ContentValues datosAlquiler;
+    //private ContentValues datosMensualidad;
+    //private ContentValues datosAlquiler;
     private String dni;
 
     private MyAdminDate myDate;
@@ -56,42 +66,66 @@ public class Presentador extends BasePresenter<Interface.view> implements Interf
     }
 
     private void actualizarDatos(){
-        datosAlquiler = db.getFilaAlquilerByCuartoOf("*", numeroCuarto);
+        datosAlquiler = db.getRentByRoom("*", numeroCuarto);
         view.pago();
     }
 
     @Override
     public void mostrarDetalles(){
-        datosCuarto = db.getFilaInCuarto("*", numeroCuarto);
-        datosAlquiler = db.getFilaAlquilerByCuartoOf("*", numeroCuarto);
-        int num = db.contDniOfAlquilerUsuario(datosAlquiler.getAsString(TAlquiler.ID));
-        if (datosAlquiler.size() != 0){
-            datosMensualidad = db.getFilaInMensualidadActual("*", datosAlquiler.get(TAlquiler.ID));
+        db.getRoom(numeroCuarto).addOnSuccessListener(this::getRoomSucces);
+    }
 
-            int pagosRealizados = datosAlquiler.getAsInteger(TAlquiler.PAGOS_REALIZADOS);
-            String fechaInicio = datosAlquiler.getAsString(TAlquiler.FECHA_INICIO);
-            try {
-                String fechaDePago = MyAdminDate.adelantarPorMeses(fechaInicio, pagosRealizados);
-                datosAlquiler.put(TAlquiler.EXTRA_FECHA_PAGO, fechaDePago);
-                if ((myDate.stringToDate(fechaDePago)).before(new Date())) {
-                    view.noPago();
-                }else {
-                    view.pago();
-                }
-            } catch (ParseException e) {
-                e.printStackTrace();
-                view.showMensaje("Error al actualizar la fecha de pago");
+    private void getRoomSucces(DocumentSnapshot documentSnapshot) {
+        if(documentSnapshot.exists()) {
+            room = (ItemRoom) documentSnapshot.toObject(TRoom.class);
+            if(room != null) {
+                room.setRoomNumber(documentSnapshot.getId());
+                db.getRentalDR(room.getCurrentRentalId()).get()
+                        .addOnSuccessListener(this::getAlquilerSuccess);
             }
-
-            view.showCuartoAlquilado(datosCuarto, num, datosMensualidad.getAsString(Mensualidad.COSTO));
-        }else{
-            view.showCuartolibre(datosCuarto);
         }
     }
 
+    private void getAlquilerSuccess(DocumentSnapshot documentSnapshot) {
+
+        if (documentSnapshot.exists()) {
+            rental =(ItemRental) documentSnapshot.toObject(TRental.class);
+            if(rental != null) {
+                rental.setId(documentSnapshot.getId());
+                rental.getCurrentMP().get().addOnSuccessListener(this::getRentalSuccess);
+                return;
+            }
+        }
+        view.showCuartolibre(room);
+    }
+
+    private void getRentalSuccess(DocumentSnapshot documentSnapshot) {
+
+        int num = room.getNumberTenants();
+
+        monthlyPayment = documentSnapshot.toObject(TMonthlyPayment.class);
+
+        int pagosRealizados = rental.getPaymentsNumber();
+        String fechaInicio = rental.getEntryDate();
+        try {
+            String paymentDate = MyAdminDate.adelantarPorMeses(fechaInicio, pagosRealizados);
+            rental.setPaymentDate(paymentDate);
+            if ((myDate.stringToDate(paymentDate)).before(new Date())) {
+                view.noPago();
+            } else {
+                view.pago();
+            }
+        } catch (ParseException e) {
+            e.printStackTrace();
+            view.showMensaje("Error al actualizar la fecha de pago");
+        }
+
+        view.showCuartoAlquilado(room, num, monthlyPayment.getPrice());
+    }
+
     @Override
-    public ContentValues getDatosAlquiler() {
-        return datosAlquiler;
+    public ItemRental getDatosAlquiler() {
+        return rental;
     }
 
     //private boolean consultarConfirmacion(String s){
@@ -108,7 +142,7 @@ public class Presentador extends BasePresenter<Interface.view> implements Interf
         DateFormat dateFormat = new SimpleDateFormat(MyAdminDate.FORMAT_DATE_TIME);
         String fecha_i = dateFormat.format(new Date());
         int id = datosAlquiler.getAsInteger(TAlquiler.ID);
-        if(db.agregarMensualidad(Double.parseDouble(mensualidad), fecha_i, id)){
+        if(db.agregarMensualidad(Double.parseDouble(mensualidad))){
             datosMensualidad = db.getFilaInMensualidadActual("*",datosAlquiler.get(TAlquiler.ID));
             view.actualizarMensualidad(mensualidad);
         }
@@ -137,7 +171,7 @@ public class Presentador extends BasePresenter<Interface.view> implements Interf
         String fechaHoraActual = myDate.getDateFormat().format(new Date());
         Long idMensualidad = datosMensualidad.getAsLong(Mensualidad.ID);
          int dniResponsable = db.getUsuarioResponsableDe(datosAlquiler.getAsString(TAlquilerUsuario.ID_AL));;
-        if(db.agregarPago(fechaHoraActual, idMensualidad, dniResponsable)){
+        if(db.agregarPago(fechaHoraActual)){
             view.showMensaje("pago agregado");
             db.upDateAlquiler(TAlquiler.PAGOS_REALIZADOS, pagosRealizados, datosAlquiler.getAsInteger(TAlquiler.ID));
             actualizarDatos();

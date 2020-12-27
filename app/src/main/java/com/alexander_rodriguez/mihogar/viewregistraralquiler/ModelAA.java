@@ -1,9 +1,11 @@
 package com.alexander_rodriguez.mihogar.viewregistraralquiler;
 
 import com.alexander_rodriguez.mihogar.Base.BasePresenter;
+import com.alexander_rodriguez.mihogar.DataBase.models.TRental;
 import com.alexander_rodriguez.mihogar.MyAdminDate;
+import com.alexander_rodriguez.mihogar.UTILIDADES.TAlquiler;
 
-public class ModelAA{
+public class ModelAA extends TRental {
     private String precio;
     private String correo;
     private String numeroTelef;
@@ -15,14 +17,20 @@ public class ModelAA{
 
     private int pagosRealizados;
 
-    public ModelAA(String precio, String correo, String numeroTelef, String numCuarto, String fecha,  int pagosRealizados, String plazo){
+
+    public ModelAA(String precio, String correo, String numeroTelef, String roomNumber, String entryDate,  int pagosRealizados, String plazo){
+        super(entryDate, null, null, "true", roomNumber, null, 0);
         this.precio = precio;
         this.correo = correo;
         this.numeroTelef = numeroTelef;
-        this.numCuarto = numCuarto;
-        this.fecha = fecha;
+        this.numCuarto = roomNumber;
+        this.fecha = entryDate;
         this.plazo = plazo;
         this.pagosRealizados = pagosRealizados;
+    }
+
+    public TRental getRoot(){
+        return (TRental) this;
     }
 
     public String getPrecio() {
@@ -49,7 +57,7 @@ public class ModelAA{
         return plazo;
     }
 
-    public boolean pago() {
+    public boolean wasPaid() {
         return pagosRealizados != 0;
     }
 
