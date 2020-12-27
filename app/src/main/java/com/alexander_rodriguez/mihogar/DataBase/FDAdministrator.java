@@ -241,18 +241,18 @@ public class FDAdministrator implements DBInterface{
     }
 
     @Override
-    public void upDateUsuario(String columna, Object valor, Object DNI) {
-
+    public Task<Void> upDateUsuario(String columna, Object valor, Object DNI) {
+    return null;
     }
 
     @Override
-    public void upDateCuarto(String columna, Object valor, Object numeroDeCuarto) {
-
+    public Task<Void> upDateCuarto(String field, Object valor, String numeroDeCuarto) {
+        return getCuartoDR(numeroDeCuarto).update(field, valor);
     }
 
     @Override
-    public void upDateAlquiler(String columna, Object valor, Object id) {
-
+    public Task<Void> upDateAlquiler(String field, Object valor, String id) {
+        return getRentalDR(id).update(field, valor);
     }
 
     @Override
@@ -267,12 +267,12 @@ public class FDAdministrator implements DBInterface{
 
     @Override
     public void updateTenantRoomNum(String numCuarto, int num){
-        getCuartoDR(numCuarto).update(mContext.getString(R.string.mdTenantsNumber), num);
+        getCuartoDR(numCuarto).update(mContext.getString(R.string.mdRoomTenantsNumber), num);
     }
 
     @Override
     public void updateCurrentRentMP(String rentalID, DocumentReference id){
-        getRentalDR(rentalID).update(mContext.getString(R.string.mdCurrentMP), id);
+        getRentalDR(rentalID).update(mContext.getString(R.string.mdRentalCurrentMP), id);
     }
 
     public DocumentReference getDocument(DocumentReference documentReference){
@@ -285,13 +285,13 @@ public class FDAdministrator implements DBInterface{
     }
 
     @Override
-    public CollectionReference getAlquilerCR(){
+    public CollectionReference getRentalCR(){
         return hogarDocument.collection(mContext.getString(R.string.cAlquileres));
     }
 
     @Override
     public DocumentReference getRentalDR(String rentalId) {
-        return getAlquilerCR().document(rentalId);
+        return getRentalCR().document(rentalId);
     }
 
     @Override
@@ -348,6 +348,9 @@ public class FDAdministrator implements DBInterface{
     public Task<Void> agregarInquilinos(ArrayList<ItemUser> list, String rentalId) {
         WriteBatch batch = firestore.batch();
         for (ItemUser u: list) {
+            if(u.isMain()){
+                getRentalDR(rentalId).update(mContext.getString(R.string.mdRentalMainTenant), u.getDni());
+            }
             TRentalTenant tRentalTenant = new TRentalTenant(rentalId, u.getDni(), u.isMain(), true);
             batch.set(getUserCR().document(u.getDni()), u);
             batch.set(getAlquilerUserCR().document(), tRentalTenant);
@@ -367,7 +370,7 @@ public class FDAdministrator implements DBInterface{
 
     @Override
     public Task<DocumentReference> agregarAlquiler(TRental model) {
-        return getAlquilerCR().add(model);
+        return getRentalCR().add(model);
     }
 
     //Recordar analizar posicion de mensualidad

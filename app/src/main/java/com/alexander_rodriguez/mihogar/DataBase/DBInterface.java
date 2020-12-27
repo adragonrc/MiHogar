@@ -37,7 +37,7 @@ public interface DBInterface {
     DocumentReference getCuartoDR(String numCuarto);
 
     CollectionReference getCuartoCR();
-    CollectionReference getAlquilerCR();
+    CollectionReference getRentalCR();
     DocumentReference getRentalDR(String rentalId);
     CollectionReference getUserCR();
     CollectionReference getAlquilerUserCR();
@@ -101,11 +101,11 @@ public interface DBInterface {
 
     int contDniOfAlquilerUsuario(String idAlquiler);
 
-    void upDateUsuario(String columna, Object valor, Object DNI);
+    Task<Void> upDateUsuario(String columna, Object valor, Object DNI);
 
-    void upDateCuarto(String columna, Object valor, Object numeroDeCuarto);
+    Task<Void> upDateCuarto(String field, Object valor, String numeroDeCuarto);
 
-    void upDateAlquiler(String columna, Object valor, Object id);
+    Task<Void> upDateAlquiler(String columna, Object valor, String id);
 
     void upDateAlquilerUsuario(String columna, Object valor, Object idAl, Object dni);
 

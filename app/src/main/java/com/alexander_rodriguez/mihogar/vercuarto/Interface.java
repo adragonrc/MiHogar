@@ -1,7 +1,5 @@
 package com.alexander_rodriguez.mihogar.vercuarto;
 
-import android.content.ContentValues;
-
 import com.alexander_rodriguez.mihogar.Base.BaseView;
 import com.alexander_rodriguez.mihogar.Base.IBasePresenter;
 import com.alexander_rodriguez.mihogar.DataBase.items.ItemRental;
@@ -43,7 +41,7 @@ public interface Interface {
 
         void showCuartoAlquilado(ItemRoom cuarto, int numCuarto, String mensualidad);
 
-        void mostrarPDF(File pdfFile, ContentValues datosUsuario);
+        void mostrarPDF(File pdfFile, ItemRental datosUsuario);
 
         void actualizarMensualidad(String mensualidad);
 

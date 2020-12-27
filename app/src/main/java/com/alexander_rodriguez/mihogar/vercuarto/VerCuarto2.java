@@ -1,6 +1,5 @@
 package com.alexander_rodriguez.mihogar.vercuarto;
 
-import android.content.ContentValues;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -24,6 +23,7 @@ import com.alexander_rodriguez.mihogar.ActivityShowImage;
 import com.alexander_rodriguez.mihogar.Base.BaseActivity;
 import com.alexander_rodriguez.mihogar.ButtonsAC.ButtonsAceptarCancelar;
 import com.alexander_rodriguez.mihogar.ButtonsAC.interfazAC;
+import com.alexander_rodriguez.mihogar.DataBase.items.ItemRental;
 import com.alexander_rodriguez.mihogar.DataBase.items.ItemRoom;
 import com.alexander_rodriguez.mihogar.R;
 import com.alexander_rodriguez.mihogar.Save;
@@ -93,7 +93,7 @@ public class VerCuarto2 extends BaseActivity<Interface.Presenter> implements Int
         int id = item.getItemId();
         switch (id) {
             case R.id.iVerPagos: {
-                String idAlquiler = presenter.getDatosAlquiler().getAsString(TAlquiler.ID);
+                String idAlquiler = presenter.getDatosAlquiler().getId();
                 Intent i = new Intent(this, TableActivity.class);
                 i.putExtra(TAlquiler.ID, idAlquiler);
                 startActivity(i);
@@ -176,7 +176,7 @@ public class VerCuarto2 extends BaseActivity<Interface.Presenter> implements Int
 
     private void gotoTablePagos() {
         Intent intent = new Intent(this, TableActivity.class);
-        intent.putExtra(TAlquiler.ID, presenter.getDatosAlquiler().getAsString(TAlquiler.ID));
+        intent.putExtra(TAlquiler.ID, presenter.getDatosAlquiler().getId());
         startActivity(intent);
     }
 
@@ -242,7 +242,7 @@ public class VerCuarto2 extends BaseActivity<Interface.Presenter> implements Int
         //startActivity(new Intent(this, HistorialCasaActivity.class));
         Intent i = new Intent(this, HistorialCasaActivity.class);
         i.putExtra(HistorialCasaActivity.TYPE_MODE, HistorialCasaActivity.MODO_SOLO_USUARIOS);
-        i.putExtra(TAlquiler.ID, presenter.getDatosAlquiler().getAsString(TAlquiler.ID));
+        i.putExtra(TAlquiler.ID, presenter.getDatosAlquiler().getId());
         startActivity(i);
     }
 
@@ -287,11 +287,11 @@ public class VerCuarto2 extends BaseActivity<Interface.Presenter> implements Int
     }
 
     @Override
-    public void mostrarPDF(File pdfFile, ContentValues datosAlquiler) {
+    public void mostrarPDF(File pdfFile, ItemRental datosAlquiler) {
         Intent intent = new Intent(this, ViewPdfActivity.class);
         intent.putExtra(ViewPdfActivity.EXTRA_PATH_PDF, pdfFile.getAbsolutePath());
-        intent.putExtra(TAlquiler.NUMERO_TEL, datosAlquiler.getAsString(TAlquiler.NUMERO_TEL));
-        intent.putExtra(TAlquiler.CORREO, datosAlquiler.getAsString(TAlquiler.CORREO));
+        intent.putExtra(TAlquiler.NUMERO_TEL, datosAlquiler.getPhoneNumber());
+        intent.putExtra(TAlquiler.CORREO, datosAlquiler.getEmail());
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
     }
@@ -326,7 +326,7 @@ public class VerCuarto2 extends BaseActivity<Interface.Presenter> implements Int
     public void onClickVerAlquileres(View view) {
         Intent i = new Intent(this, ListAlquileresActivity.class);
         i.putExtra(TCuarto.NUMERO, numCuarto);
-        i.putExtra(TAlquiler.ID, presenter.getDatosAlquiler().getAsString(TAlquiler.ID));
+        i.putExtra(TAlquiler.ID, presenter.getDatosAlquiler().getId());
         startActivity(i);
     }
 

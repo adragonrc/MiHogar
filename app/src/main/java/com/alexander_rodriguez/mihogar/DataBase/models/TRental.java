@@ -9,16 +9,22 @@ public class TRental {
     protected String enabled;
     protected String roomNumber;
     protected DocumentReference currentMP;
+    protected String mainTenant;
     protected int paymentsNumber;
+    protected String phoneNumber;
+    protected String email;
 
-    public TRental(String entryDate, String departureDate, String reasonExit, String enabled, String roomNumber, DocumentReference currentMP, int paymentsNumber) {
+    public TRental(String entryDate, String departureDate, String reasonExit, String enabled, String roomNumber, DocumentReference currentMP, String mainTenant, int paymentsNumber, String phoneNumber, String email) {
         this.entryDate = entryDate;
         this.departureDate = departureDate;
         this.reasonExit = reasonExit;
         this.enabled = enabled;
         this.roomNumber = roomNumber;
         this.currentMP = currentMP;
+        this.mainTenant = mainTenant;
         this.paymentsNumber = paymentsNumber;
+        this.phoneNumber = phoneNumber;
+        this.email = email;
     }
 
     public String getEntryDate() {
@@ -55,5 +61,29 @@ public class TRental {
 
     public void setCurrentMP(DocumentReference currentMP) {
         this.currentMP = currentMP;
+    }
+
+    public String getMainTenant() {
+        return mainTenant;
+    }
+
+    public void setMainTenant(String mainTenant) {
+        this.mainTenant = mainTenant;
+    }
+
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 }

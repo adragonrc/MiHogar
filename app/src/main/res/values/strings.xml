@@ -139,13 +139,20 @@
     <string name="cMonthlyPayment">monthlyPayment</string>
 
     //room document metadata
-    <string name="mdRentalCurrentId">rentalCurrentId</string>
     <string name="mdRoomDescription">description</string>
     <string name="mdRoomPrice">price_e</string>
     <string name="mdRoomPathImage">pathImage</string>
-    <string name="mdTenantsNumber">tenantsNumber</string>
+    <string name="mdRoomTenantsNumber">tenantsNumber</string>
 
     //rental document metadata
-    <string name="mdCurrentMP">currentMP</string>
+    <string name="mdRentalCurrentId">rentalCurrentId</string>
+    <string name="mdRentalCurrentMP">currentMP</string>
+    <string name="mdRentalDepartureDate">departureDate</string>
+    <string name="mdRentalReasonExit">reasonExit.</string>
+    <string name="mdRentalMainTenant">mainTenant</string>
+    <string name="mdRentalPaymentsNumber">paymentsNumber</string>
+    <string name="mdRentalPhoneNumber">phoneNumber</string>
+    <string name="mdRentalEmail">email</string>
+
 
 </resources>

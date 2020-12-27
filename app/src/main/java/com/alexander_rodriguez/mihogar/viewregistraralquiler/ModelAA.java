@@ -19,7 +19,7 @@ public class ModelAA extends TRental {
 
 
     public ModelAA(String precio, String correo, String numeroTelef, String roomNumber, String entryDate,  int pagosRealizados, String plazo){
-        super(entryDate, null, null, "true", roomNumber, null, 0);
+        super(entryDate, null, null, "true", roomNumber, null, null, 0);
         this.precio = precio;
         this.correo = correo;
         this.numeroTelef = numeroTelef;

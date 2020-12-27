@@ -1,22 +1,22 @@
 package com.alexander_rodriguez.mihogar.DataBase.models;
 
 public class TMonthlyPayment {
-    protected String price;
+    protected String amount;
     protected String dateInit;
     protected String rentalId;
 
-    public TMonthlyPayment(String price, String dateInit, String rentalId) {
-        this.price = price;
+    public TMonthlyPayment(String amount, String dateInit, String rentalId) {
+        this.amount = amount;
         this.dateInit = dateInit;
         this.rentalId = rentalId;
     }
 
-    public String getPrice() {
-        return price;
+    public String getAmount() {
+        return amount;
     }
 
-    public void setPrice(String price) {
-        this.price = price;
+    public void setAmount(String amount) {
+        this.amount = amount;
     }
 
     public String getDateInit() {

@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import androidx.cardview.widget.CardView;
 
+import com.alexander_rodriguez.mihogar.DataBase.items.ItemRental;
 import com.alexander_rodriguez.mihogar.R;
 import com.alexander_rodriguez.mihogar.UTILIDADES.TAlquiler;
 
@@ -68,15 +69,15 @@ public class PerfilCuarto extends ScrollView{
         iniciarViews();
     }
 
-    public void showCuartoAlquilado(int cantidadDeUsuarios, String mensualidad, ContentValues alquiler) {
+    public void showCuartoAlquilado(int cantidadDeUsuarios, String mensualidad, ItemRental rental) {
         //String nombes = usuario.getAsString(TUsuario.NOMBRES) + ", " + usuario.getAsString(TUsuario.APELLIDO_PAT) + " " + usuario.getAsString(TUsuario.APELLIDO_MAT) + ".";
 
         tvNumeroInquilinos.setText(String.valueOf(cantidadDeUsuarios));
         tvMensualidad.setText(mensualidad);
-        tvFechaC.setText(alquiler.getAsString(TAlquiler.EXTRA_FECHA_PAGO));
-        tvFechaI.setText(alquiler.getAsString(TAlquiler.FECHA_INICIO));
-        tvNumeroTel.setText(alquiler.getAsString(TAlquiler.NUMERO_TEL));
-        tvCorreo.setText(alquiler.getAsString(TAlquiler.CORREO));
+        tvFechaC.setText(rental.getPaymentDate());
+        tvFechaI.setText(rental.getEntryDate());
+        tvNumeroTel.setText(rental.getPhoneNumber());
+        tvCorreo.setText(rental.getEmail());
 
         cvMensaje.setVisibility(View.GONE);
         cvDetallesAlquiler.setVisibility(View.VISIBLE);

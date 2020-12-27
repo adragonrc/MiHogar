@@ -12,21 +12,25 @@ public class ItemRental extends TRental {
     private String id;
     private String paymentDate;
 
-    public ItemRental(String id, String entryDate, String departureDate, String reasonExit, String valid, String roomNumber, int paymentsNumber) {
-        super(entryDate, departureDate, reasonExit, valid, roomNumber, null, paymentsNumber);
+    public ItemRental(String id, String entryDate, String departureDate, String reasonExit, String valid, String roomNumber) {
+        super(entryDate, departureDate, reasonExit, valid, roomNumber, null,null,  0);
         this.id = id;
     }
 
-    public ItemRental(String id, String entryDate, String departureDate, String reasonExit, String valid, String roomNumber) {
-        super(entryDate, departureDate, reasonExit, valid, roomNumber, null, 0);
+    public ItemRental(String id, String entryDate, String departureDate, String reasonExit, String valid, String roomNumber, int paymentsNumber) {
+        super(entryDate, departureDate, reasonExit, valid, roomNumber, null, null, paymentsNumber);
         this.id = id;
     }
 
     public ItemRental(String id, String entryDate, String departureDate, String reasonExit, String valid, String roomNumber, DocumentReference currentMP) {
-        super(entryDate, departureDate, reasonExit, valid, roomNumber, currentMP, 0);
+        super(entryDate, departureDate, reasonExit, valid, roomNumber, currentMP,null,  0);
         this.id = id;
     }
 
+    public ItemRental(String id, String entryDate, String departureDate, String reasonExit, String valid, String roomNumber, int paymentsNumber, String tenantMain) {
+        super(entryDate, departureDate, reasonExit, valid, roomNumber, null, tenantMain, paymentsNumber);
+        this.id = id;
+    }
     @Contract(pure = true)
     public static @NotNull String getLabelName(int i){
         switch (i){
