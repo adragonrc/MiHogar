@@ -83,8 +83,9 @@ public class Presentador extends BasePresenter<Interface.view> implements Interf
 
     private void getRoomSucces(DocumentSnapshot documentSnapshot) {
         if(documentSnapshot.exists()) {
-            room = (ItemRoom) documentSnapshot.toObject(TRoom.class);
-            if(room != null) {
+            TRoom tRoom = documentSnapshot.toObject(TRoom.class);
+            if(tRoom != null) {
+                room = new ItemRoom(tRoom);
                 room.setRoomNumber(documentSnapshot.getId());
                 db.getRentalDR(room.getCurrentRentalId()).get()
                         .addOnSuccessListener(this::getAlquilerSuccess);
@@ -95,7 +96,7 @@ public class Presentador extends BasePresenter<Interface.view> implements Interf
     private void getAlquilerSuccess(DocumentSnapshot documentSnapshot) {
 
         if (documentSnapshot.exists()) {
-            rental =(ItemRental) documentSnapshot.toObject(TRental.class);
+            rental = ItemRental.newInstance(documentSnapshot);
             if(rental != null) {
                 rental.setId(documentSnapshot.getId());
                 rental.getCurrentMP().get().addOnSuccessListener(this::getRentalSuccess);

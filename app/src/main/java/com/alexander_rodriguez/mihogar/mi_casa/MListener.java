@@ -10,7 +10,6 @@ import java.text.ParseException;
 
 public class MListener <T extends DocumentSnapshot>  implements OnSuccessListener<T> {
     ModelCuartoView modelCuartoView;
-    CallBack cb;
     public MListener(ModelCuartoView modelCuartoView) {
         this.modelCuartoView = modelCuartoView;
     }
@@ -27,10 +26,6 @@ public class MListener <T extends DocumentSnapshot>  implements OnSuccessListene
                 modelCuartoView.setPaymentDate(null);
             }
         }
-        cb.onComplete();
     }
 
-    interface CallBack{
-        void onComplete();
-    }
 }

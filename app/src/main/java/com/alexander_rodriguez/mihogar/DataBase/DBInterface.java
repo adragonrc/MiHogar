@@ -166,4 +166,6 @@ public interface DBInterface {
     DocumentReference getDocument(DocumentReference currentMP);
 
     Task<QuerySnapshot> getAllRoom();
+
+    Task<DocumentSnapshot> getRental(String currentRentalId);
 }

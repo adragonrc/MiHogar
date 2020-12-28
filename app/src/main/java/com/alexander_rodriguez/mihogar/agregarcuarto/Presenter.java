@@ -29,7 +29,7 @@ public class Presenter extends BasePresenter<Interfaz.view> implements Interfaz.
     }
     public void insertarCuarto(String numCuarto, String precio, String detalles, String path){
         if (path == null ) path = "";
-        roomToSave = new ItemRoom(numCuarto, detalles, null, precio, path);
+        roomToSave = new ItemRoom(detalles, path, precio, numCuarto);
         int err = roomToSave.getErrorIfExist();
         if(err == -1){
             db.getCuartoDR(numCuarto).get().addOnSuccessListener(oclGetRoom);

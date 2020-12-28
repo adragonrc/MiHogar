@@ -10,15 +10,19 @@ import org.jetbrains.annotations.NotNull;
 public class ItemRoom extends TRoom{
     private String roomNumber;
 
-    public ItemRoom(String roomNumber, String details, String currentRentalId, int numberTenants, String price_e, String pathImage) {
-        super(details, currentRentalId, numberTenants, price_e, pathImage);
-        this.roomNumber = roomNumber;
-    }
-    public ItemRoom(String roomNumber, String details, String  currentRentalId, String price_e, String pathImage) {
-        super(details, currentRentalId, 0, price_e, pathImage);
-        this.roomNumber = roomNumber;
+    public ItemRoom(TRoom room) {
+        super(room.getDetails(), room.getCurrentRentalId(), room.getNumberTenants(), room.getPathImage(), room.getPrice_e());
     }
 
+    public ItemRoom(String currentRentalId, String details, int numberTenants, String pathImage, String price_e) {
+        super(currentRentalId, details, numberTenants, pathImage, price_e);
+    }
+
+
+    public ItemRoom(String details, String pathImage, String price_e, String roomNumber) {
+        super(null, details, 0, pathImage, price_e);
+        this.roomNumber = roomNumber;
+    }
 
     public TRoom getCuartoRoot(){
         return new TRoom(this) ;

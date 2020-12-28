@@ -1,7 +1,11 @@
 package com.alexander_rodriguez.mihogar.DataBase.models;
 
+import com.alexander_rodriguez.mihogar.Adapters.Models.ModelCuartoView;
 import com.alexander_rodriguez.mihogar.DataBase.items.ItemRoom;
 import com.alexander_rodriguez.mihogar.alquilerusuario.Item;
+import com.alexander_rodriguez.mihogar.modelos.ModelCuarto;
+
+import org.jetbrains.annotations.NotNull;
 
 public class TRoom {
     protected String details;
@@ -10,6 +14,9 @@ public class TRoom {
     protected String price_e;
     protected String pathImage;
 
+    public TRoom(){
+
+    }
     public TRoom(ItemRoom room){
         this.details = room.getDetails();
         this.currentRentalId = room.getCurrentRentalId();
@@ -17,7 +24,7 @@ public class TRoom {
         this.price_e = room.getPrice_e();
         this.pathImage = room.getPathImage();
     }
-    public TRoom(String details, String currentRentalId, int numberTenants, String price_e, String pathImage) {
+    public TRoom( String currentRentalId, String details, int numberTenants,  String pathImage, String price_e) {
         this.details = details;
         this.currentRentalId = currentRentalId;
         this.numberTenants = numberTenants;

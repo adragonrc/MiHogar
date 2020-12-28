@@ -132,7 +132,7 @@
     <string name="cHogar">hogar</string>
     <string name="cUsers">users</string>
     <string name="cAlquileres">rentals</string>
-    <string name="cCuartos">rooms</string>
+    <string name="cRoom">rooms</string>
     <string name="cPayment">payment</string>
     <string name="cTenant">tenant</string>
     <string name="cRentalTenant">rentalTenant</string>

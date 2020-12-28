@@ -83,25 +83,17 @@ public class MiCasaActivity extends BaseActivity<Interface.Presenter> implements
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
 
-        switch (id){
-            case R.id.iTodos:{
-                opcion = 0;
-                presenter.verTodos();
-                break;
-            }
-            case R.id.iCuartosAlquilados:{
-                opcion = 1;
-                presenter.verCuartosAlquilados();
-                break;
-            }
-            case R.id.iCuartosLibres:{
-                opcion = 2;
-                presenter.verCuartosLibres();
-                break;
-            }
-            case R.id.itFecha:{
-                presenter.ordenarPorFecha();
-            }
+        if (id == R.id.iTodos) {
+            opcion = 0;
+            presenter.verTodos();
+        } else if (id == R.id.iCuartosAlquilados) {
+            opcion = 1;
+            presenter.verCuartosAlquilados();
+        } else if (id == R.id.iCuartosLibres) {
+            opcion = 2;
+            presenter.verCuartosLibres();
+        } else if (id == R.id.itFecha) {
+            presenter.ordenarPorFecha();
         }
         return super.onOptionsItemSelected(item);
     }
@@ -204,7 +196,7 @@ public class MiCasaActivity extends BaseActivity<Interface.Presenter> implements
     }
 
     private class PresenterDialogOptions implements DialogInterfaz.DialogOptionPresenter {
-        private DialogOptions dop;
+        private final DialogOptions dop;
         private PresenterDialogOptions(DialogOptions dop){
             this.dop = dop;
         }

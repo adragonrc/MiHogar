@@ -4,9 +4,11 @@ import com.alexander_rodriguez.mihogar.Base.BaseView;
 import com.alexander_rodriguez.mihogar.DataBase.models.TRental;
 import com.alexander_rodriguez.mihogar.Validator;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public class ItemRental extends TRental {
     private String id;
@@ -19,7 +21,11 @@ public class ItemRental extends TRental {
 
     public ItemRental(String entryDate, String departureDate, String reasonExit, boolean enabled, String roomNumber, DocumentReference currentMP, String mainTenant, int paymentsNumber, String phoneNumber, String email) {
         super(entryDate, departureDate, reasonExit, enabled, roomNumber, currentMP, mainTenant, paymentsNumber, phoneNumber, email);
-        this.id = id;
+
+    }
+
+    public ItemRental(TRental r) {
+        super(r.getEntryDate(), r.getDepartureDate(), r.getReasonExit(), r.isEnabled(), r.getRoomNumber(), r.getCurrentMP(), r.getMainTenant(), r.getPaymentsNumber(), r.getPhoneNumber(), r.getEmail());
     }
 
     @Contract(pure = true)
@@ -31,6 +37,11 @@ public class ItemRental extends TRental {
             case 3:{ return "Image Path"; }
             default:{ return  "There's no answer";}
         }
+    }
+
+    public static @Nullable ItemRental newInstance(@NotNull DocumentSnapshot documentSnapshot) {
+        TRental r = documentSnapshot.toObject(TRental.class);
+        return r == null? null: new ItemRental(r);
     }
 
 

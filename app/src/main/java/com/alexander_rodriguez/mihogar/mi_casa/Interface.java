@@ -3,6 +3,8 @@ package com.alexander_rodriguez.mihogar.mi_casa;
 import com.alexander_rodriguez.mihogar.Base.BaseView;
 import com.alexander_rodriguez.mihogar.Base.IBasePresenter;
 import com.alexander_rodriguez.mihogar.Adapters.Models.ModelCuartoView;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.DocumentSnapshot;
 
 import java.util.ArrayList;
 
@@ -13,6 +15,12 @@ public interface Interface{
         void verCuartosAlquilados();
         void verCuartosLibres();
         void ordenarPorFecha();
+
+        Task<DocumentSnapshot> getRental(String currentRentalId);
+
+        void mostratCuartos(ArrayList<ModelCuartoView> list);
+
+        ArrayList<ModelCuartoView> getList();
     }
 
     interface View extends BaseView {

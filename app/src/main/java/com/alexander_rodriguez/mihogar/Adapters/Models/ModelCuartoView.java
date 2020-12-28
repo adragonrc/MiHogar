@@ -1,38 +1,26 @@
 package com.alexander_rodriguez.mihogar.Adapters.Models;
 
-import android.database.Cursor;
-import android.os.Bundle;
-
 import com.alexander_rodriguez.mihogar.DataBase.items.ItemRoom;
 import com.alexander_rodriguez.mihogar.DataBase.models.TRoom;
 import com.alexander_rodriguez.mihogar.MyAdminDate;
-import com.alexander_rodriguez.mihogar.UTILIDADES.TAlquiler;
-import com.alexander_rodriguez.mihogar.UTILIDADES.TCuarto;
+import com.alexander_rodriguez.mihogar.mi_casa.MListener;
 
-import java.text.ParseException;
-import java.util.ArrayList;
 import java.util.Date;
 
 public class ModelCuartoView extends ItemRoom {
-    private String fechaCancelar;
+    private String paymentDate;
     private boolean alert;
 
-    public ModelCuartoView(String roomNumber, String details, String currentRentalId, int numberTenants, String price_e, String pathImage) {
-        super(roomNumber, details, currentRentalId, numberTenants, price_e, pathImage);
+    public ModelCuartoView(TRoom room) {
+        super(room);
     }
 
-    public ModelCuartoView(String roomNumber, String details, String currentRentalId, int numberTenants, String price_e, String pathImage, String fechaCancelar, boolean alert) {
-        super(roomNumber, details, currentRentalId, numberTenants, price_e, pathImage);
-        this.fechaCancelar = fechaCancelar;
-        this.alert = alert;
-    }
-
-    public void setFechaCancelar(String fechaCancelar) {
-        this.fechaCancelar = fechaCancelar;
+    public void setPaymentDate(String paymentDate) {
+        this.paymentDate = paymentDate;
         MyAdminDate date = new MyAdminDate();
         this.alert = false;
-        if (fechaCancelar != null)
-            this.alert = date.stringToDate(fechaCancelar).before(new Date());
+        if (paymentDate != null)
+            this.alert = date.stringToDate(paymentDate).before(new Date());
 
     }
 /*
@@ -52,13 +40,10 @@ public class ModelCuartoView extends ItemRoom {
         return alert;
     }
 
-    public String getFechaCancelar() {
-        return fechaCancelar;
+    public String getPaymentDate() {
+        return paymentDate;
     }
 
-    public void setPaymentDate(String fechaCancelar) {
-        this.fechaCancelar = fechaCancelar;
-    }
 
     public void setAlert(boolean alert) {
         this.alert = alert;

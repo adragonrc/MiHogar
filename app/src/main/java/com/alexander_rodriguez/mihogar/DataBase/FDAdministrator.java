@@ -135,7 +135,7 @@ public class FDAdministrator implements DBInterface{
     @Override
     public ArrayList<String> getCuartosAlquilados() {
         ArrayList<String> mList = new ArrayList<>();
-        hogarDocument.collection(mContext.getString(R.string.cCuartos))
+        hogarDocument.collection(mContext.getString(R.string.cRoom))
                 .whereEqualTo(mContext.getString(R.string.mdRentalCurrentId), null)
                 .get()
                 .addOnCompleteListener(task -> {
@@ -307,6 +307,11 @@ public class FDAdministrator implements DBInterface{
     }
 
     @Override
+    public Task<DocumentSnapshot> getRental(String currentRentalId) {
+        return getRentalDR(currentRentalId).get();
+    }
+
+    @Override
     public Task<Void> agregarCuarto(ItemRoom room) {
 
         return getCuartoDR(room.getRoomNumber()).set(room.getCuartoRoot());
@@ -334,7 +339,7 @@ public class FDAdministrator implements DBInterface{
 
     @Override
     public CollectionReference getCuartoCR() {
-        return hogarDocument.collection(mContext.getString(R.string.cCuartos));
+        return hogarDocument.collection(mContext.getString(R.string.cRoom));
     }
 
     @Override
