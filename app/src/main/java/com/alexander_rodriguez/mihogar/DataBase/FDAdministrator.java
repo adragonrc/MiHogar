@@ -3,6 +3,7 @@ package com.alexander_rodriguez.mihogar.DataBase;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -16,7 +17,10 @@ import com.alexander_rodriguez.mihogar.DataBase.models.TRentalTenant;
 import com.alexander_rodriguez.mihogar.R;
 import com.alexander_rodriguez.mihogar.TableCursor;
 import com.alexander_rodriguez.mihogar.modelos.ModelUsuario;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
@@ -50,10 +54,28 @@ public class FDAdministrator implements DBInterface{
         firestore = FirebaseFirestore.getInstance();
 
         mAuth = FirebaseAuth.getInstance();
-        usuario = mAuth.getCurrentUser();
+        if(mAuth.getCurrentUser() == null)
+            FirebaseAuth.getInstance().signInWithEmailAndPassword("alexrodriguez@gmail.com","hola12").addOnSuccessListener(new OnSuccessListener<AuthResult>() {
+                @Override
+                public void onSuccess(AuthResult authResult) {
+                    usuario = authResult.getUser();
+                    hogarReference = firestore.collection(mContext.getString(R.string.cHogar));
+                    hogarDocument = hogarReference.document(usuario.getUid());
+                    Toast.makeText(mContext, "login success", Toast.LENGTH_SHORT).show();
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Toast.makeText(mContext, "can not login", Toast.LENGTH_SHORT).show();
+                        }
+                    });
 
-        hogarReference = firestore.collection(mContext.getString(R.string.cHogar));
-        hogarDocument = hogarReference.document(mAuth.getUid());
+        else{
+            Toast.makeText(mContext, "really success", Toast.LENGTH_SHORT).show();
+            usuario = mAuth.getCurrentUser();
+            hogarReference = firestore.collection(mContext.getString(R.string.cHogar));
+            hogarDocument = hogarReference.document(usuario.getUid());
+        }
         //colegioReference = firestore.collection(mContext.getString(R.string.collection_colegio));
     }
 
@@ -166,13 +188,13 @@ public class FDAdministrator implements DBInterface{
     }
 
     @Override
-    public Cursor getAllCuartosJoinAlquiler(String columnas) {
+    public Task<QuerySnapshot> getAllCuartosJoinAlquiler(String columnas) {
         return null;
     }
 
     @Override
-    public Cursor getCuartosLibres(String columnas) {
-        return null;
+    public Task<QuerySnapshot> getEmptyRooms() {
+        return getCuartoCR().whereEqualTo(mContext.getString(R.string.mdroomCurrentRentalId), null).get();
     }
 
     @Override
@@ -278,6 +300,12 @@ public class FDAdministrator implements DBInterface{
     public DocumentReference getDocument(DocumentReference documentReference){
         return firestore.document(documentReference.getPath());
     }
+
+    @Override
+    public Task<QuerySnapshot> getAllRoom() {
+        return getCuartoCR().get();
+    }
+
     @Override
     public Task<Void> agregarCuarto(ItemRoom room) {
 

@@ -2,55 +2,28 @@ package com.alexander_rodriguez.mihogar.viewregistraralquiler;
 
 import com.alexander_rodriguez.mihogar.Base.BasePresenter;
 import com.alexander_rodriguez.mihogar.DataBase.models.TRental;
-import com.alexander_rodriguez.mihogar.MyAdminDate;
-import com.alexander_rodriguez.mihogar.UTILIDADES.TAlquiler;
+import com.google.firebase.firestore.DocumentReference;
 
 public class ModelAA extends TRental {
-    private String precio;
-    private String correo;
-    private String numeroTelef;
-
-    private String numCuarto;
+    private String price;
     private String fecha;
-
     private String plazo;
 
-    private int pagosRealizados;
-
-
-    public ModelAA(String precio, String correo, String numeroTelef, String roomNumber, String entryDate,  int pagosRealizados, String plazo){
-        super(entryDate, null, null, "true", roomNumber, null, null, 0);
-        this.precio = precio;
-        this.correo = correo;
-        this.numeroTelef = numeroTelef;
-        this.numCuarto = roomNumber;
-        this.fecha = entryDate;
-        this.plazo = plazo;
-        this.pagosRealizados = pagosRealizados;
+    public ModelAA(String entryDate, String roomNumber, int paymentsNumber, String phoneNumber, String email, String price ) {
+        super(entryDate, null, "", true, roomNumber, null,null, paymentsNumber, phoneNumber, email);
+        this.price = price;
     }
+    public ModelAA(String entryDate, String departureDate, String reasonExit, boolean enabled, String roomNumber, DocumentReference currentMP, String mainTenant, int paymentsNumber, String phoneNumber, String email) {
+        super(entryDate, departureDate, reasonExit, enabled, roomNumber, currentMP, mainTenant, paymentsNumber, phoneNumber, email);
+    }
+
 
     public TRental getRoot(){
         return (TRental) this;
     }
 
-    public String getPrecio() {
-        return precio;
-    }
-
-    public String getCorreo() {
-        return correo;
-    }
-
-    public String getNumeroTelef() {
-        return numeroTelef;
-    }
-
-    public String getNumCuarto() {
-        return numCuarto;
-    }
-
-    public String getFecha() {
-        return fecha;
+    public String getPrice() {
+        return price;
     }
 
     public String getPlazo() {
@@ -58,19 +31,10 @@ public class ModelAA extends TRental {
     }
 
     public boolean wasPaid() {
-        return pagosRealizados != 0;
+        return paymentsNumber != 0;
     }
 
     public boolean isCorrect() {
-        return  BasePresenter.validarStrings(precio, numCuarto, fecha, plazo);
-    }
-
-
-    public int getPagosRealizados() {
-        return pagosRealizados;
-    }
-
-    public void setFecha(String fecha) {
-        this.fecha = fecha;
+        return  BasePresenter.validarStrings(price, roomNumber, fecha, plazo);
     }
 }

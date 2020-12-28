@@ -82,13 +82,12 @@ public class AgregarAlquilerView extends ScrollView {
         if  (pago) pagosRealizados  = 1;
         else pagosRealizados = 0;
         ModelAA model = new ModelAA(
-                etPrecio.getText().toString(),
+                fecha,
+                spNumCuarto.getSelectedItem().toString(),
+                pagosRealizados,
                 etCorreo.getText().toString(),
                 etNumeroTelef.getText().toString(),
-                spNumCuarto.getSelectedItem().toString(),
-                fecha,
-                pagosRealizados,
-                "0"
+                etPrecio.getText().toString()
         );
 
         return model;

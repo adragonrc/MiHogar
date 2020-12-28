@@ -132,7 +132,7 @@ public class Presenter extends BasePresenter<Interfaz.view> implements Interfaz.
     }
 
     private void addTenantSuccess(Void v){
-        TMonthlyPayment monthlyPayment = new TMonthlyPayment(modelToSave.getPrecio(), modelToSave.getFecha(), rentalId);
+        TMonthlyPayment monthlyPayment = new TMonthlyPayment(modelToSave.getPrice(), modelToSave.getEntryDate(), rentalId);
         db.agregarMensualidad(monthlyPayment)
                 .addOnSuccessListener(this::addMonthlyPaymentSuccess)
                 .addOnFailureListener(this::addMonthlyPaymentFailure);
@@ -141,7 +141,7 @@ public class Presenter extends BasePresenter<Interfaz.view> implements Interfaz.
 
     private void addMonthlyPaymentSuccess(DocumentReference document) {
         if (modelToSave.wasPaid()) {
-            TPayment payment = new TPayment(modelToSave.getFecha(), rentalId, modelToSave.getRoomNumber(), document.getId(), modelToSave.getPrecio());
+            TPayment payment = new TPayment(modelToSave.getEntryDate(), rentalId, modelToSave.getRoomNumber(), document.getId(), modelToSave.getPrice());
             db.agregarPago(payment)
                     .addOnSuccessListener(this::addPaymentSuccess)
                     .addOnFailureListener(this::addPaymentFailure);
@@ -157,8 +157,8 @@ public class Presenter extends BasePresenter<Interfaz.view> implements Interfaz.
         db.revertir(TAlquiler.T_NOMBRE, TAlquiler.ID, String.valueOf(rentalId));
     }
     private void addPaymentSuccess(DocumentReference documentReference) {
-        db.updateCurrentRoomRent(modelToSave.getNumCuarto(), rentalId);
-        db.updateTenantRoomNum(modelToSave.getNumCuarto(), list.size());
+        db.updateCurrentRoomRent(modelToSave.getRoomNumber(), rentalId);
+        db.updateTenantRoomNum(modelToSave.getRoomNumber(), list.size());
 
         view.showMensaje("OK");
         view.close();

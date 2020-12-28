@@ -6,7 +6,7 @@ public class TRental {
     protected String entryDate;
     protected String departureDate;
     protected String reasonExit;
-    protected String enabled;
+    protected boolean enabled;
     protected String roomNumber;
     protected DocumentReference currentMP;
     protected String mainTenant;
@@ -14,7 +14,7 @@ public class TRental {
     protected String phoneNumber;
     protected String email;
 
-    public TRental(String entryDate, String departureDate, String reasonExit, String enabled, String roomNumber, DocumentReference currentMP, String mainTenant, int paymentsNumber, String phoneNumber, String email) {
+    public TRental(String entryDate, String departureDate, String reasonExit, boolean enabled, String roomNumber, DocumentReference currentMP, String mainTenant, int paymentsNumber, String phoneNumber, String email) {
         this.entryDate = entryDate;
         this.departureDate = departureDate;
         this.reasonExit = reasonExit;
@@ -39,7 +39,7 @@ public class TRental {
         return reasonExit;
     }
 
-    public String getEnabled() {
+    public boolean isEnabled() {
         return enabled;
     }
 

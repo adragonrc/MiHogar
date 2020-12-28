@@ -21,20 +21,20 @@ public class ItemRoom extends TRoom{
 
 
     public TRoom getCuartoRoot(){
-        return (TRoom) this;
+        return new TRoom(this) ;
     }
 
     public int getErrorIfExist(){
-        return Validator.isEmptyOrNull(details, currentRentalId, price_e, pathImage);
+        return Validator.isEmptyOrNull(roomNumber, details, price_e);
     }
 
     @Contract(pure = true)
     public static @NotNull String getLabelName(int i){
         switch (i){
-            case 0:{ return "Details"; }
-            case 1:{ return "Current Rental"; }
+            case 0: {return "room number"; }
+            case 1:{ return "Details"; }
+            //case 2:{ return "Current Rental"; }
             case 2:{ return "Suggested price"; }
-            case 3:{ return "Image Path"; }
             default:{ return  "There's no answer";}
         }
     }

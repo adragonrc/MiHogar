@@ -12,25 +12,16 @@ public class ItemRental extends TRental {
     private String id;
     private String paymentDate;
 
-    public ItemRental(String id, String entryDate, String departureDate, String reasonExit, String valid, String roomNumber) {
-        super(entryDate, departureDate, reasonExit, valid, roomNumber, null,null,  0);
+    public ItemRental(String id, String entryDate, String departureDate, String reasonExit, boolean enabled, String roomNumber, String phoneNumber, String email) {
+        super(entryDate, departureDate, reasonExit, enabled, roomNumber, null, null, 0, phoneNumber, email);
         this.id = id;
     }
 
-    public ItemRental(String id, String entryDate, String departureDate, String reasonExit, String valid, String roomNumber, int paymentsNumber) {
-        super(entryDate, departureDate, reasonExit, valid, roomNumber, null, null, paymentsNumber);
+    public ItemRental(String entryDate, String departureDate, String reasonExit, boolean enabled, String roomNumber, DocumentReference currentMP, String mainTenant, int paymentsNumber, String phoneNumber, String email) {
+        super(entryDate, departureDate, reasonExit, enabled, roomNumber, currentMP, mainTenant, paymentsNumber, phoneNumber, email);
         this.id = id;
     }
 
-    public ItemRental(String id, String entryDate, String departureDate, String reasonExit, String valid, String roomNumber, DocumentReference currentMP) {
-        super(entryDate, departureDate, reasonExit, valid, roomNumber, currentMP,null,  0);
-        this.id = id;
-    }
-
-    public ItemRental(String id, String entryDate, String departureDate, String reasonExit, String valid, String roomNumber, int paymentsNumber, String tenantMain) {
-        super(entryDate, departureDate, reasonExit, valid, roomNumber, null, tenantMain, paymentsNumber);
-        this.id = id;
-    }
     @Contract(pure = true)
     public static @NotNull String getLabelName(int i){
         switch (i){
@@ -48,7 +39,7 @@ public class ItemRental extends TRental {
     }
 
     public int getErrorIfExist(){
-        return Validator.isEmptyOrNull(entryDate, departureDate, reasonExit, enabled, roomNumber);
+        return Validator.isEmptyOrNull(entryDate, departureDate, reasonExit, roomNumber);
     }
 
     public String getId() {

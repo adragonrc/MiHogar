@@ -12,7 +12,6 @@ public interface Interface{
         void verTodos();
         void verCuartosAlquilados();
         void verCuartosLibres();
-
         void ordenarPorFecha();
     }
 

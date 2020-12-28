@@ -153,6 +153,7 @@
     <string name="mdRentalPaymentsNumber">paymentsNumber</string>
     <string name="mdRentalPhoneNumber">phoneNumber</string>
     <string name="mdRentalEmail">email</string>
+    <string name="mdroomCurrentRentalId">currentRentalId</string>
 
 
 </resources>

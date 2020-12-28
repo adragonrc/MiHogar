@@ -1,5 +1,8 @@
 package com.alexander_rodriguez.mihogar.DataBase.models;
 
+import com.alexander_rodriguez.mihogar.DataBase.items.ItemRoom;
+import com.alexander_rodriguez.mihogar.alquilerusuario.Item;
+
 public class TRoom {
     protected String details;
     protected String currentRentalId;
@@ -7,6 +10,13 @@ public class TRoom {
     protected String price_e;
     protected String pathImage;
 
+    public TRoom(ItemRoom room){
+        this.details = room.getDetails();
+        this.currentRentalId = room.getCurrentRentalId();
+        this.numberTenants = room.getNumberTenants();
+        this.price_e = room.getPrice_e();
+        this.pathImage = room.getPathImage();
+    }
     public TRoom(String details, String currentRentalId, int numberTenants, String price_e, String pathImage) {
         this.details = details;
         this.currentRentalId = currentRentalId;

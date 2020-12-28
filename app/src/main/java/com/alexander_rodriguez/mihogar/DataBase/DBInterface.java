@@ -71,9 +71,9 @@ public interface DBInterface {
 
     Cursor getAllCuartos(String columnas);
 
-    Cursor getAllCuartosJoinAlquiler(String columnas);
+    Task<QuerySnapshot> getAllCuartosJoinAlquiler(String columnas);
 
-    Cursor getCuartosLibres(String columnas);
+    Task<QuerySnapshot> getEmptyRooms();
 
     Cursor getCuartosAlquilados(String columnas);
 
@@ -164,4 +164,6 @@ public interface DBInterface {
     void updateCurrentRentMP(String rentalId, DocumentReference id);
 
     DocumentReference getDocument(DocumentReference currentMP);
+
+    Task<QuerySnapshot> getAllRoom();
 }

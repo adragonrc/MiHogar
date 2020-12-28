@@ -38,10 +38,10 @@ public class RvAdapterCuartos extends RecyclerView.Adapter<RvAdapterCuartos.Hold
     @Override
     public void onBindViewHolder(@NonNull Holder holder, int i) {
         ModelCuartoView item = list.get(i);
-        holder.tvTitle.setText(item.getNumero());
-        holder.tvDetalles.setText(item.getDescripcion());
-        holder.id = item.getNumero();
-        String path = item.getPath();
+        holder.tvTitle.setText(item.getRoomNumber());
+        holder.tvDetalles.setText(item.getDetails());
+        holder.id = item.getRoomNumber();
+        String path = item.getPathImage();
 
         File f = new File(path);
         if (f.exists())       Picasso.get().load(f).into(holder.ivPhoto);

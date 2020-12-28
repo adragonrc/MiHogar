@@ -21,7 +21,7 @@ public class ModelUserView  {
     public ModelUserView(String dni, String nombres, String path) {
         this.dni = dni;
         this.nombres = nombres;
-        this.path = path;
+        this.path = path.isEmpty()? "": path;
         main = false;
     }
 
@@ -36,6 +36,7 @@ public class ModelUserView  {
             if (flag != null && flag.equals("1"))
                 main = true;
         }
+        this.path = path.isEmpty()? "": path;
     }
 
     public ModelUserView(Intent i){
@@ -44,6 +45,7 @@ public class ModelUserView  {
         this.path = i.getStringExtra(TUsuario.URI);
         this.alert = i.getStringExtra(TAlquiler.ALERT);
         main = false;
+        this.path = path.isEmpty()? "": path;
     }
 
     public ModelUserView(ModelUsuario m) {
@@ -52,6 +54,7 @@ public class ModelUserView  {
         this.path = m.getPath();
         this.alert = "0";
         main = false;
+        this.path = path.isEmpty()? "": path;
     }
 
     public ModelUserView(ItemUser m) {
@@ -60,6 +63,7 @@ public class ModelUserView  {
         this.path = m.getPath();
         this.alert = "0";
         main = false;
+        this.path = path.isEmpty()? "": path;
     }
     public static ArrayList<ModelUserView> createListModel(Cursor c, boolean showMain){
         ArrayList<ModelUserView> list = new ArrayList<>();
