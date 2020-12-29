@@ -25,6 +25,8 @@ public class MListener <T extends DocumentSnapshot>  implements OnSuccessListene
             } catch (ParseException e) {
                 modelCuartoView.setPaymentDate(null);
             }
+        }else{
+            modelCuartoView.setPaymentDate(null);
         }
     }
 

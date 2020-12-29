@@ -124,7 +124,8 @@ public class Presenter extends BasePresenter<Interface.View> implements Interfac
                 ModelCuartoView room = new  ModelCuartoView (roomDoc.toObject(TRoom.class));
                 list.add(room);
                 room.setRoomNumber(roomDoc.getId());
-                presenter.getRental(room.getCurrentRentalId()).addOnSuccessListener(new MListener<>(room));
+                if(room.getCurrentRentalId() != null && !room.getCurrentRentalId().isEmpty())
+                    presenter.getRental(room.getCurrentRentalId()).addOnSuccessListener(new MListener<>(room));
             }
             return null;
         }

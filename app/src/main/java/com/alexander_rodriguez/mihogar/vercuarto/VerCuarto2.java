@@ -298,16 +298,21 @@ public class VerCuarto2 extends BaseActivity<Interface.Presenter> implements Int
 
     @Override
     public void onClickPhoto(View view) {
-        if(Objects.requireNonNull(path).equals("")) {
+        if(path == null || path.equals("")) {
             Toast.makeText(this, "Sin foto", Toast.LENGTH_SHORT).show();
             return;
         }
         Intent intent = new Intent(this, ActivityShowImage.class);
-        ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(this, ivPerfil, ViewCompat.getTransitionName(ivPerfil));
+        String transitionName = ViewCompat.getTransitionName(ivPerfil);
         intent.putExtra(ActivityShowImage.IS_CUARTO_IMAGE, true);
         intent.putExtra(TCuarto.NUMERO, numCuarto);
         intent.putExtra(ActivityShowImage.DATA_IMAGE, path);
-        startActivity(intent, options.toBundle());
+        if(transitionName != null) {
+            ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(this, ivPerfil, transitionName);
+            startActivity(intent, options.toBundle());
+        }else{
+            startActivity(intent);
+        }
     }
 
     @Override

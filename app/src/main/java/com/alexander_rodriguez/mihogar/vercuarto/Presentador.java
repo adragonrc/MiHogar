@@ -13,13 +13,11 @@ import com.alexander_rodriguez.mihogar.DataBase.items.ItemRental;
 import com.alexander_rodriguez.mihogar.DataBase.items.ItemRoom;
 import com.alexander_rodriguez.mihogar.DataBase.models.TMonthlyPayment;
 import com.alexander_rodriguez.mihogar.DataBase.models.TPayment;
-import com.alexander_rodriguez.mihogar.DataBase.models.TRental;
 import com.alexander_rodriguez.mihogar.DataBase.models.TRoom;
 import com.alexander_rodriguez.mihogar.MyAdminDate;
 import com.alexander_rodriguez.mihogar.PDF;
 import com.alexander_rodriguez.mihogar.R;
 import com.alexander_rodriguez.mihogar.UTILIDADES.Mensualidad;
-import com.alexander_rodriguez.mihogar.UTILIDADES.TAlquiler;
 import com.alexander_rodriguez.mihogar.UTILIDADES.TCuarto;
 import com.alexander_rodriguez.mihogar.UTILIDADES.TPago;
 import com.google.firebase.firestore.DocumentReference;
@@ -87,8 +85,12 @@ public class Presentador extends BasePresenter<Interface.view> implements Interf
             if(tRoom != null) {
                 room = new ItemRoom(tRoom);
                 room.setRoomNumber(documentSnapshot.getId());
-                db.getRentalDR(room.getCurrentRentalId()).get()
-                        .addOnSuccessListener(this::getAlquilerSuccess);
+                if(room.getCurrentRentalId() != null && !room.getCurrentRentalId().isEmpty()){
+                    db.getRental(room.getCurrentRentalId())
+                            .addOnSuccessListener(this::getAlquilerSuccess);
+                }else{
+                    view.showCuartolibre(room);
+                }
             }
         }
     }
@@ -99,14 +101,14 @@ public class Presentador extends BasePresenter<Interface.view> implements Interf
             rental = ItemRental.newInstance(documentSnapshot);
             if(rental != null) {
                 rental.setId(documentSnapshot.getId());
-                rental.getCurrentMP().get().addOnSuccessListener(this::getRentalSuccess);
+                rental.getCurrentMP().get().addOnSuccessListener(this::getCurrentMPSuccess);
                 return;
             }
         }
         view.showCuartolibre(room);
     }
 
-    private void getRentalSuccess(DocumentSnapshot documentSnapshot) {
+    private void getCurrentMPSuccess(DocumentSnapshot documentSnapshot) {
 
         int num = room.getNumberTenants();
 
