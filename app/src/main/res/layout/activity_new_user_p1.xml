@@ -8,7 +8,7 @@
     android:id="@+id/regCuarto"
     android:layout_gravity="bottom"
     android:orientation="vertical"
-    android:background="@drawable/gradient_for_user">
+    android:gravity="bottom">
 
     <LinearLayout
         android:id="@+id/linearLayout"
@@ -22,82 +22,96 @@
             android:layout_height="match_parent"
 
             android:orientation="vertical">
-
-            <de.hdodenhof.circleimageview.CircleImageView
-                android:id="@+id/ivPhoto"
+            <FrameLayout
                 android:layout_width="match_parent"
-                android:layout_height="200dp"
-                android:scaleType="centerCrop"
-                android:src="@drawable/images"
-                android:layout_marginBottom="18dp"
-                android:contentDescription="@string/cdImageView"/>
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="12dp"
-                android:text="@string/datos_del_usuario"
-                android:textColor="@color/colorPrimary" />
+                android:layout_height="220dp"
+                android:background="@drawable/gradient_for_user">
 
-            <LinearLayout
-                style="@style/styleMargin"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <com.google.android.material.textfield.TextInputLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="8dp"
-                    android:layout_weight="1">
-
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/etDNI"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:ems="10"
-                        android:hint="@string/sDni"
-                        android:inputType="number"
-                        android:maxLength="8"
-                        android:singleLine="true"
-                        android:textColorHint="@color/colorAccent" />
-                </com.google.android.material.textfield.TextInputLayout>
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:id="@+id/ivPhoto"
+                    android:layout_width="180dp"
+                    android:layout_height="180dp"
+                    android:scaleType="centerCrop"
+                    android:layout_gravity="center"
+                    android:src="@drawable/images"
+                    android:contentDescription="@string/cdImageView"/>
 
                 <ImageButton
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:background="@android:color/transparent"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:layout_gravity="bottom|center"
+                    android:layout_marginStart="66dp"
+                    android:layout_marginBottom="21dp"
+                    android:scaleType="centerCrop"
+                    android:contentDescription="@string/toma_foto"
                     android:onClick="onClickTomarFoto"
+                    android:padding="10dp"
+                    android:background="@drawable/roud_borders"
                     android:src="@drawable/ic_photo_camera_black_24dp"
-                    android:tint="@color/colorPrimary"
-                    android:contentDescription="@string/toma_foto"/>
+                    android:tint="#FFFFFF">
+                </ImageButton>
+            </FrameLayout>
 
-            </LinearLayout>
+            <TextView
+                android:text="@string/datos_del_usuario"
+                style="@style/tvSubTitle"
+                android:layout_marginBottom="8dp"/>
 
             <com.google.android.material.textfield.TextInputLayout
                 style="@style/styleMargin"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:textColorHint="@color/colorAccent"
+                android:layout_height="wrap_content"
+                app:startIconDrawable="@drawable/ic_baseline_perm_identity_24"
+                app:startIconTint="@color/colorPrimary">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/etDNI"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ems="10"
+                    android:hint="@string/sDni"
+                    android:text="987654321"
+                    android:textSize="16sp"
+                    android:inputType="number"
+                    android:maxLength="8"
+                    android:singleLine="true" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                style="@style/styleMargin"
+                android:layout_width="match_parent"
+                android:textColorHint="@color/colorAccent"
+                android:layout_height="wrap_content"
+                app:startIconDrawable="@drawable/ic_baseline_person_24"
+                app:startIconTint="@color/colorPrimary">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/etNombre"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:ems="10"
+                    android:text="Alexander"
+                    android:textSize="16sp"
                     android:hint="@string/sNombreUser"
                     android:inputType="textCapSentences" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
+                android:textColorHint="@color/colorAccent"
                 android:layout_height="wrap_content"
-                style="@style/styleMargin">
+                style="@style/styleMargin"
+                app:startIconDrawable="@drawable/ic_baseline_person_24"
+                app:startIconTint="@color/colorPrimary">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/etApellidoPat"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:ems="10"
+                    android:textSize="16sp"
+                    android:text="Rodriguez"
                     android:hint="@string/sApePat"
                     android:inputType="textCapSentences"/>
             </com.google.android.material.textfield.TextInputLayout>
@@ -105,20 +119,24 @@
             <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                style="@style/styleMargin">
+                android:textColorHint="@color/colorAccent"
+                style="@style/styleMargin"
+                app:startIconDrawable="@drawable/ic_baseline_person_24"
+                app:startIconTint="@color/colorPrimary">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/etApellidoMat"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:ems="10"
+                    android:textSize="16sp"
+                    android:text="Carrion"
                     android:hint="@string/sApeMat"
                     android:inputType="textCapSentences" />
             </com.google.android.material.textfield.TextInputLayout>
         </LinearLayout>
         <include
             android:layout_marginTop="12dp"
-
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             layout="@layout/buttons_aceptar_cancelar" />

@@ -6,8 +6,6 @@ import com.google.firebase.firestore.DocumentReference;
 
 public class ModelAA extends TRental {
     private String price;
-    private String fecha;
-    private String plazo;
 
     public ModelAA(String entryDate, String roomNumber, int paymentsNumber, String phoneNumber, String email, String price ) {
         super(entryDate, null, "", true, roomNumber, null,null, paymentsNumber, phoneNumber, email);
@@ -19,22 +17,22 @@ public class ModelAA extends TRental {
 
 
     public TRental getRoot(){
-        return (TRental) this;
+        return new TRental(entryDate, departureDate, reasonExit, enabled, roomNumber, currentMP, mainTenant, paymentsNumber, phoneNumber, email);
     }
 
     public String getPrice() {
         return price;
     }
 
-    public String getPlazo() {
-        return plazo;
-    }
+   // public String getPlazo() {
+  //      return plazo;
+   // }
 
     public boolean wasPaid() {
         return paymentsNumber != 0;
     }
 
     public boolean isCorrect() {
-        return  BasePresenter.validarStrings(price, roomNumber, fecha, plazo);
+        return  BasePresenter.validarStrings(price, roomNumber, entryDate);
     }
 }

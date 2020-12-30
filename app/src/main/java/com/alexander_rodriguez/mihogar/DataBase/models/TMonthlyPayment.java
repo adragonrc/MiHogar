@@ -5,6 +5,8 @@ public class TMonthlyPayment {
     protected String dateInit;
     protected String rentalId;
 
+    public TMonthlyPayment(){}
+
     public TMonthlyPayment(String amount, String dateInit, String rentalId) {
         this.amount = amount;
         this.dateInit = dateInit;

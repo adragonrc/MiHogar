@@ -46,6 +46,7 @@
             android:layout_margin="4dp">
 
             <ImageButton
+                android:id="@+id/btAddTenant"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
@@ -60,6 +61,7 @@
                 android:layout_weight="1"
                 style="@style/Widget.AppCompat.Button.Colored"
                 android:onClick="onClickAvanzar"
+                android:tint="@color/white"
                 android:src="@drawable/ic_arrow_forward_black_24dp"/>
         </LinearLayout>
     </LinearLayout>
@@ -69,7 +71,7 @@
         android:layout_height="wrap_content"
         android:clickable="true"
         android:id="@+id/drawing"
-        android:focusable="false"
+        android:focusable="true"
         android:orientation="vertical">
 
         <RelativeLayout

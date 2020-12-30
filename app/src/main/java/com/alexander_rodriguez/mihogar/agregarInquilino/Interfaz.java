@@ -24,7 +24,7 @@ public interface Interfaz {
 
         void agregarAlquilerNuevo(ModelAA list);
 
-        void doMain(RvAdapterUser.Holder holder);
+        void setMain(RvAdapterUser.Holder holder);
 
         boolean saveChanges();
     }
@@ -41,8 +41,6 @@ public interface Interfaz {
         void sinCuartos();
 
         void mostrarNuevoUsuario(ItemUser m);
-
-        void cambiarPrincipal(RvAdapterUser.Holder adapterPosition, RvAdapterUser.Holder adapterPosition1);
 
         void doPrincipal(RvAdapterUser.Holder holder);
     }

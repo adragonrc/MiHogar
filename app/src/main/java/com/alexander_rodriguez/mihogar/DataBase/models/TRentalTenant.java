@@ -6,6 +6,8 @@ public class TRentalTenant {
     protected boolean isMain;
     protected boolean isInside;
 
+    public TRentalTenant(){}
+
     public TRentalTenant(String rentalId, String DNI, boolean isMain, boolean isInside) {
         this.rentalId = rentalId;
         this.DNI = DNI;

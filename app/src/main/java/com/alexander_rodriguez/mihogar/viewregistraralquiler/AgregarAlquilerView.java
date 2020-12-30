@@ -2,6 +2,7 @@ package com.alexander_rodriguez.mihogar.viewregistraralquiler;
 
 import android.content.Context;
 import android.util.AttributeSet;
+import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -72,6 +73,18 @@ public class AgregarAlquilerView extends ScrollView {
 
         positive = findViewById(R.id.positiveButton);
         negative = findViewById(R.id.negativeButton);
+        makeNotFocusable(etCorreo, etNumeroTelef, etPrecio);
+    }
+    private void makeFocusable(View...view){
+        for (View v: view){
+            v.setFocusable(true);
+            v.setFocusableInTouchMode(true);
+        }
+    }
+    private void makeNotFocusable(View...view){
+        for (View v: view){
+            v.setFocusable(false);
+        }
     }
 
     public ModelAA getList()  {
@@ -81,7 +94,8 @@ public class AgregarAlquilerView extends ScrollView {
         int pagosRealizados ;
         if  (pago) pagosRealizados  = 1;
         else pagosRealizados = 0;
-        ModelAA model = new ModelAA(
+
+        return new ModelAA(
                 fecha,
                 spNumCuarto.getSelectedItem().toString(),
                 pagosRealizados,
@@ -89,11 +103,10 @@ public class AgregarAlquilerView extends ScrollView {
                 etNumeroTelef.getText().toString(),
                 etPrecio.getText().toString()
         );
-
-        return model;
     }
 
     public void onExpanded(){
+        makeFocusable(etCorreo, etNumeroTelef, etPrecio);
         etNumeroTelef.requestFocus();
     }
 

@@ -3,10 +3,12 @@ package com.alexander_rodriguez.mihogar.agregarInquilino;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -15,7 +17,6 @@ import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.alexander_rodriguez.mihogar.Adapters.Models.ModelUserView;
 import com.alexander_rodriguez.mihogar.Adapters.RvAdapterUser;
 import com.alexander_rodriguez.mihogar.Base.BaseActivity;
 import com.alexander_rodriguez.mihogar.DataBase.items.ItemUser;
@@ -24,7 +25,6 @@ import com.alexander_rodriguez.mihogar.viewregistraralquiler.AgregarAlquilerView
 import com.alexander_rodriguez.mihogar.UTILIDADES.TCuarto;
 import com.alexander_rodriguez.mihogar.UTILIDADES.TUsuario;
 import com.alexander_rodriguez.mihogar.view_registrar_usuario.RegistroUsuarioView;
-import com.alexander_rodriguez.mihogar.modelos.ModelUsuario;
 import com.alexander_rodriguez.mihogar.agregarcuarto.AgregarCuarto;
 import com.alexander_rodriguez.mihogar.historialUserPakage.HistorialUsuarioActivity;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
@@ -39,9 +39,7 @@ public class AgregarAlquilerActivity extends BaseActivity<Interfaz.presenter> im
 
     private RecyclerView recyclerView;
 
-    private ArrayList<ItemUser> listUsuarios;
-
-    private ArrayList<ModelUserView> rvAdapter;
+    private ArrayList<ItemUser> rvAdapter;
 
     private boolean cancelDialog;
 
@@ -52,6 +50,8 @@ public class AgregarAlquilerActivity extends BaseActivity<Interfaz.presenter> im
     private SlidingUpPanelLayout sliding;
 
     private TextView tvAviso;
+
+    private ImageButton btAddTenant;
 
     private DialogInterface.OnClickListener positivo = new DialogInterface.OnClickListener() {
         @Override
@@ -67,14 +67,21 @@ public class AgregarAlquilerActivity extends BaseActivity<Interfaz.presenter> im
     };
 
     @Override
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        ocultarTeclado(ruv.getEtDNI());
+    }
+
+    @Override
     protected void iniciarComandos() {
-        listUsuarios = new ArrayList<>();
         rvAdapter = new ArrayList<>();
         adapterUser = new RvAdapterUser(this, rvAdapter);
 
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setHasFixedSize(true);
         recyclerView.setAdapter(adapterUser);
+        ocultarTeclado(ruv.getEtDNI());
 
     }
 
@@ -100,6 +107,8 @@ public class AgregarAlquilerActivity extends BaseActivity<Interfaz.presenter> im
         sliding = findViewById(R.id.slide);
         //sliding.setAnchorPoint(0.5f);
 
+        btAddTenant = findViewById(R.id.btAddTenant);
+
         agregarAlquilerView.setOnClickListener(v -> { });
 
         sliding.addPanelSlideListener(new SlidingUpPanelLayout.PanelSlideListener() {
@@ -113,12 +122,16 @@ public class AgregarAlquilerActivity extends BaseActivity<Interfaz.presenter> im
             public void onPanelStateChanged(View panel, SlidingUpPanelLayout.PanelState previousState, SlidingUpPanelLayout.PanelState newState) {
                 switch (newState){
                     case EXPANDED:{
-                        ruv.onExpanded();
+                        if(ruv.getVisibility() == View.VISIBLE)
+                            ruv.onExpanded();
+                         else agregarAlquilerView.onExpanded();
                         break;
                     }
                     case COLLAPSED:{
-                        ruv.onCollapsed();
-                        AgregarAlquilerActivity.this.ocultarTeclado();
+                        if(ruv.getVisibility() == View.VISIBLE)
+                            ruv.onCollapsed();
+                        else agregarAlquilerView.onCollapsed();
+                            AgregarAlquilerActivity.this.ocultarTeclado();
                         break;
                     }
                 }
@@ -198,7 +211,7 @@ public class AgregarAlquilerActivity extends BaseActivity<Interfaz.presenter> im
 
     @Override
     public void onClickUsuario(RvAdapterUser.Holder holder) {
-        presenter.doMain(holder);
+        presenter.setMain(holder);
     }
 
     @Override
@@ -277,16 +290,9 @@ public class AgregarAlquilerActivity extends BaseActivity<Interfaz.presenter> im
             tvAviso.setVisibility(View.GONE);
             recyclerView.setVisibility(View.VISIBLE);
         }
-        listUsuarios.add(m);
-        adapterUser.addItem(new ModelUserView(m));
+        adapterUser.addItem(m);
         ruv.clear();
         sliding.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
-    }
-
-    @Override
-    public void cambiarPrincipal(RvAdapterUser.Holder old, RvAdapterUser.Holder current) {
-        adapterUser.removeMain(old);
-        adapterUser.isMain(current);
     }
 
     public void doPrincipal(RvAdapterUser.Holder holder){

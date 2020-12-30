@@ -15,13 +15,13 @@ public class ModelUserView  {
     private String dni;
     private String nombres;
     private String path;
-    private String alert;
+    private boolean alert;
     private Boolean main;
 
     public ModelUserView(String dni, String nombres, String path) {
         this.dni = dni;
         this.nombres = nombres;
-        this.path = path.isEmpty()? "": path;
+        this.path = path==null ? "": path;
         main = false;
     }
 
@@ -29,48 +29,48 @@ public class ModelUserView  {
         this.dni = c.getString(TUsuario.INT_DNI);
         this.nombres = c.getString(TUsuario.INT_NOMBRES) + " " +c.getString(TUsuario.INT_APELLIDO_PAT);
         this.path = c.getString(TUsuario.INT_URI);
-        this.alert = "0";
+        this.alert = false;
         main = false;
         if (showMain) {
             String flag = c.getString(c.getColumnIndex(TAlquilerUsuario.IS_ENCARGADO));
             if (flag != null && flag.equals("1"))
                 main = true;
         }
-        this.path = path.isEmpty()? "": path;
+        this.path = path==null ? "": path;
     }
 
     public ModelUserView(Intent i){
         this.dni = i.getStringExtra(TUsuario.DNI);
         this.nombres = i.getStringExtra(TUsuario.NOMBRES) + " " +i.getStringExtra(TUsuario.APELLIDO_PAT);
         this.path = i.getStringExtra(TUsuario.URI);
-        this.alert = i.getStringExtra(TAlquiler.ALERT);
+        //this.alert = i.getStringExtra(TAlquiler.ALERT);
         main = false;
-        this.path = path.isEmpty()? "": path;
+        this.path = path==null ? "": path;
     }
 
     public ModelUserView(ModelUsuario m) {
         this.dni = m.getDni();
         this.nombres = m.getNombre();
         this.path = m.getPath();
-        this.alert = "0";
+        this.alert = false;
         main = false;
-        this.path = path.isEmpty()? "": path;
+        this.path = path==null ? "": path;
     }
 
     public ModelUserView(ItemUser m) {
         this.dni = m.getDni();
-        this.nombres = m.getNombre();
+        this.nombres = m.getName();
         this.path = m.getPath();
-        this.alert = "0";
+        this.alert = m.isAlerted();
         main = false;
-        this.path = path.isEmpty()? "": path;
+        this.path = path==null ? "": path;
     }
-    public static ArrayList<ModelUserView> createListModel(Cursor c, boolean showMain){
-        ArrayList<ModelUserView> list = new ArrayList<>();
+    public static ArrayList<ItemUser> createListModel(Cursor c, boolean showMain){
+        ArrayList<ItemUser> list = new ArrayList<>();
         if (c.moveToFirst()){
             do{
                 ModelUserView mcv = new ModelUserView(c, showMain);
-                list.add(mcv);
+                //list.add(mcv);
             }while(c.moveToNext());
         }
         c.close();
@@ -97,8 +97,7 @@ public class ModelUserView  {
         return main;
     }
 
-    public boolean getAlert() {
-        if (alert == null) return  false;
-        return alert.equals("1");
+    public boolean isAlert() {
+        return alert;
     }
 }

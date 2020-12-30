@@ -9,6 +9,7 @@ import android.view.MenuItem;
 
 import com.alexander_rodriguez.mihogar.Base.BaseActivity;
 import com.alexander_rodriguez.mihogar.Base.BasePresenter;
+import com.alexander_rodriguez.mihogar.DataBase.items.ItemUser;
 import com.alexander_rodriguez.mihogar.MyAdminDate;
 import com.alexander_rodriguez.mihogar.R;
 import com.alexander_rodriguez.mihogar.UTILIDADES.TAlquiler;
@@ -36,7 +37,7 @@ public class Presenter extends BasePresenter<Interface.View> implements Interfac
     private boolean showMain;
 
     private ArrayList<ModelAlquilerView> listAlquileres;
-    private ArrayList<ModelUserView> listUsuarios;
+    private ArrayList<ItemUser> listUsuarios;
     private Intent mIntent;
 
     public Presenter(Interface.View view, Intent i) {
@@ -158,7 +159,7 @@ public class Presenter extends BasePresenter<Interface.View> implements Interfac
 
     @Override
     public void ordenarPorNombre() {
-        Collections.sort(listUsuarios, (o1, o2) -> o1.getNombres().compareTo(o2.getNombres()));
+        Collections.sort(listUsuarios, (o1, o2) -> o1.getName().compareTo(o2.getName()));
         mostrarUsuarios();
     }
 
@@ -214,7 +215,7 @@ public class Presenter extends BasePresenter<Interface.View> implements Interfac
         return listAlquileres;
     }
 
-    private ArrayList<ModelUserView> getListUsuarios(){
+    private ArrayList<ItemUser> getListUsuarios(){
         if (listUsuarios == null) {
             String columnas = "*";
             Cursor c = db.getAllUsuariosADDAlert(columnas);
@@ -223,7 +224,7 @@ public class Presenter extends BasePresenter<Interface.View> implements Interfac
         return listUsuarios;
     }
 
-    private ArrayList<ModelUserView> getListUsuariosDealquiler() {
+    private ArrayList<ItemUser> getListUsuariosDealquiler() {
         if (listUsuarios == null) {
             String columnas = "*";
             Cursor c = db.getUsuariosForAlquiler(columnas, idAlquiler);

@@ -9,6 +9,7 @@ import com.alexander_rodriguez.mihogar.Base.BaseView;
 import com.alexander_rodriguez.mihogar.Base.IBasePresenter;
 import com.alexander_rodriguez.mihogar.Adapters.Models.ModelAlquilerView;
 import com.alexander_rodriguez.mihogar.Adapters.Models.ModelUserView;
+import com.alexander_rodriguez.mihogar.DataBase.items.ItemUser;
 
 import java.util.ArrayList;
 
@@ -29,7 +30,7 @@ public interface Interface {
         void itemSelected(MenuItem item);
     }
     interface View extends BaseView {
-        void mostarListUsuarios(ArrayList<ModelUserView> list);
+        void mostarListUsuarios(ArrayList<ItemUser> list);
 
         void mostarListAlquileres(ArrayList<ModelAlquilerView> list);
 

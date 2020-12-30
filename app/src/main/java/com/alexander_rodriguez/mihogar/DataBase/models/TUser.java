@@ -5,17 +5,21 @@ public class TUser {
     protected String apellidoPat;
     protected String apellidoMat;
     protected String path;
+    protected boolean alerted;
     protected boolean main;
 
-    public TUser(String nombre, String apellidoPat, String apellidoMat, String path, boolean main) {
+    public TUser(){}
+
+    public TUser(String nombre, String apellidoPat, String apellidoMat, String path, boolean alerted, boolean main) {
         this.nombre = nombre;
         this.apellidoPat = apellidoPat;
         this.apellidoMat = apellidoMat;
         this.path = path;
+        this.alerted = alerted;
         this.main = main;
     }
 
-    public String getNombre() {
+    public String getName() {
         return nombre;
     }
 
@@ -28,12 +32,14 @@ public class TUser {
     }
 
     public String getPath() {
-        return path;
+        return path == null ? "": path;
     }
 
     public boolean isMain() {
         return main;
     }
+
+    public boolean isAlerted(){ return alerted;}
 
     public void setNombre(String nombre) {
         this.nombre = nombre;

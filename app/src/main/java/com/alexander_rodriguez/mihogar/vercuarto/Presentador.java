@@ -96,12 +96,13 @@ public class Presentador extends BasePresenter<Interface.view> implements Interf
     }
 
     private void getAlquilerSuccess(DocumentSnapshot documentSnapshot) {
-
         if (documentSnapshot.exists()) {
             rental = ItemRental.newInstance(documentSnapshot);
             if(rental != null) {
                 rental.setId(documentSnapshot.getId());
-                rental.getCurrentMP().get().addOnSuccessListener(this::getCurrentMPSuccess);
+                DocumentReference mp = rental.getCurrentMP();
+                if(mp != null) mp.get().addOnSuccessListener(this::getCurrentMPSuccess);
+                else view.showMensaje("Current Monthly Payment wasn't found");
                 return;
             }
         }

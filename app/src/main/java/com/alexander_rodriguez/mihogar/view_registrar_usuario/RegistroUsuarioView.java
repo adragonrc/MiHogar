@@ -3,6 +3,7 @@ package com.alexander_rodriguez.mihogar.view_registrar_usuario;
 import android.content.Context;
 import android.graphics.BitmapFactory;
 import android.util.AttributeSet;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -76,6 +77,21 @@ public class RegistroUsuarioView extends ScrollView {
         ivPhoto = findViewById(R.id.ivPhoto);
         acept = findViewById(R.id.positiveButton);
         cancel = findViewById(R.id.negativeButton);
+        makeNotFocusable(etDNI, etNombre, etApellidoMat, etApellidoPat);
+    }
+    private void makeFocusable(View...view){
+        for (View v: view){
+            v.setFocusable(true);
+            v.setFocusableInTouchMode(true);
+        }
+    }
+    private void makeNotFocusable(View...view){
+        for (View v: view){
+            v.setFocusable(false);
+        }
+    }
+    public EditText getEtDNI() {
+        return etDNI;
     }
 
     public String getDniText(){
@@ -93,7 +109,8 @@ public class RegistroUsuarioView extends ScrollView {
     }
 
     public void onExpanded() {
-        etDNI.requestFocus();
+        makeFocusable(etDNI, etNombre, etApellidoMat, etApellidoPat);
+        //etDNI.requestFocus();
     }
 
     public void onCollapsed() {

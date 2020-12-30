@@ -14,6 +14,8 @@ public class TRental {
     protected String phoneNumber;
     protected String email;
 
+    public TRental(){}
+
     public TRental(String entryDate, String departureDate, String reasonExit, boolean enabled, String roomNumber, DocumentReference currentMP, String mainTenant, int paymentsNumber, String phoneNumber, String email) {
         this.entryDate = entryDate;
         this.departureDate = departureDate;

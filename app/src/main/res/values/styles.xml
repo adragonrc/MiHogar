@@ -7,10 +7,11 @@
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
         <item name="colorSecondary">@color/secondaryColor</item>
-
         <item name="android:textColorPrimary">@color/primaryTextColor</item>
         <item name="android:textColorSecondary">@color/secondaryTextColor</item>
         <item name="android:windowActivityTransitions">true</item>
+        <item name="android:fontFamily">sans-serif-condensed-light</item>
+
     </style>
     <style name="Theme.Preferences" parent="Theme.AppCompat.Light.DarkActionBar">
         <item name="colorPrimary">@color/colorPrimary</item>
@@ -121,5 +122,14 @@
         <item name="android:layout_marginBottom">8dp</item>
         <item name="android:layout_weight">1</item>
         <item name="elevation">4dp</item>
+    </style>
+    <style name="tvSubTitle">
+        <item name="android:layout_marginTop">12dp</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="fontFamily">sans-serif-condensed-medium</item>
+        <item name="android:layout_marginStart">12dp</item>
+        <item name="android:textColor">@color/colorPrimary</item>
+        <item name="android:textSize">16sp</item>
     </style>
 </resources>

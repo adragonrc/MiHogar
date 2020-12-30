@@ -114,15 +114,15 @@
     <string name="etDetalles">Detalles</string>
     <string name="etPrecio">Precio estimado</string>
     <string name="sMostrarPago">MOSTRAR PAGOS</string>
-    <string name="datos_del_usuario">Datos del usuario.</string>
+    <string name="datos_del_usuario">DATOS DEL USUARIO.</string>
     <string name="toma_foto">toma una foto</string>
     <string name="sNumTel">Número telefonico.</string>
     <string name="sCorreo">Correo electronico.</string>
-    <string name="sDatosAlquile">Datos del alquiler.</string>
+    <string name="sDatosAlquile">DATOS DEL ALQUILER.</string>
     <string name="sPlazoPago">Plazo de pago.</string>
     <string name="sPlazo">Plazo</string>
     <string name="s1">1</string>
-    <string name="detalles_del_representante">Detalles del representante</string>
+    <string name="detalles_del_representante">DATOS DEL REPRESENTANTE</string>
     <string name="campos_vasios">Lista vacia, agrege nuevos usuarios</string>
     <string name="descripcion_fecha_mensualidad">Fecha y hora de modificacion</string>
     <string name="descripcion_fecha_pago">fecha y hora de pago</string>
@@ -145,7 +145,7 @@
     <string name="mdRoomTenantsNumber">tenantsNumber</string>
 
     //rental document metadata
-    <string name="mdRentalCurrentId">rentalCurrentId</string>
+    <string name="mdCurrentRentalId">currentRentalId</string>
     <string name="mdRentalCurrentMP">currentMP</string>
     <string name="mdRentalDepartureDate">departureDate</string>
     <string name="mdRentalReasonExit">reasonExit.</string>

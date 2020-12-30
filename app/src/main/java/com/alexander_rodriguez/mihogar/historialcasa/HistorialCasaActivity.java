@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.alexander_rodriguez.mihogar.Adapters.RvAdapterAlquiler;
 import com.alexander_rodriguez.mihogar.Adapters.RvAdapterUser;
 import com.alexander_rodriguez.mihogar.Base.BaseActivity;
+import com.alexander_rodriguez.mihogar.DataBase.items.ItemUser;
 import com.alexander_rodriguez.mihogar.R;
 import com.alexander_rodriguez.mihogar.UTILIDADES.TAlquiler;
 import com.alexander_rodriguez.mihogar.UTILIDADES.TUsuario;
@@ -88,7 +89,7 @@ public class HistorialCasaActivity extends BaseActivity<Interface.Presenter> imp
     }
 
     @Override
-    public void mostarListUsuarios(ArrayList<ModelUserView> list) {
+    public void mostarListUsuarios(ArrayList<ItemUser> list) {
         adapterUser = new RvAdapterUser(this, list);
 
         manager = new LinearLayoutManager(this);

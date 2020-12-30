@@ -7,6 +7,8 @@ public class TPayment {
     String monthlyPaymentId;
     String amount;
 
+    public TPayment(){}
+
     public TPayment(String date, String rentalId, String romNumber, String monthlyPaymentId, String amount) {
         this.date = date;
         this.rentalId = rentalId;

@@ -8,13 +8,18 @@ import org.jetbrains.annotations.NotNull;
 
 public class ItemUser extends TUser {
     private String dni;
+
     public ItemUser(String dni, String nombre, String apellidoPat, String apellidoMat, String path, boolean main) {
-        super(nombre, apellidoPat, apellidoMat, path, main);
+        super(nombre, apellidoPat, apellidoMat, path, false, main);
+        this.dni = dni;
+    }
+    public ItemUser(String dni, String nombre, String apellidoPat, String apellidoMat, String path, boolean alert, boolean main) {
+        super(nombre, apellidoPat, apellidoMat, path, alert, main);
         this.dni = dni;
     }
 
-    public TUser getCuartoRoot(){
-        return (TUser) this;
+    public TUser getRoot(){
+        return  new TUser(nombre, apellidoPat, apellidoMat, path, alerted, main);
     }
 
     public int getErrorIfExist(){
