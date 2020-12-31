@@ -45,25 +45,25 @@ public class Presenter extends BasePresenter<Interfaz.view> implements Interfaz.
 
     @Override
     public void actualizarNombres(String nombres) {
-        db.upDateUsuario(TUsuario.NOMBRES, nombres, dni);
+        db.upDateUser(TUsuario.NOMBRES, nombres, dni);
         view.actualizarNombres(nombres);
     }
 
     @Override
     public void actualizarApePat(String apellidoPat) {
-        db.upDateUsuario(TUsuario.APELLIDO_PAT, apellidoPat, dni);
+        db.upDateUser(TUsuario.APELLIDO_PAT, apellidoPat, dni);
         view.actualizarApePat(apellidoPat);
     }
 
     @Override
     public void actualizarApeMat(String apellidoMat) {
-        db.upDateUsuario(TUsuario.APELLIDO_MAT, apellidoMat, dni);
+        db.upDateUser(TUsuario.APELLIDO_MAT, apellidoMat, dni);
         view.actualizarApeMat(apellidoMat);
     }
 
     @Override
     public void actualizarPhoto(String path) {
-        db.upDateUsuario(TUsuario.URI, path, dni);
+        db.upDateUser(TUsuario.URI, path, dni);
     }
 
 

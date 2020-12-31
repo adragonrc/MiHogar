@@ -107,7 +107,7 @@ public class AgregarCuarto extends BaseActivity<Interfaz.Presenter> implements I
         String sDetalles= detalles.getText().toString();
         Save s = new Save();
         //ivPhoto.buildDrawingCache();
-        currentPhotoPath = s.SaveImage(this, bmGuardar);
+        currentPhotoPath = s.SaveImage(this, bmGuardar, getString(R.string.cRoom), sNumCuarto);
         presenter.insertarCuarto(sNumCuarto,sPrecio,sDetalles, currentPhotoPath);
     }
 

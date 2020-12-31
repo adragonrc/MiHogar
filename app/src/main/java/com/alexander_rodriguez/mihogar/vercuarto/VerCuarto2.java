@@ -139,8 +139,8 @@ public class VerCuarto2 extends BaseActivity<Interface.Presenter> implements Int
     private void resultOk(CropImage.ActivityResult result){
         Save s = new Save();
         Bitmap bm = BitmapFactory.decodeFile(result.getUri().getPath());
-        path = s.SaveImage(this, bm);
-        presenter.actualizarPhoto(path);
+        path = s.SaveImage(this, bm, getString(R.string.cRoom), numCuarto);
+        presenter.updatePhoto(path);
         profileCuarto.setPhotoImage(path);
     }
 
@@ -219,8 +219,13 @@ public class VerCuarto2 extends BaseActivity<Interface.Presenter> implements Int
         perfilCuarto.setDetallesText(room.getDetails());
         profileCuarto.setTitle(room.getRoomNumber());
         profileCuarto.setSubTitle(room.getDetails());
-
     }
+
+    @Override
+    public void reloadRoomPhoto() {
+        profileCuarto.setPhotoImage(path);
+    }
+
     public void showCuartolibre(ItemRoom cuarto) {
         perfilCuarto.showCuartolibre();
         iMenu = R.menu.menu_cuarto_no_alquilado;
@@ -306,6 +311,7 @@ public class VerCuarto2 extends BaseActivity<Interface.Presenter> implements Int
         String transitionName = ViewCompat.getTransitionName(ivPerfil);
         intent.putExtra(ActivityShowImage.IS_CUARTO_IMAGE, true);
         intent.putExtra(TCuarto.NUMERO, numCuarto);
+
         intent.putExtra(ActivityShowImage.DATA_IMAGE, path);
         if(transitionName != null) {
             ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(this, ivPerfil, transitionName);

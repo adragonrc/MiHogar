@@ -121,7 +121,7 @@ public class HistorialUsuarioActivity extends BaseActivity<Interfaz.presenter> i
     private void resultOk(CropImage.ActivityResult result){
         Save s = new Save();
         Bitmap bm = BitmapFactory.decodeFile(result.getUri().getPath());
-        path = s.SaveImage(this, bm);
+        path = s.SaveImage(this, bm, getString(R.string.cTenant),  dni);
         presenter.actualizarPhoto(path);
         profileView.setPhotoImage(path);
     }

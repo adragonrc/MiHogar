@@ -5,12 +5,10 @@ import android.database.Cursor;
 import android.os.AsyncTask;
 
 import com.alexander_rodriguez.mihogar.Base.BasePresenter;
-import com.alexander_rodriguez.mihogar.DataBase.items.ItemRoom;
 import com.alexander_rodriguez.mihogar.DataBase.models.TRoom;
 import com.alexander_rodriguez.mihogar.MyAdminDate;
 import com.alexander_rodriguez.mihogar.UTILIDADES.TAlquiler;
 import com.alexander_rodriguez.mihogar.Adapters.Models.ModelCuartoView;
-import com.alexander_rodriguez.mihogar.modelos.ModelCuarto;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
@@ -19,7 +17,6 @@ import com.google.firebase.firestore.QuerySnapshot;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 
 public class Presenter extends BasePresenter<Interface.View> implements Interface.Presenter{
     private ArrayList<ModelCuartoView> list;
@@ -37,8 +34,8 @@ public class Presenter extends BasePresenter<Interface.View> implements Interfac
 
     @Override
     public void terminarAlquiler(String motivo, String id) {
-        db.upDateAlquiler(TAlquiler.FECHA_SALIDA, MyAdminDate.getFechaActual(), id);
-        db.upDateAlquiler(TAlquiler.MOTIVO, motivo, id);
+        db.upDateTenant(TAlquiler.FECHA_SALIDA, MyAdminDate.getFechaActual(), id);
+        db.upDateTenant(TAlquiler.MOTIVO, motivo, id);
         //view.mostrarAlquileres(getListAlquileres());
         verTodos();
     }

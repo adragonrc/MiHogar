@@ -3,6 +3,7 @@ package com.alexander_rodriguez.mihogar.DataBase;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.net.Uri;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -30,9 +31,14 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.firestore.WriteBatch;
+import com.google.firebase.storage.FileDownloadTask;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Iterator;
 
@@ -41,6 +47,8 @@ public class FDAdministrator implements DBInterface{
     public final static String TAG_SUCCESS = "tag_success";
     public final static String TAG_FAILURE = "tag_failure";
     private FirebaseFirestore firestore;
+    private FirebaseStorage storage;
+    private StorageReference storageRef;
     private FirebaseAuth mAuth;
     private Context mContext;
     private FirebaseUser usuario;
@@ -50,7 +58,8 @@ public class FDAdministrator implements DBInterface{
 
     public FDAdministrator(Context mContext){
         this.mContext = mContext;
-
+        storage = FirebaseStorage.getInstance();
+        storageRef = storage.getReference();
         firestore = FirebaseFirestore.getInstance();
 
         mAuth = FirebaseAuth.getInstance();
@@ -263,17 +272,17 @@ public class FDAdministrator implements DBInterface{
     }
 
     @Override
-    public Task<Void> upDateUsuario(String columna, Object valor, Object DNI) {
-    return null;
+    public Task<Void> upDateUser(String field, Object valor, String DNI) {
+    return getUserDR(DNI).update(field, valor);
     }
 
     @Override
-    public Task<Void> upDateCuarto(String field, Object valor, String numeroDeCuarto) {
+    public Task<Void> upDateRoom(String field, Object valor, String numeroDeCuarto) {
         return getCuartoDR(numeroDeCuarto).update(field, valor);
     }
 
     @Override
-    public Task<Void> upDateAlquiler(String field, Object valor, String id) {
+    public Task<Void> upDateTenant(String field, Object valor, String id) {
         return getRentalDR(id).update(field, valor);
     }
 
@@ -312,6 +321,37 @@ public class FDAdministrator implements DBInterface{
     }
 
     @Override
+    public UploadTask saveRoomPhoto(String numeroCuarto, String path) {
+        Uri file = Uri.fromFile(new File(path));
+        StorageReference riversRef = getRoomPhotoStorege(numeroCuarto);
+        return riversRef.putFile(file);
+    }
+
+    @Override
+    public String getRoomPhotoStoregeAsString(String numeroCuarto) {
+        return mContext.getString(R.string.cHogar) + "/" +usuario.getUid()+"/"+mContext.getString(R.string.cRoom)+"/"+numeroCuarto+".jpg";
+    }
+
+    @Override
+    public FileDownloadTask downloadRoomPhoto(String roomNumber, File localFile) {
+        return getRoomPhotoStorege(roomNumber).getFile(localFile);
+    }
+
+    @Override
+    public String getPathTenant(String DNI) {
+        return mContext.getString(R.string.cTenant) + "/" + DNI;
+    }
+
+    @Override
+    public String getPathRoom(String roomNumber){
+        return mContext.getString(R.string.cRoom) + "/" +  roomNumber;
+    }
+    private @NotNull StorageReference getRoomPhotoStorege(String numeroCuarto) {
+        String path = getRoomPhotoStoregeAsString(numeroCuarto);
+        return storageRef.child(path);
+    }
+
+    @Override
     public Task<Void> agregarCuarto(ItemRoom room) {
 
         return getCuartoDR(room.getRoomNumber()).set(room.getCuartoRoot());
@@ -345,6 +385,10 @@ public class FDAdministrator implements DBInterface{
     @Override
     public DocumentReference getCuartoDR(String numCuarto) {
         return getCuartoCR().document(numCuarto);
+    }
+
+    public DocumentReference getUserDR(String numCuarto) {
+        return getUserCR().document(numCuarto);
     }
 
     @Override

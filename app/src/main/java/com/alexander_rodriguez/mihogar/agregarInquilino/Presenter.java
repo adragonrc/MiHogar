@@ -197,10 +197,9 @@ public class Presenter extends BasePresenter<Interfaz.view> implements Interfaz.
         /*long idAlquiler = db.getIdMaxAlquiler();*/
         rentalId = document.getId();
         Save s = new Save();
-        int cont = 0;
-
+        int cont = 0;;
         for (ItemUser m : list) {
-            m.setPath(s.SaveImage(view.getContext(), m.getPath()));
+            m.setPath(s.SaveImage(view.getContext(), m.getPath(), view.getContext().getString(R.string.cTenant), m.getDni()));
         }
         db.agregarInquilinos(list, rentalId)
                 .addOnSuccessListener(this::addTenantSuccess)

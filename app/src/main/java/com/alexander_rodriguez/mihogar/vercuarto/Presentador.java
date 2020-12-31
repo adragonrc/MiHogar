@@ -5,7 +5,9 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.os.Environment;
 
+import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 
 import com.alexander_rodriguez.mihogar.Base.BasePresenter;
@@ -18,13 +20,19 @@ import com.alexander_rodriguez.mihogar.MyAdminDate;
 import com.alexander_rodriguez.mihogar.PDF;
 import com.alexander_rodriguez.mihogar.R;
 import com.alexander_rodriguez.mihogar.UTILIDADES.Mensualidad;
-import com.alexander_rodriguez.mihogar.UTILIDADES.TCuarto;
 import com.alexander_rodriguez.mihogar.UTILIDADES.TPago;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.storage.FileDownloadTask;
 import com.itextpdf.text.DocumentException;
 
+import org.jetbrains.annotations.NotNull;
+
+import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -37,9 +45,6 @@ public class Presentador extends BasePresenter<Interface.view> implements Interf
     private ItemRental rental;
     private TMonthlyPayment monthlyPayment;
     private TMonthlyPayment monthlyPaymentAux;
-    //private ContentValues datosUsuario;
-    //private ContentValues datosMensualidad;
-    //private ContentValues datosAlquiler;
     private String dni;
 
     private MyAdminDate myDate;
@@ -62,8 +67,8 @@ public class Presentador extends BasePresenter<Interface.view> implements Interf
     @Override
     public void deshacerContrato(String motivo) {
         if(rental != null) {
-            db.upDateAlquiler(mContext.getString(R.string.mdRentalDepartureDate), MyAdminDate.getFechaActual(), rental.getId());
-            db.upDateAlquiler(mContext.getString(R.string.mdRentalReasonExit), motivo, rental.getId());
+            db.upDateTenant(mContext.getString(R.string.mdRentalDepartureDate), MyAdminDate.getFechaActual(), rental.getId());
+            db.upDateTenant(mContext.getString(R.string.mdRentalReasonExit), motivo, rental.getId());
             mostrarDetalles();
             rental = null;
         }
@@ -85,6 +90,25 @@ public class Presentador extends BasePresenter<Interface.view> implements Interf
             if(tRoom != null) {
                 room = new ItemRoom(tRoom);
                 room.setRoomNumber(documentSnapshot.getId());
+                if(room.getPathImage() != null && !room.getPathImage().isEmpty()) {
+                    File f = new File(room.getPathImage());
+                    if (!f.exists()) {
+                        File parent = mContext.getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+                        if (parent != null){
+                            if (!parent.exists()) {
+                                parent.mkdirs();
+                            }
+                            parent = new File(parent, mContext.getString(R.string.cRoom));
+                            if (!parent.exists()) {
+                                parent.mkdirs();
+                            }
+                            File localFile = new File(parent, room.getRoomNumber() + ".jpg");
+                            db.downloadRoomPhoto(room.getRoomNumber(), localFile)
+                                    .addOnSuccessListener(this::downloadRoomPhotoSuccess)
+                                    .addOnFailureListener(this::downloadRoomPhotoFailure);
+                        }
+                    }
+                }
                 if(room.getCurrentRentalId() != null && !room.getCurrentRentalId().isEmpty()){
                     db.getRental(room.getCurrentRentalId())
                             .addOnSuccessListener(this::getAlquilerSuccess);
@@ -93,6 +117,14 @@ public class Presentador extends BasePresenter<Interface.view> implements Interf
                 }
             }
         }
+    }
+
+    private void downloadRoomPhotoFailure(@NotNull Exception e) {
+        e.printStackTrace();
+    }
+
+    private void downloadRoomPhotoSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
+        view.reloadRoomPhoto();
     }
 
     private void getAlquilerSuccess(DocumentSnapshot documentSnapshot) {
@@ -110,8 +142,11 @@ public class Presentador extends BasePresenter<Interface.view> implements Interf
     }
 
     private void getCurrentMPSuccess(DocumentSnapshot documentSnapshot) {
-
-        int num = room.getNumberTenants();
+        if(!documentSnapshot.exists()){
+            view.showMensaje("Current Monthly Payment wasn't found");
+            return;
+        }
+        int num = room.getTenantsNumber();
 
         monthlyPayment = documentSnapshot.toObject(TMonthlyPayment.class);
 
@@ -162,7 +197,7 @@ public class Presentador extends BasePresenter<Interface.view> implements Interf
 
     @Override
     public void actualizarDetalles(String detalles) {
-        db.upDateCuarto(view.getContext().getString(R.string.mdRoomDescription), detalles, numeroCuarto);
+        db.upDateRoom(view.getContext().getString(R.string.mdRoomDescription), detalles, numeroCuarto);
         room.setDetails(detalles);
         view.actualizarDetalles(detalles);
     }
@@ -191,7 +226,7 @@ public class Presentador extends BasePresenter<Interface.view> implements Interf
     private void addPaymentSuccess(DocumentReference documentReference) {
 
         int pagosRealizados = (rental.getPaymentsNumber() + 1);
-        db.upDateAlquiler(mContext.getString(R.string.mdRentalPaymentsNumber), pagosRealizados, rental.getId())
+        db.upDateTenant(mContext.getString(R.string.mdRentalPaymentsNumber), pagosRealizados, rental.getId())
                 .addOnSuccessListener(aVoid->{
                     rental.setPaymentsNumber(pagosRealizados);
                     view.pago();
@@ -217,14 +252,14 @@ public class Presentador extends BasePresenter<Interface.view> implements Interf
 
     @Override
     public void actualizarNumTel(String numero) {
-        db.upDateAlquiler(mContext.getString(R.string.mdRentalPhoneNumber), numero, rental.getId());
+        db.upDateTenant(mContext.getString(R.string.mdRentalPhoneNumber), numero, rental.getId());
         rental.setPhoneNumber(numero);
         view.actualizarNumTel(numero);
     }
 
     @Override
     public void actualizarCorreo(String email) {
-        db.upDateAlquiler(mContext.getString(R.string.mdRentalEmail), email, rental.getId());
+        db.upDateTenant(mContext.getString(R.string.mdRentalEmail), email, rental.getId());
         rental.setEmail(email);
         view.actualizarCorreo(email);
     }
@@ -279,8 +314,22 @@ public class Presentador extends BasePresenter<Interface.view> implements Interf
     }
 
     @Override
-    public void actualizarPhoto(String path) {
-        db.upDateCuarto(TCuarto.URL, path, numeroCuarto);
+    public void updatePhoto(String path) {
+        db.upDateRoom(mContext.getString(R.string.mdRoomPathImage), path, numeroCuarto);
+        db.saveRoomPhoto(numeroCuarto, path).addOnFailureListener(exception -> {
+            // Handle unsuccessful uploads
+            view.showMensaje("Photo upload failed");
+        }).addOnSuccessListener(taskSnapshot -> {
+            // taskSnapshot.getMetadata() contains file metadata such as size, content-type, etc.
+            // ...
+            String pathStorage;
+            if(taskSnapshot.getMetadata() != null){
+                pathStorage = taskSnapshot.getMetadata().getPath();
+            }else{
+                pathStorage = db.getRoomPhotoStoregeAsString(numeroCuarto);
+            }
+            db.upDateRoom(mContext.getString(R.string.mdroomPahtImageStorage), pathStorage, numeroCuarto);
+        });;
     }
 
 

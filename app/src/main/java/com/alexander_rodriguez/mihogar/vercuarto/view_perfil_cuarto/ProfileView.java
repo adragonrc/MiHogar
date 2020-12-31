@@ -17,6 +17,8 @@ import com.alexander_rodriguez.mihogar.HeaderView;
 import com.alexander_rodriguez.mihogar.R;
 import com.google.android.material.appbar.AppBarLayout;
 
+import java.io.File;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -82,8 +84,11 @@ public class ProfileView extends CoordinatorLayout implements AppBarLayout.OnOff
 
     public void setPhotoImage(String path){
         if (path != null && !path.equals("")) {
-            Bitmap bm = BitmapFactory.decodeFile(path);
-            ivPerfil.setImageBitmap(bm);
+            File f = new File(path);
+            if(f.exists()) {
+                Bitmap bm = BitmapFactory.decodeFile(path);
+                ivPerfil.setImageBitmap(bm);
+            }
         }
     }
 

@@ -26,7 +26,7 @@ public interface Interface {
 
         void actualizarCorreo(String toString);
 
-        void actualizarPhoto(String path);
+        void updatePhoto(String path);
 
         void crearPDF();
 
@@ -48,5 +48,7 @@ public interface Interface {
         void actualizarDetalles(String detalles);
 
         void actualizarFechaPago(String fecha);
+
+        void reloadRoomPhoto();
     }
 }

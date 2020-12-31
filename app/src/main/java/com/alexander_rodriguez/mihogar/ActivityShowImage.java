@@ -16,7 +16,9 @@ import androidx.appcompat.app.ActionBar;
 import com.alexander_rodriguez.mihogar.Base.BaseActivity;
 import com.alexander_rodriguez.mihogar.Base.BasePresenter;
 import com.alexander_rodriguez.mihogar.Base.IBasePresenter;
+import com.alexander_rodriguez.mihogar.DataBase.DBInterface;
 import com.alexander_rodriguez.mihogar.DataBase.DataBaseAdmin;
+import com.alexander_rodriguez.mihogar.DataBase.FDAdministrator;
 import com.alexander_rodriguez.mihogar.UTILIDADES.TCuarto;
 import com.alexander_rodriguez.mihogar.UTILIDADES.TUsuario;
 import com.alexander_rodriguez.mihogar.menu_photo.MenuIterator;
@@ -30,12 +32,13 @@ public class ActivityShowImage extends BaseActivity<IBasePresenter> {
     public static final String DATA_IMAGE = "BIT_MAP";
     public static final String IS_CUARTO_IMAGE = "photo_cuarto";
     public static final String IS_USER_IMAGE = "photo_user";
+    public static final String NAME_PHOTO = "name_photo";
     public static final int BACK_PRESSED = 16908332;
     private Bitmap bmGuardar;
     private ImageView photoView;
     private String path;
     private interfazMenu interfazMenu;
-    private DataBaseAdmin db ;
+    private DBInterface db ;
 
     @Override
     protected void iniciarComandos() {
@@ -52,7 +55,7 @@ public class ActivityShowImage extends BaseActivity<IBasePresenter> {
         }
         interfazMenu = new MenuIterator(this);
 
-        db = new DataBaseAdmin(this, null, 1);
+        db = new FDAdministrator(this);
     }
 
     @Override
@@ -130,14 +133,15 @@ public class ActivityShowImage extends BaseActivity<IBasePresenter> {
     private void guardar(Bitmap bmGuardar) {
         try {
             Save s = new Save();
-            String path = s.SaveImage(this, bmGuardar);
             if (getIntent().getBooleanExtra(ActivityShowImage.IS_CUARTO_IMAGE, false)) {
-                String numCuarto = getIntent().getStringExtra(TCuarto.NUMERO);
-                db.upDateCuarto(TCuarto.URL, path, numCuarto);
+                String roomNumber = getIntent().getStringExtra(TCuarto.NUMERO);
+                path = s.SaveImage(this, bmGuardar, getString(R.string.cRoom), roomNumber);
+                db.upDateRoom(TCuarto.URL, path, roomNumber);
             } else {
                 if (getIntent().getBooleanExtra(ActivityShowImage.IS_USER_IMAGE, false)) {
-                    String numUsuario = getIntent().getStringExtra(TUsuario.DNI);
-                    db.upDateUsuario(TUsuario.URI, path, numUsuario);
+                    String DNI = getIntent().getStringExtra(TUsuario.DNI);
+                    path = s.SaveImage(this, bmGuardar, getString(R.string.cTenant), DNI);
+                    db.upDateRoom(TUsuario.URI, path, DNI);
                 }
             }
         }catch (IOError e){

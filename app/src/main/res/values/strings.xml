@@ -154,6 +154,7 @@
     <string name="mdRentalPhoneNumber">phoneNumber</string>
     <string name="mdRentalEmail">email</string>
     <string name="mdroomCurrentRentalId">currentRentalId</string>
+    <string name="mdroomPahtImageStorage">pahtImageStorage</string>
 
 
 </resources>

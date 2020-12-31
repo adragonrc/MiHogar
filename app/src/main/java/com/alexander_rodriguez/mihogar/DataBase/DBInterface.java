@@ -18,9 +18,13 @@ import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.storage.FileDownloadTask;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.io.File;
 import java.util.ArrayList;
 
 
@@ -101,11 +105,11 @@ public interface DBInterface {
 
     int contDniOfAlquilerUsuario(String idAlquiler);
 
-    Task<Void> upDateUsuario(String columna, Object valor, Object DNI);
+    Task<Void> upDateUser(String columna, Object valor, String DNI);
 
-    Task<Void> upDateCuarto(String field, Object valor, String numeroDeCuarto);
+    Task<Void> upDateRoom(String field, Object valor, String numeroDeCuarto);
 
-    Task<Void> upDateAlquiler(String columna, Object valor, String id);
+    Task<Void> upDateTenant(String columna, Object valor, String id);
 
     void upDateAlquilerUsuario(String columna, Object valor, Object idAl, Object dni);
 
@@ -168,4 +172,15 @@ public interface DBInterface {
     Task<QuerySnapshot> getAllRoom();
 
     Task<DocumentSnapshot> getRental(String currentRentalId);
+
+    UploadTask saveRoomPhoto(String numeroCuarto, String path);
+
+    String getRoomPhotoStoregeAsString(String numeroCuarto) ;
+
+    FileDownloadTask downloadRoomPhoto(String roomNumber, File localFile);
+
+    String getPathTenant(String DNI);
+
+    String getPathRoom(String roomNumber);
+
 }
