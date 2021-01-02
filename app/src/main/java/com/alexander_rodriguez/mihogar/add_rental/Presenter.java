@@ -1,14 +1,15 @@
-package com.alexander_rodriguez.mihogar.agregarInquilino;
+package com.alexander_rodriguez.mihogar.add_rental;
 
 import android.widget.ArrayAdapter;
 
+import androidx.annotation.NonNull;
+
 import com.alexander_rodriguez.mihogar.Adapters.RvAdapterUser;
 import com.alexander_rodriguez.mihogar.Base.BasePresenter;
-import com.alexander_rodriguez.mihogar.DataBase.FDAdministrator;
 import com.alexander_rodriguez.mihogar.DataBase.items.ItemUser;
 import com.alexander_rodriguez.mihogar.DataBase.models.TMonthlyPayment;
 import com.alexander_rodriguez.mihogar.DataBase.models.TPayment;
-import com.alexander_rodriguez.mihogar.MyAdminDate;
+import com.alexander_rodriguez.mihogar.AdminDate;
 import com.alexander_rodriguez.mihogar.R;
 import com.alexander_rodriguez.mihogar.viewregistraralquiler.ModelAA;
 import com.alexander_rodriguez.mihogar.Save;
@@ -16,10 +17,14 @@ import com.alexander_rodriguez.mihogar.UTILIDADES.TAlquiler;
 import com.alexander_rodriguez.mihogar.UTILIDADES.TAlquilerUsuario;
 import com.alexander_rodriguez.mihogar.UTILIDADES.TUsuario;
 import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -28,7 +33,7 @@ public class Presenter extends BasePresenter<Interfaz.view> implements Interfaz.
     static final String SIN_REGISTROS = "-1";
 
     private Boolean confirmacion;
-    private MyAdminDate adminDate;
+    private AdminDate adminDate;
     private ArrayList<String> cuartosDisponibles;
 
     private ArrayList<ItemUser> list;
@@ -41,8 +46,8 @@ public class Presenter extends BasePresenter<Interfaz.view> implements Interfaz.
 
     public Presenter(Interfaz.view view) {
         super(view);
-        adminDate = new MyAdminDate();
-        adminDate.setFormat(MyAdminDate.FORMAT_DATE_TIME);
+        adminDate = new AdminDate();
+        adminDate.setFormat(AdminDate.FORMAT_DATE_TIME);
         list = new ArrayList<>();
         confirmacion = false;
     }
@@ -99,43 +104,24 @@ public class Presenter extends BasePresenter<Interfaz.view> implements Interfaz.
     public void agregarUsuario(ItemUser m) {
         int err = m.getErrorIfExist();
         if (err != -1) {
-            view.showMensaje("Campo vacio en el campo: " + ItemUser.getLabelName(err));
+            view.showMessage("Campo vacio en el campo: " + ItemUser.getLabelName(err));
             return;
         }
         if (!isNuevo(m.getDni())){
             view.showError("Usuario ya esta en lista: DNI");
             return;
         }
-        if (db.existeUsuario(m.getDni())) {
-            if (confirmacion){
-                guardarModel(m);
-            }else{
-                if (db.esUsuarioAntiguo(m.getDni())){
-                    view.showMensaje("número DNI ya esta registrado");
-                    view.showDialog("Usuario Antiguo");
-                }else {
-                    if (db.esUsuarioInterno(m.getDni())) {
-                        view.showMensaje("Usuario ya se encuentra en casa ;v");
-                    }
-                }
-            }
-        }else {
-            guardarModel(m);
-        }
+        SaveUser s  = new SaveUser(m);
+        db.existeUsuario(m.getDni())
+                .addOnSuccessListener(s)
+                .addOnFailureListener(s);
+
     }
+
 
     @Override
     public void avanzar() {
 
-    }
-
-    private ItemUser reviewUsersOld(){
-        for (ItemUser m: list ) {
-            if(db.existeUsuario(m.getDni())){
-                return m;
-            };
-        }
-        return null;
     }
 
     private void addTenantSuccess(Void v){
@@ -149,8 +135,8 @@ public class Presenter extends BasePresenter<Interfaz.view> implements Interfaz.
     private void addMonthlyPaymentSuccess(DocumentReference document) {
         db.updateCurrentRentMP(rentalId, document);
         if (modelToSave.wasPaid()) {
-            TPayment payment = new TPayment(modelToSave.getEntryDate(), rentalId, modelToSave.getRoomNumber(), document.getId(), modelToSave.getPrice());
-            db.agregarPago(payment)
+            TPayment payment = new TPayment(modelToSave.getEntryDate(), rentalId, modelToSave.getRoomNumber(), document.getId(), modelToSave.getPrice(), modelSelect.getDni());
+            db.addPayment(payment)
                     .addOnSuccessListener(this::addPaymentSuccess)
                     .addOnFailureListener(this::addPaymentFailure);
         } else {
@@ -162,7 +148,7 @@ public class Presenter extends BasePresenter<Interfaz.view> implements Interfaz.
     private void finish(){
         db.updateCurrentRoomRent(modelToSave.getRoomNumber(), rentalId);
         db.updateTenantRoomNum(modelToSave.getRoomNumber(), list.size());
-        view.showMensaje("OK");
+        view.showMessage("OK");
         view.close();
     }
 
@@ -180,7 +166,7 @@ public class Presenter extends BasePresenter<Interfaz.view> implements Interfaz.
 
     private void addTentalFailure(Exception e){
 
-        view.showMensaje("Could not add");
+        view.showMessage("Could not add");
         e.printStackTrace();
     }
     private void revertir(int cont, int idAlquiler){
@@ -213,13 +199,17 @@ public class Presenter extends BasePresenter<Interfaz.view> implements Interfaz.
     @Override
     public void agregarAlquilerNuevo(ModelAA model) {
         modelToSave = model;
+        if(model == null) {
+            view.showMessage("Datos no validos");
+            return;
+        }
         if  (list.isEmpty()){
-            view.showMensaje("No hay usuarios en la lista");
+            view.showMessage("No hay usuarios en la lista");
             return;
         }
 
         if(modelSelect == null){
-            view.showMensaje("Seleccione un usuario responsable");
+            view.showMessage("Seleccione un usuario responsable");
             return;
         }
 /*
@@ -261,51 +251,41 @@ public class Presenter extends BasePresenter<Interfaz.view> implements Interfaz.
         list.add(m);
         view.mostrarNuevoUsuario(m);
     }
-}
-/*
-    @Override
-    public void agregarUsuario(ModelUsuario mu, String numCuarto, String mensualidad, int plazo, String fecha, boolean pago) {
+    class SaveUser implements OnSuccessListener<DocumentSnapshot>, OnFailureListener{
+        ItemUser userToSave;
+        public SaveUser(ItemUser userToSave){
+            this.userToSave = userToSave;
+        }
 
-            if (validarImputs(mu.getDni(), mu.getNombres(), mu.getApellidoPat(), mu.getApellidoMat(), numCuarto, mensualidad)){
+        @Override
+        public void onFailure(@NonNull Exception e) {
+            guardarModel(userToSave);
+        }
 
-            String fecha_c = null;
-            if (pago) {
-                try {
-                    fecha_c = adminDate.adelantarUnMes(fecha, 0);
-                } catch (ParseException e) {
-                    e.printStackTrace();
-                    view.showError("fecha no disponible");
-                    return;
-                }
-            }
-            if (db.existeUsuario(mu.getDni())){
+        @Override
+        public void onSuccess(@NotNull DocumentSnapshot documentSnapshot) {
+            if(documentSnapshot.exists())
                 if (confirmacion){
-                    try {
-                        db.agregarInquilinoExist(mu.getDni(), numCuarto, Double.parseDouble(mensualidad), fecha, fecha_c);
-                        view.showMensaje("Alquiler Agregado");
-                        view.close();
-                    }catch (IllegalAccessError error){
-                        view.showError("error, agregar usuario");
-                    }
+                    guardarModel(userToSave);
                 }else{
-                    if (db.esUsuarioAntiguo(mu.getDni())){
-                        view.showMensaje("número DNI ya esta registrado");
+                    if (db.esUsuarioAntiguo(userToSave.getDni())){
+                        view.showMessage("El usuario con DNI " + userToSave.getDni() + " ya ha sido registrado");
                         view.showDialog("Usuario Antiguo");
                     }else {
-                        if (db.esUsuarioInterno(mu.getDni())) {
-                            view.showMensaje("Usuario ya se encuentra en casa ;v");
+                        if (db.esUsuarioInterno(userToSave.getDni())) {
+                            view.showMessage("Usuario ya se encuentra en casa ;v");
                         }
                     }
                 }
-            }else{
-                try {
-                    db.agregarNuevoInquilino(mu, numCuarto, Double.parseDouble(mensualidad), fecha, fecha_c);
-                    view.showMensaje("Usuario Agregado");
-                    view.close();
-                }catch (IllegalAccessError error){
-                    view.showError("error, agregar usuario");
-                }
-            }
+            else
+                guardarModel(userToSave);
+        }
+
+        private void userNotExists(Exception e) {
+        }
+
+        private void userExists(Task<DocumentSnapshot> task) {
+
         }
     }
-*/
+}

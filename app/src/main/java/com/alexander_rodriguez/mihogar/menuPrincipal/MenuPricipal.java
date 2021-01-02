@@ -15,7 +15,7 @@ import com.alexander_rodriguez.mihogar.Preferencias;
 import com.alexander_rodriguez.mihogar.R;
 import com.alexander_rodriguez.mihogar.agregarcuarto.AgregarCuarto;
 import com.alexander_rodriguez.mihogar.historialcasa.HistorialCasaActivity;
-import com.alexander_rodriguez.mihogar.agregarInquilino.AgregarAlquilerActivity;
+import com.alexander_rodriguez.mihogar.add_rental.AddRentalActivity;
 import com.alexander_rodriguez.mihogar.mi_casa.MiCasaActivity;
 import com.alexander_rodriguez.mihogar.registrarcasa.RegistrarCasaActivity;
 
@@ -63,7 +63,7 @@ public class MenuPricipal extends BaseActivity<IBasePresenter> implements Interf
     }
 
     public void onClickMasAlquiler(View view) {
-        startActivity(new Intent(this, AgregarAlquilerActivity.class));
+        startActivity(new Intent(this, AddRentalActivity.class));
     }
 
     @Override

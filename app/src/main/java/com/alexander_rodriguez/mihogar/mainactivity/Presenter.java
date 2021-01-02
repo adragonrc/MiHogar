@@ -32,20 +32,20 @@ public class Presenter extends BasePresenter<Interface.view> implements Interfac
         String id = getUsuario();
         String pass = getContraseña();
         if (id.equals("-1") || pass.equals("-1")) {
-            view.showMensaje("no hay registros");
+            view.showMessage("no hay registros");
             return;
         }
         if (usuario.equals(id)) {
             if (contraseña.equals(pass)) {
-                view.showMensaje("Bienvenido");
+                view.showMessage("Bienvenido");
                 view.ingresar();
             } else {
                 view.negarIngreso();
-                view.showMensaje("Contraseña Invalida");
+                view.showMessage("Contraseña Invalida");
             }
         } else {
             view.negarIngreso();
-            view.showMensaje("Usuario Invalido");
+            view.showMessage("Usuario Invalido");
         }
     }
 

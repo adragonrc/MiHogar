@@ -32,5 +32,7 @@ public interface Interface{
         void showDialogImput(String idAlquiler);
 
         void actualizarLista();
+
+        void notifyChangedOn(int posList);
     }
 }

@@ -2,13 +2,13 @@ package com.alexander_rodriguez.mihogar.mi_casa;
 
 import android.content.Context;
 import android.database.Cursor;
-import android.os.AsyncTask;
 
 import com.alexander_rodriguez.mihogar.Base.BasePresenter;
+import com.alexander_rodriguez.mihogar.DataBase.models.TRental;
 import com.alexander_rodriguez.mihogar.DataBase.models.TRoom;
-import com.alexander_rodriguez.mihogar.MyAdminDate;
-import com.alexander_rodriguez.mihogar.UTILIDADES.TAlquiler;
+import com.alexander_rodriguez.mihogar.AdminDate;
 import com.alexander_rodriguez.mihogar.Adapters.Models.ModelCuartoView;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
@@ -34,10 +34,13 @@ public class Presenter extends BasePresenter<Interface.View> implements Interfac
 
     @Override
     public void terminarAlquiler(String motivo, String id) {
-        db.upDateTenant(TAlquiler.FECHA_SALIDA, MyAdminDate.getFechaActual(), id);
-        db.upDateTenant(TAlquiler.MOTIVO, motivo, id);
-        //view.mostrarAlquileres(getListAlquileres());
-        verTodos();
+        /*
+        db.updateRental(mContext.getString(R.string.mdRentalDepartureDate), MyAdminDate.getFechaActual(), id);
+        db.updateRental(mContext.getString(R.string.mdRentalReasonExit), motivo, id);
+        db.upDateRoom(mContext.getString(R.string.mdroomCurrentRentalId), null)
+        verTodos();*/
+
+        view.showMessage("Funcion aun no implementada");
     }
 
     @Override
@@ -49,7 +52,8 @@ public class Presenter extends BasePresenter<Interface.View> implements Interfac
 
     @Override
     public void verCuartosAlquilados() {
-        list = getListCuartosAlquilados();
+        /*list = getListCuartosAlquilados();*/
+        view.showMessage("Funcion aun no implementada");
     }
 
     @Override
@@ -62,10 +66,10 @@ public class Presenter extends BasePresenter<Interface.View> implements Interfac
     public void ordenarPorFecha() {
         Collections.sort(list, (o1, o2) -> {
             try {
-                return MyAdminDate.comparar(o1.getPaymentDate(), o2.getPaymentDate());
+                return AdminDate.comparar(o1.getPaymentDate(), o2.getPaymentDate());
             } catch (ParseException e) {
                 e.printStackTrace();
-                view.showMensaje("Error con la fecha");
+                view.showMessage("Error con la fecha");
                 return 0;
             }
         });
@@ -101,10 +105,46 @@ public class Presenter extends BasePresenter<Interface.View> implements Interfac
     }
 
     private void getAllRoomsSuccess(QuerySnapshot queryDocumentSnapshots) {
-        new DownloadRentalsTask(this).execute(queryDocumentSnapshots);
+
+        for (QueryDocumentSnapshot roomDoc : queryDocumentSnapshots) {
+            ModelCuartoView room = new  ModelCuartoView (roomDoc.toObject(TRoom.class));
+            list.add(room);
+            room.setPosList(list.indexOf(room));
+            room.setRoomNumber(roomDoc.getId());
+            if(room.getCurrentRentalId() != null && !room.getCurrentRentalId().isEmpty()) {
+                MListener listener = new MListener(room);
+                getRental(room.getCurrentRentalId()).addOnSuccessListener(listener);
+            }
+        }
+        mostratCuartos(list);
+        //new DownloadRentalsTask(this).execute(queryDocumentSnapshots);
     }
 
-    static  class DownloadRentalsTask extends AsyncTask<QuerySnapshot, Void, Void> {
+    private class MListener  implements OnSuccessListener<DocumentSnapshot>{
+        ModelCuartoView modelCuartoView;
+        public MListener(ModelCuartoView modelCuartoView) {
+            this.modelCuartoView = modelCuartoView;
+        }
+
+        @Override
+        public void onSuccess(DocumentSnapshot t) {
+            TRental rental = t.toObject(TRental.class);
+            if (rental != null) {
+                String entryDate = AdminDate.dateToString(rental.getEntryDate().toDate());;
+                try {
+                    String nextPaymentDate = AdminDate.adelantarPorMeses(entryDate, rental.getPaymentsNumber());
+                    modelCuartoView.setPaymentDate(nextPaymentDate);
+                } catch (ParseException e) {
+                    modelCuartoView.setPaymentDate(null);
+                }
+            }else{
+                modelCuartoView.setPaymentDate(null);
+            }
+            if(modelCuartoView.isAlert()) view.notifyChangedOn(modelCuartoView.getPosList());
+        }
+    }
+    /*
+    private class DownloadRentalsTask extends AsyncTask<QuerySnapshot, Void, Void> {
 
         ArrayList<ModelCuartoView> list;
         Interface.Presenter presenter;
@@ -116,19 +156,11 @@ public class Presenter extends BasePresenter<Interface.View> implements Interfac
 
         @Override
         protected Void doInBackground(QuerySnapshot... voids) {
-            QuerySnapshot queryDocumentSnapshots = voids[0];
-            for (QueryDocumentSnapshot roomDoc : queryDocumentSnapshots) {
-                ModelCuartoView room = new  ModelCuartoView (roomDoc.toObject(TRoom.class));
-                list.add(room);
-                room.setRoomNumber(roomDoc.getId());
-                if(room.getCurrentRentalId() != null && !room.getCurrentRentalId().isEmpty())
-                    presenter.getRental(room.getCurrentRentalId()).addOnSuccessListener(new MListener<>(room));
-            }
-            return null;
+
         }
 
         protected void onPostExecute(Void result) {
-            presenter.mostratCuartos(list);
         }
-    }
+    }*/
+
 }

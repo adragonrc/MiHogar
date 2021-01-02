@@ -1,4 +1,4 @@
-package com.alexander_rodriguez.mihogar.agregarInquilino;
+package com.alexander_rodriguez.mihogar.add_rental;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -32,7 +32,7 @@ import com.theartofdev.edmodo.cropper.CropImage;
 
 import java.util.ArrayList;
 
-public class AgregarAlquilerActivity extends BaseActivity<Interfaz.presenter> implements Interfaz.view, RvAdapterUser.Interface   {
+public class AddRentalActivity extends BaseActivity<Interfaz.presenter> implements Interfaz.view, RvAdapterUser.Interface   {
     static final int CODE_0 = 0;
 
     private RvAdapterUser adapterUser;
@@ -131,7 +131,7 @@ public class AgregarAlquilerActivity extends BaseActivity<Interfaz.presenter> im
                         if(ruv.getVisibility() == View.VISIBLE)
                             ruv.onCollapsed();
                         else agregarAlquilerView.onCollapsed();
-                            AgregarAlquilerActivity.this.ocultarTeclado();
+                            AddRentalActivity.this.ocultarTeclado();
                         break;
                     }
                 }
@@ -247,7 +247,7 @@ public class AgregarAlquilerActivity extends BaseActivity<Interfaz.presenter> im
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         cancelDialog = false;
-                        startActivity(new Intent(AgregarAlquilerActivity.this, AgregarCuarto.class));
+                        startActivity(new Intent(AddRentalActivity.this, AgregarCuarto.class));
                     }
                 }).setNegativeButton("Salir", new DialogInterface.OnClickListener() {
             @Override
@@ -258,7 +258,7 @@ public class AgregarAlquilerActivity extends BaseActivity<Interfaz.presenter> im
         AlertDialog a =builder.create();
         a.setOnDismissListener(dialog -> {
             if (cancelDialog) {
-                AgregarAlquilerActivity.this.onBackPressed();
+                AddRentalActivity.this.onBackPressed();
             }
         });
         a.setOnCancelListener(dialog -> cancelDialog = true);
@@ -274,7 +274,7 @@ public class AgregarAlquilerActivity extends BaseActivity<Interfaz.presenter> im
     @Override
     public void onClickPositive(View v) {
         if (v == agregarAlquilerView.getPositive()) {
-            presenter.agregarAlquilerNuevo(agregarAlquilerView.getList());
+            presenter.agregarAlquilerNuevo(agregarAlquilerView.getData());
         }else{
             presenter.agregarUsuario(ruv.getDatos());
         }

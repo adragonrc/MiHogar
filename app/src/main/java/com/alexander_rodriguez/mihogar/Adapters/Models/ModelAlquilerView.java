@@ -3,9 +3,8 @@ package com.alexander_rodriguez.mihogar.Adapters.Models;
 import android.content.ContentValues;
 import android.database.Cursor;
 
-import com.alexander_rodriguez.mihogar.DataBase.DataBaseAdmin;
 import com.alexander_rodriguez.mihogar.DataBase.DataBaseInterface;
-import com.alexander_rodriguez.mihogar.MyAdminDate;
+import com.alexander_rodriguez.mihogar.AdminDate;
 import com.alexander_rodriguez.mihogar.UTILIDADES.TAlquiler;
 
 import java.text.Format;
@@ -34,7 +33,7 @@ public class ModelAlquilerView {
     public ModelAlquilerView(Cursor c){
 //        this.nombres = c.getString(c.getColumnIndex(TUsuario.NOMBRES)) + " " +c.getString(c.getColumnIndex(TUsuario.APELLIDO_PAT));
         this.fecha = c.getString(c.getColumnIndex(TAlquiler.FECHA_INICIO));
-        Format f = new SimpleDateFormat(MyAdminDate.FORMAT_DATE, Locale.getDefault());
+        Format f = new SimpleDateFormat(AdminDate.FORMAT_DATE, Locale.getDefault());
         fecha = f.format(new Date());
         this.numCuarto = c.getString(c.getColumnIndex(TAlquiler.NUMERO_C));
 //      this.alert = c.getString(TAlquiler.INT_ALERT).equals("1");

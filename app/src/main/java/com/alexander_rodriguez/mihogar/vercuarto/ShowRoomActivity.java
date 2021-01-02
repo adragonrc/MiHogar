@@ -34,7 +34,7 @@ import com.alexander_rodriguez.mihogar.UTILIDADES.TUsuario;
 import com.alexander_rodriguez.mihogar.ViewPdfActivity;
 import com.alexander_rodriguez.mihogar.historialcasa.HistorialCasaActivity;
 import com.alexander_rodriguez.mihogar.listalquileres.ListAlquileresActivity;
-import com.alexander_rodriguez.mihogar.agregarInquilino.AgregarAlquilerActivity;
+import com.alexander_rodriguez.mihogar.add_rental.AddRentalActivity;
 import com.alexander_rodriguez.mihogar.menu_photo.MenuIterator;
 import com.alexander_rodriguez.mihogar.menu_photo.interfazMenu;
 import com.alexander_rodriguez.mihogar.mydialog.DialogImput;
@@ -51,7 +51,7 @@ import java.util.Objects;
 
 import butterknife.ButterKnife;
 
-public class VerCuarto2 extends BaseActivity<Interface.Presenter> implements Interface.view, interfazAC {
+public class ShowRoomActivity extends BaseActivity<Interface.Presenter> implements Interface.view, interfazAC {
     public static final String TAG_REALIZAR_PAGO = "confirmarPago";
 
     private PerfilCuarto perfilCuarto;
@@ -100,7 +100,7 @@ public class VerCuarto2 extends BaseActivity<Interface.Presenter> implements Int
                 break;
             }
             case R.id.iAgregarInquilino: {
-                Intent i = new Intent(this, AgregarAlquilerActivity.class);
+                Intent i = new Intent(this, AddRentalActivity.class);
                 i.putExtra(TCuarto.NUMERO, numCuarto);
                 startActivity(i);
                 break;
@@ -406,14 +406,14 @@ public class VerCuarto2 extends BaseActivity<Interface.Presenter> implements Int
             datos.putString(TAlquiler.EXTRA_FECHA_PAGO, perfilCuarto.getTvFechaC().getText().toString());
             datos.putString(Mensualidad.COSTO, perfilCuarto.getTvMensualidad().getText().toString());
 
-            dialogConfirmPago = new DialogConfirmPago(datos, VerCuarto2.this);
+            dialogConfirmPago = new DialogConfirmPago(datos, ShowRoomActivity.this);
 
             dialogConfirmPago.setOnClickListenerAceptar(v12 -> {
                 presenter.realizarPago();
                 dialogConfirmPago.dismiss();
             });
             dialogConfirmPago.setOnClickListenerCancelar(v1 -> {
-                Toast.makeText(VerCuarto2.this, "transaccion canselada", Toast.LENGTH_SHORT).show();
+                Toast.makeText(ShowRoomActivity.this, "transaccion canselada", Toast.LENGTH_SHORT).show();
                 dialogConfirmPago.dismiss();
             });
             dialogConfirmPago.show(getSupportFragmentManager(), TAG_REALIZAR_PAGO);

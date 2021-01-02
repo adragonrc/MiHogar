@@ -14,7 +14,6 @@ import android.widget.TextView;
 import androidx.core.content.ContextCompat;
 
 import com.alexander_rodriguez.mihogar.Base.BasePresenter;
-import com.alexander_rodriguez.mihogar.DataBase.DataBaseAdmin;
 import com.alexander_rodriguez.mihogar.DataBase.DataBaseInterface;
 import com.alexander_rodriguez.mihogar.PDF;
 import com.alexander_rodriguez.mihogar.R;
@@ -147,10 +146,10 @@ public class Presenter extends BasePresenter<Interfaz.view> implements Interfaz.
             db.agregarVoucher(pdf.getPdfFile().getAbsolutePath(), viewClicked.getTextId());
             view.gotoShowPDF(pdf.getPdfFile().getAbsolutePath(), alquiler);
         } catch (FileNotFoundException e) {
-            view.showMensaje("error al crear el archivo");
+            view.showMessage("error al crear el archivo");
             e.printStackTrace();
         } catch (DocumentException e) {
-            view.showMensaje("error al crear el documento");
+            view.showMessage("error al crear el documento");
             e.printStackTrace();
         }
     }

@@ -50,7 +50,7 @@ public class FDAdministrator implements DBInterface{
     private FirebaseStorage storage;
     private StorageReference storageRef;
     private FirebaseAuth mAuth;
-    private Context mContext;
+    private final Context mContext;
     private FirebaseUser usuario;
 
     private CollectionReference hogarReference;
@@ -277,12 +277,12 @@ public class FDAdministrator implements DBInterface{
     }
 
     @Override
-    public Task<Void> upDateRoom(String field, Object valor, String numeroDeCuarto) {
+    public Task<Void> updateRoom(String field, Object valor, String numeroDeCuarto) {
         return getCuartoDR(numeroDeCuarto).update(field, valor);
     }
 
     @Override
-    public Task<Void> upDateTenant(String field, Object valor, String id) {
+    public Task<Void> updateRental(String field, Object valor, String id) {
         return getRentalDR(id).update(field, valor);
     }
 
@@ -453,12 +453,11 @@ public class FDAdministrator implements DBInterface{
     //Recordar analizar posicion de mensualidad
     @Override
     public Task<DocumentReference> agregarMensualidad(TMonthlyPayment monthlyPayment) {
-
         return getMonthlyPaymentCR(monthlyPayment.getRentalId()).add(monthlyPayment);
     }
 
     @Override
-    public Task<DocumentReference> agregarPago(TPayment payment) {
+    public Task<DocumentReference> addPayment(TPayment payment) {
         return getPaymentCR().add(payment);
 
     }
@@ -500,9 +499,8 @@ public class FDAdministrator implements DBInterface{
     }
 
     @Override
-    public boolean existeUsuario(String dni) {
-
-        return false;
+    public Task<DocumentSnapshot> existeUsuario(String dni) {
+        return  getUserDR(dni).get();
     }
 
     @Override

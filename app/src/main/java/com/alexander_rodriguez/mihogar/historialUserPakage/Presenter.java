@@ -21,7 +21,7 @@ public class Presenter extends BasePresenter<Interfaz.view> implements Interfaz.
         if (dni != null && !dni.isEmpty()) {
             solicitarDatos();
         }else {
-            view.showMensaje("DNI no encontrado");
+            view.showMessage("DNI no encontrado");
             view.salir();
         }
     }

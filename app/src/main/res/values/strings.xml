@@ -155,6 +155,7 @@
     <string name="mdRentalEmail">email</string>
     <string name="mdroomCurrentRentalId">currentRentalId</string>
     <string name="mdroomPahtImageStorage">pahtImageStorage</string>
+    <string name="s_room_without_rental">Agregar alquiler</string>
 
 
 </resources>

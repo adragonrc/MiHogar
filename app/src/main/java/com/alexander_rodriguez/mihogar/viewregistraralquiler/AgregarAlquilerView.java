@@ -6,17 +6,20 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.RadioGroup;
 import android.widget.ScrollView;
 import android.widget.Spinner;
 
 import androidx.annotation.Nullable;
 
-import com.alexander_rodriguez.mihogar.MyAdminDate;
+import com.alexander_rodriguez.mihogar.AdminDate;
 import com.alexander_rodriguez.mihogar.R;
+import com.google.firebase.Timestamp;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 
 public class AgregarAlquilerView extends ScrollView {
 
@@ -87,16 +90,21 @@ public class AgregarAlquilerView extends ScrollView {
         }
     }
 
-    public ModelAA getList()  {
+    public ModelAA getData() {
 
-        String fecha =  MyAdminDate.buidFecha(spAnio.getSelectedItem().toString(), spMes.getSelectedItem().toString(), spDia.getSelectedItem().toString());
+        String fecha =  AdminDate.buidFecha(spAnio.getSelectedItem().toString(), spMes.getSelectedItem().toString(), spDia.getSelectedItem().toString());
         boolean pago = radioGroup.getCheckedRadioButtonId() == R.id.rbCancelo;
         int pagosRealizados ;
         if  (pago) pagosRealizados  = 1;
         else pagosRealizados = 0;
-
+        Timestamp timestamp = null;
+        try {
+            timestamp = new Timestamp((new SimpleDateFormat(AdminDate.FORMAT_DATE, Locale.getDefault())).parse(fecha));
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
         return new ModelAA(
-                fecha,
+                timestamp,
                 spNumCuarto.getSelectedItem().toString(),
                 pagosRealizados,
                 etCorreo.getText().toString(),

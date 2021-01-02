@@ -2,7 +2,7 @@ package com.alexander_rodriguez.mihogar.mi_casa;
 
 import com.alexander_rodriguez.mihogar.Adapters.Models.ModelCuartoView;
 import com.alexander_rodriguez.mihogar.DataBase.models.TRental;
-import com.alexander_rodriguez.mihogar.MyAdminDate;
+import com.alexander_rodriguez.mihogar.AdminDate;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.DocumentSnapshot;
 
@@ -18,9 +18,9 @@ public class MListener <T extends DocumentSnapshot>  implements OnSuccessListene
     public void onSuccess(T t) {
         TRental rental = t.toObject(TRental.class);
         if (rental != null) {
-            String entryDate = rental.getEntryDate();
+            String entryDate = AdminDate.dateToString(rental.getEntryDate().toDate());
             try {
-                String nextPaymentDate = MyAdminDate.adelantarPorMeses(entryDate, rental.getPaymentsNumber());
+                String nextPaymentDate = AdminDate.adelantarPorMeses(entryDate, rental.getPaymentsNumber());
                 modelCuartoView.setPaymentDate(nextPaymentDate);
             } catch (ParseException e) {
                 modelCuartoView.setPaymentDate(null);
@@ -28,6 +28,7 @@ public class MListener <T extends DocumentSnapshot>  implements OnSuccessListene
         }else{
             modelCuartoView.setPaymentDate(null);
         }
+
     }
 
 }

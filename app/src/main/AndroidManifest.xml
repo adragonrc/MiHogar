@@ -41,7 +41,7 @@
         <activity android:name=".tableActivity.TableActivity" />
 
         <activity
-            android:name=".vercuarto.VerCuarto2"
+            android:name=".vercuarto.ShowRoomActivity"
             android:label=""
             android:configChanges="orientation"
             android:theme="@style/AppTheme.StatusBarTransparent"/>
@@ -64,7 +64,7 @@
             android:label="@string/title_activity_settings"
             android:theme="@style/Theme.Preferences" />
 
-        <activity android:name=".agregarInquilino.AgregarAlquilerActivity"
+        <activity android:name=".add_rental.AddRentalActivity"
             android:theme="@style/ThemeAddList"
             android:configChanges="orientation|screenSize"/>
 

@@ -1,27 +1,31 @@
 package com.alexander_rodriguez.mihogar.DataBase.models;
 
+import com.google.firebase.Timestamp;
+
 public class TPayment {
-    String date;
-    String rentalId;
-    String romNumber;
-    String monthlyPaymentId;
-    String amount;
+    protected Timestamp date;
+    protected String rentalId;
+    protected String romNumber;
+    protected String monthlyPaymentId;
+    protected String amount;
+    protected String dni;
 
     public TPayment(){}
 
-    public TPayment(String date, String rentalId, String romNumber, String monthlyPaymentId, String amount) {
+    public TPayment(Timestamp date, String rentalId, String romNumber, String monthlyPaymentId, String amount, String dni) {
         this.date = date;
         this.rentalId = rentalId;
         this.romNumber = romNumber;
         this.monthlyPaymentId = monthlyPaymentId;
         this.amount = amount;
+        this.dni = dni;
     }
 
-    public String getDate() {
+    public Timestamp getDate() {
         return date;
     }
 
-    public void setDate(String date) {
+    public void setDate(Timestamp date) {
         this.date = date;
     }
 
@@ -55,5 +59,9 @@ public class TPayment {
 
     public void setAmount(String amount) {
         this.amount = amount;
+    }
+
+    public String getDni() {
+        return dni;
     }
 }

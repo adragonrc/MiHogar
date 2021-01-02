@@ -54,7 +54,7 @@ public class ItemRoom extends TRoom{
     public boolean reportError(BaseView view){
         int err =getErrorIfExist();
         if (err != -1) {
-            view.showMensaje("Campo vacio en el campo: " + getLabelName(err));
+            view.showMessage("Campo vacio en el campo: " + getLabelName(err));
             return true;
         }
         return false;

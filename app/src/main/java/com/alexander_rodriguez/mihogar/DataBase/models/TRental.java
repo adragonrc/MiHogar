@@ -1,10 +1,11 @@
 package com.alexander_rodriguez.mihogar.DataBase.models;
 
+import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.DocumentReference;
 
 public class TRental {
-    protected String entryDate;
-    protected String departureDate;
+    protected Timestamp entryDate;
+    protected Timestamp departureDate;
     protected String reasonExit;
     protected boolean enabled;
     protected String roomNumber;
@@ -16,7 +17,7 @@ public class TRental {
 
     public TRental(){}
 
-    public TRental(String entryDate, String departureDate, String reasonExit, boolean enabled, String roomNumber, DocumentReference currentMP, String mainTenant, int paymentsNumber, String phoneNumber, String email) {
+    public TRental(Timestamp entryDate, Timestamp departureDate, String reasonExit, boolean enabled, String roomNumber, DocumentReference currentMP, String mainTenant, int paymentsNumber, String phoneNumber, String email) {
         this.entryDate = entryDate;
         this.departureDate = departureDate;
         this.reasonExit = reasonExit;
@@ -29,11 +30,11 @@ public class TRental {
         this.email = email;
     }
 
-    public String getEntryDate() {
+    public Timestamp getEntryDate() {
         return entryDate;
     }
 
-    public String getDepartureDate() {
+    public Timestamp getDepartureDate() {
         return departureDate;
     }
 

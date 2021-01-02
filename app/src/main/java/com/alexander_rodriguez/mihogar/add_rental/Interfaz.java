@@ -1,4 +1,4 @@
-package com.alexander_rodriguez.mihogar.agregarInquilino;
+package com.alexander_rodriguez.mihogar.add_rental;
 
 import android.widget.ArrayAdapter;
 

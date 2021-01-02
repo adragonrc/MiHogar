@@ -23,7 +23,7 @@ import com.alexander_rodriguez.mihogar.mydialog.DialogInterfaz;
 import com.alexander_rodriguez.mihogar.mydialog.DialogOptions;
 import com.alexander_rodriguez.mihogar.mydialog.PresenterDialogImput;
 import com.alexander_rodriguez.mihogar.tableActivity.TableActivity;
-import com.alexander_rodriguez.mihogar.vercuarto.VerCuarto2;
+import com.alexander_rodriguez.mihogar.vercuarto.ShowRoomActivity;
 
 import java.util.ArrayList;
 
@@ -188,9 +188,14 @@ public class MiCasaActivity extends BaseActivity<Interface.Presenter> implements
     }
 
     @Override
+    public void notifyChangedOn(int posList) {
+        adapterCuartos.notifyItemChanged(posList);
+    }
+
+    @Override
     public void onClickCuarto(View view) {
         String numero = ((TextView)view).getText().toString();
-        Intent i = new Intent(this, VerCuarto2.class);
+        Intent i = new Intent(this, ShowRoomActivity.class);
         i.putExtra(TCuarto.NUMERO, numero);
         startActivity(i);
     }

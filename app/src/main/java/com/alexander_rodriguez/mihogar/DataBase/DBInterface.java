@@ -41,12 +41,19 @@ public interface DBInterface {
     DocumentReference getCuartoDR(String numCuarto);
 
     CollectionReference getCuartoCR();
+
     CollectionReference getRentalCR();
+
     DocumentReference getRentalDR(String rentalId);
+
     CollectionReference getUserCR();
+
     CollectionReference getAlquilerUserCR();
+
     CollectionReference getMonthlyPaymentCR(String rentalId);
+
     CollectionReference getPaymentCR();
+
     boolean revertir(String tableName, String columKey, Object key);
 
     Task<DocumentSnapshot> getRoom(String numCuarto);
@@ -107,9 +114,9 @@ public interface DBInterface {
 
     Task<Void> upDateUser(String columna, Object valor, String DNI);
 
-    Task<Void> upDateRoom(String field, Object valor, String numeroDeCuarto);
+    Task<Void> updateRoom(String field, Object valor, String numeroDeCuarto);
 
-    Task<Void> upDateTenant(String columna, Object valor, String id);
+    Task<Void> updateRental(String columna, Object valor, String id);
 
     void upDateAlquilerUsuario(String columna, Object valor, Object idAl, Object dni);
 
@@ -131,7 +138,7 @@ public interface DBInterface {
 
     Task<DocumentReference> agregarMensualidad( TMonthlyPayment monthlyPayment );
 
-    Task<DocumentReference> agregarPago(TPayment payment);
+    Task<DocumentReference> addPayment(TPayment payment);
 
     boolean agregarInquilinoExist(String DNI, String numC, double costo, @NonNull String fecha_i, @Nullable String fecha_c, String numTel, String correo);
 
@@ -145,7 +152,7 @@ public interface DBInterface {
 
     boolean existIntoCuarto(String valor);
 
-    boolean existeUsuario(String dni);
+    Task<DocumentSnapshot> existeUsuario(String dni);
 
     boolean esUsuarioAntiguo(String dni);
 

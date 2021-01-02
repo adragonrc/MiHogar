@@ -61,7 +61,7 @@ public abstract class BaseActivity<P extends IBasePresenter> extends AppCompatAc
     protected abstract void iniciarViews();
 
     @Override
-    public void showMensaje(String mensaje) {
+    public void showMessage(String mensaje) {
         Toast.makeText(this, mensaje, Toast.LENGTH_SHORT).show();
 
     }

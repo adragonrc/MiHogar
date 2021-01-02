@@ -424,7 +424,7 @@ public class DataBaseAdmin extends SQLiteOpenHelper implements DataBaseInterface
 
     @Override
     public boolean agregarAlquiler(ModelAA model) {
-        cv.put(TAlquiler.FECHA_INICIO, model.getEntryDate());
+        cv.put(TAlquiler.FECHA_INICIO, model.getEntryDateAsString());
         cv.put(TAlquiler.PAGOS_REALIZADOS, model.getPaymentsNumber());
         cv.put(TAlquiler.NUMERO_TEL, model.getPhoneNumber());
         cv.put(TAlquiler.CORREO, model.getEmail());

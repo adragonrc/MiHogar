@@ -8,13 +8,14 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.Locale;
 
-public class MyAdminDate {
+public class AdminDate {
     private DateFormat dateFormat;
     public static final String FORMAT_DATE_TIME = "yyyy-MM-dd HH:mm:ss";
     public static final String FORMAT_DATE = "yyyy-MM-dd";
-    public MyAdminDate(){
-        dateFormat = new SimpleDateFormat(FORMAT_DATE);
+    public AdminDate(){
+        dateFormat = new SimpleDateFormat(FORMAT_DATE, Locale.getDefault());
     }
 
     public static int comparar(String fechaCancelar, String fechaCancelar1) throws ParseException {
@@ -28,7 +29,7 @@ public class MyAdminDate {
             return -1;
         }
 
-        DateFormat dateFormat = new SimpleDateFormat(FORMAT_DATE_TIME);
+        DateFormat dateFormat = new SimpleDateFormat(FORMAT_DATE_TIME, Locale.getDefault());
         Date d1 = dateFormat.parse(fechaCancelar);
         Date d2 = dateFormat.parse(fechaCancelar1);
 
@@ -38,24 +39,30 @@ public class MyAdminDate {
     }
 
     public static String adelantarUnMes(String fecha) throws ParseException {
-        DateFormat dateFormat = new SimpleDateFormat(FORMAT_DATE);
+        DateFormat dateFormat = new SimpleDateFormat(FORMAT_DATE, Locale.getDefault());
         Date date = dateFormat.parse(fecha);
         date.setMonth(date.getMonth() + 1);
         return dateFormat.format(date);
     }
 
     public static String adelantarPorMeses(String fecha, int pagos) throws ParseException {
-        DateFormat dateFormat = new SimpleDateFormat(FORMAT_DATE_TIME);
+        DateFormat dateFormat = new SimpleDateFormat(FORMAT_DATE_TIME, Locale.getDefault());
         Date date = dateFormat.parse(fecha);
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(date);
         calendar.add(Calendar.MONTH, pagos);
         return dateFormat.format(calendar.getTime());
-
+    }
+    public static String adelantarPorMeses(Date date, int pagos) throws ParseException {
+        DateFormat dateFormat = new SimpleDateFormat(FORMAT_DATE_TIME, Locale.getDefault());
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        calendar.add(Calendar.MONTH, pagos);
+        return dateFormat.format(calendar.getTime());
     }
 
     public void setFormat(String format){
-        dateFormat = new SimpleDateFormat(format);
+        dateFormat = new SimpleDateFormat(format, Locale.getDefault());
     }
 
     public String[] getFechas(){
@@ -103,18 +110,18 @@ public class MyAdminDate {
         return calendar.getTime();
     }
     public static String getFechaActual(){
-        return (new SimpleDateFormat(FORMAT_DATE_TIME)).format(new Date());
+        return (new SimpleDateFormat(FORMAT_DATE_TIME, Locale.getDefault())).format(new Date());
     }
 
     public static String buidFecha(String year, String month, String day){
         Date date  = new Date();
-        String fecha = year + "-" + month + "-" + day + " " + date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds();
+        String fecha;
+        fecha = year + "-" + month + "-" + day + " " + date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds();
         return fecha;
     }
 
     public static String buidFecha(String year, String month, String day, String hour, String min, String ss){
-        String fecha = year + "-" + month + "-" + day+ " " + hour+ ":" + min+ ":" + ss;
-        return fecha;
+        return year + "-" + month + "-" + day+ " " + hour+ ":" + min+ ":" + ss;
     }
 
     public DateFormat getDateFormat() {
@@ -129,6 +136,16 @@ public class MyAdminDate {
             e.printStackTrace();
         }
         return null;
+    }
+
+    public static String dateToString(Date date){
+        return (new SimpleDateFormat(FORMAT_DATE, Locale.getDefault())).format(date);
+    }
+    public static String dateToString(Date date, String cache){
+        if(cache == null || cache.isEmpty()){
+            cache = dateToString(date);
+        }
+        return cache;
     }
 
 

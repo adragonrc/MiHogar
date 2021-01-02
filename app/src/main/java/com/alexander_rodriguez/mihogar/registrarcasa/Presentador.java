@@ -14,7 +14,7 @@ public class Presentador extends BasePresenter<interfaz.view> implements interfa
     private boolean validarImputs(String ...s){
         for (String s1 : s)
             if (s1.equals("")) {
-                view.showMensaje("Campo vacio");
+                view.showMessage("Campo vacio");
                 return false;
             }
         return true;
@@ -22,7 +22,7 @@ public class Presentador extends BasePresenter<interfaz.view> implements interfa
     @Override
     public void ingresar(String dir, String corr) {
         if(!validarImputs( dir, corr)) {
-            view.showMensaje("Campo vacio");
+            view.showMessage("Campo vacio");
             return;
         };
         Context c = view.getContext();

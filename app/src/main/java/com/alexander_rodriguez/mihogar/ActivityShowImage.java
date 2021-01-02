@@ -17,7 +17,6 @@ import com.alexander_rodriguez.mihogar.Base.BaseActivity;
 import com.alexander_rodriguez.mihogar.Base.BasePresenter;
 import com.alexander_rodriguez.mihogar.Base.IBasePresenter;
 import com.alexander_rodriguez.mihogar.DataBase.DBInterface;
-import com.alexander_rodriguez.mihogar.DataBase.DataBaseAdmin;
 import com.alexander_rodriguez.mihogar.DataBase.FDAdministrator;
 import com.alexander_rodriguez.mihogar.UTILIDADES.TCuarto;
 import com.alexander_rodriguez.mihogar.UTILIDADES.TUsuario;
@@ -136,16 +135,16 @@ public class ActivityShowImage extends BaseActivity<IBasePresenter> {
             if (getIntent().getBooleanExtra(ActivityShowImage.IS_CUARTO_IMAGE, false)) {
                 String roomNumber = getIntent().getStringExtra(TCuarto.NUMERO);
                 path = s.SaveImage(this, bmGuardar, getString(R.string.cRoom), roomNumber);
-                db.upDateRoom(TCuarto.URL, path, roomNumber);
+                db.updateRoom(TCuarto.URL, path, roomNumber);
             } else {
                 if (getIntent().getBooleanExtra(ActivityShowImage.IS_USER_IMAGE, false)) {
                     String DNI = getIntent().getStringExtra(TUsuario.DNI);
                     path = s.SaveImage(this, bmGuardar, getString(R.string.cTenant), DNI);
-                    db.upDateRoom(TUsuario.URI, path, DNI);
+                    db.updateRoom(TUsuario.URI, path, DNI);
                 }
             }
         }catch (IOError e){
-            showMensaje("No se pudo guardar");
+            showMessage("No se pudo guardar");
         }
     }
 }

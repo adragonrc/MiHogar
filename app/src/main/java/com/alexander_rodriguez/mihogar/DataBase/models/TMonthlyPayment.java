@@ -1,13 +1,15 @@
 package com.alexander_rodriguez.mihogar.DataBase.models;
 
+import com.google.firebase.Timestamp;
+
 public class TMonthlyPayment {
     protected String amount;
-    protected String dateInit;
+    protected Timestamp dateInit;
     protected String rentalId;
 
     public TMonthlyPayment(){}
 
-    public TMonthlyPayment(String amount, String dateInit, String rentalId) {
+    public TMonthlyPayment(String amount, Timestamp dateInit, String rentalId) {
         this.amount = amount;
         this.dateInit = dateInit;
         this.rentalId = rentalId;
@@ -21,11 +23,11 @@ public class TMonthlyPayment {
         this.amount = amount;
     }
 
-    public String getDateInit() {
+    public Timestamp getDateInit() {
         return dateInit;
     }
 
-    public void setDateInit(String dateInit) {
+    public void setDateInit(Timestamp dateInit) {
         this.dateInit = dateInit;
     }
 

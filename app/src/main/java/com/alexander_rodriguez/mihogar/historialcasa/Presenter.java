@@ -10,7 +10,7 @@ import android.view.MenuItem;
 import com.alexander_rodriguez.mihogar.Base.BaseActivity;
 import com.alexander_rodriguez.mihogar.Base.BasePresenter;
 import com.alexander_rodriguez.mihogar.DataBase.items.ItemUser;
-import com.alexander_rodriguez.mihogar.MyAdminDate;
+import com.alexander_rodriguez.mihogar.AdminDate;
 import com.alexander_rodriguez.mihogar.R;
 import com.alexander_rodriguez.mihogar.UTILIDADES.TAlquiler;
 import com.alexander_rodriguez.mihogar.Adapters.Models.ModelAlquilerView;
@@ -23,7 +23,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 public class Presenter extends BasePresenter<Interface.View> implements Interface.Presenter {
-    private MyAdminDate myAdminDate;
+    private AdminDate adminDate;
 
     private String modo;
     private String idAlquiler;
@@ -42,7 +42,7 @@ public class Presenter extends BasePresenter<Interface.View> implements Interfac
 
     public Presenter(Interface.View view, Intent i) {
         super(view);
-        myAdminDate = new MyAdminDate();
+        adminDate = new AdminDate();
         this.modo  = i.getStringExtra(HistorialCasaActivity.TYPE_MODE);
         idAlquiler = i.getStringExtra(TAlquiler.ID);
 
