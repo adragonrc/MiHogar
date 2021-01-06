@@ -12,6 +12,7 @@ import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.alexander_rodriguez.mihogar.Adapters.AdapterInterface;
 import com.alexander_rodriguez.mihogar.Adapters.RvAdapterCuartos;
 import com.alexander_rodriguez.mihogar.Base.BaseActivity;
 import com.alexander_rodriguez.mihogar.R;
@@ -27,7 +28,7 @@ import com.alexander_rodriguez.mihogar.vercuarto.ShowRoomActivity;
 
 import java.util.ArrayList;
 
-public class MiCasaActivity extends BaseActivity<Interface.Presenter> implements Interface.View, RvAdapterCuartos.Interface{
+public class MiCasaActivity extends BaseActivity<Interface.Presenter> implements Interface.View, AdapterInterface {
     private RecyclerView rv;
     private DialogOptions dop;
     private DialogInterfaz.DialogOptionPresenter dialogOptionPresenter;
@@ -193,11 +194,14 @@ public class MiCasaActivity extends BaseActivity<Interface.Presenter> implements
     }
 
     @Override
-    public void onClickCuarto(View view) {
-        String numero = ((TextView)view).getText().toString();
-        Intent i = new Intent(this, ShowRoomActivity.class);
-        i.putExtra(TCuarto.NUMERO, numero);
-        startActivity(i);
+    public void onClickHolder(RecyclerView.ViewHolder holder) {
+        if(holder instanceof RvAdapterCuartos.Holder){
+            RvAdapterCuartos.Holder mHolder = (RvAdapterCuartos.Holder) holder;
+            String numero = mHolder.getTvTitle().getText().toString();
+            Intent i = new Intent(this, ShowRoomActivity.class);
+            i.putExtra(TCuarto.NUMERO, numero);
+            startActivity(i);
+        }
     }
 
     private class PresenterDialogOptions implements DialogInterfaz.DialogOptionPresenter {

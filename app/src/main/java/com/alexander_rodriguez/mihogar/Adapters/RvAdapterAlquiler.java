@@ -1,16 +1,12 @@
 package com.alexander_rodriguez.mihogar.Adapters;
 
-import android.graphics.BitmapFactory;
-import android.os.Build;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.RequiresApi;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -22,11 +18,11 @@ import java.util.ArrayList;
 public class RvAdapterAlquiler extends RecyclerView.Adapter<RvAdapterAlquiler.Holder>{
 
     private ArrayList<ModelAlquilerView> list;
-    private Interface view;
+    private AdapterInterface view;
     private View viewSelect;
     private String idAlquilerSelect;
 
-    public RvAdapterAlquiler(Interface view, ArrayList<ModelAlquilerView> list){
+    public RvAdapterAlquiler(AdapterInterface view, ArrayList<ModelAlquilerView> list){
         this.view = view;
         this.list = list;
     }
@@ -80,19 +76,20 @@ public class RvAdapterAlquiler extends RecyclerView.Adapter<RvAdapterAlquiler.Ho
             cardView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    view.onClickAlquiler(mId);
+                    view.onClickHolder(Holder.this);
                 }
             });
         }
+
+        public String getmId() {
+            return mId;
+        }
+
         @Override
         public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
             view.getMenuInflater().inflate(R.menu.menu_opciones,menu);
             viewSelect = v;
             idAlquilerSelect = mId;
         }
-    }
-
-    public interface Interface extends  AdapterInterface{
-        void onClickAlquiler(String idAlquiler);
     }
 }

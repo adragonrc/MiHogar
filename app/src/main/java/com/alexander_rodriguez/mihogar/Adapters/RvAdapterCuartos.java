@@ -21,9 +21,9 @@ import java.util.ArrayList;
 
 public class RvAdapterCuartos extends RecyclerView.Adapter<RvAdapterCuartos.Holder> {
     private ArrayList<ModelCuartoView> list;
-    private Interface mInterface;
+    private AdapterInterface mInterface;
     private String valueSelect;
-    public RvAdapterCuartos(Interface mInterface, ArrayList<ModelCuartoView> list){
+    public RvAdapterCuartos(AdapterInterface mInterface, ArrayList<ModelCuartoView> list){
         this.mInterface = mInterface;
         this.list = list;
     }
@@ -63,10 +63,10 @@ public class RvAdapterCuartos extends RecyclerView.Adapter<RvAdapterCuartos.Hold
     }
 
     public class Holder extends RecyclerView.ViewHolder implements View.OnCreateContextMenuListener{
-        private TextView tvTitle;
-        private TextView tvDetalles;
-        private ImageView ivPhoto;
-        private ImageView ivAlert;
+        private final TextView tvTitle;
+        private final TextView tvDetalles;
+        private final ImageView ivPhoto;
+        private final ImageView ivAlert;
         private String id;
 
         public Holder(@NonNull View itemView) {
@@ -80,7 +80,7 @@ public class RvAdapterCuartos extends RecyclerView.Adapter<RvAdapterCuartos.Hold
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    mInterface.onClickCuarto(tvTitle);
+                    mInterface.onClickHolder(Holder.this);
                 }
             });
         }
@@ -90,8 +90,9 @@ public class RvAdapterCuartos extends RecyclerView.Adapter<RvAdapterCuartos.Hold
             mInterface.getMenuInflater().inflate(R.menu.menu_opciones,menu);
             valueSelect = id;
         }
-    }
-    public interface Interface extends AdapterInterface{
-        void onClickCuarto(View view);
+
+        public TextView getTvTitle() {
+            return tvTitle;
+        }
     }
 }

@@ -12,6 +12,8 @@ import android.widget.TableLayout;
 import androidx.annotation.NonNull;
 
 import com.alexander_rodriguez.mihogar.Base.BaseActivity;
+import com.alexander_rodriguez.mihogar.DataBase.items.ItemRental;
+import com.alexander_rodriguez.mihogar.DataBase.parse.ParceRental;
 import com.alexander_rodriguez.mihogar.R;
 import com.alexander_rodriguez.mihogar.UTILIDADES.TAlquiler;
 import com.alexander_rodriguez.mihogar.ViewMensualidad;
@@ -19,8 +21,13 @@ import com.alexander_rodriguez.mihogar.ViewPdfActivity;
 import com.alexander_rodriguez.mihogar.viewForTable.ViewFilaOfPagos;
 
 
-public class
-TableActivity extends BaseActivity<Interfaz.Presenter> implements Interfaz.view {
+public class TableActivity extends BaseActivity<Interfaz.Presenter> implements Interfaz.view {
+    public static final String RENTAL_ID = "rentalID";
+    public static final String ROOM_NUMBER = "room_number";
+    public static final String PHONE_NUM = "phone_num";
+    public static final String EMAIL = "email";
+    public static final String SEND_MT = "send_md";
+
     private LinearLayout llPagos;
 
     @Override
@@ -36,7 +43,7 @@ TableActivity extends BaseActivity<Interfaz.Presenter> implements Interfaz.view 
     @NonNull
     @Override
     protected Interfaz.Presenter createPresenter() {
-        return new Presenter(this,getIntent().getStringExtra(TAlquiler.ID));
+        return new Presenter(this, getIntent());
     }
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
@@ -63,11 +70,12 @@ TableActivity extends BaseActivity<Interfaz.Presenter> implements Interfaz.view 
     }
 
     @Override
-    public void gotoShowPDF(String absolutePath, ContentValues datosAlquiler) {
+    public void gotoShowPDF(String absolutePath, ParceRental datosAlquiler) {
         Intent intent = new Intent(this, ViewPdfActivity.class);
+
         intent.putExtra(ViewPdfActivity.EXTRA_PATH_PDF, absolutePath);
-        intent.putExtra(TAlquiler.NUMERO_TEL, datosAlquiler.getAsString(TAlquiler.NUMERO_TEL));
-        intent.putExtra(TAlquiler.CORREO, datosAlquiler.getAsString(TAlquiler.CORREO));
+        intent.putExtra(TAlquiler.NUMERO_TEL, datosAlquiler.getPhoneNumber());
+        intent.putExtra(TAlquiler.CORREO, datosAlquiler.getEmail());
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
     }

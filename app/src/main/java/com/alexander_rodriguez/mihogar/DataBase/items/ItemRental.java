@@ -36,6 +36,10 @@ public class ItemRental extends TRental {
         super(r.getEntryDate(), r.getDepartureDate(), r.getReasonExit(), r.isEnabled(), r.getRoomNumber(), r.getCurrentMP(), r.getMainTenant(), r.getPaymentsNumber(), r.getPhoneNumber(), r.getEmail());
     }
 
+    public ItemRental() {
+
+    }
+
     @Contract(pure = true)
     public static @NotNull String getLabelName(int i){
         switch (i){

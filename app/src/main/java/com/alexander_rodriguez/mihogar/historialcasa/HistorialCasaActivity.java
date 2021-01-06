@@ -9,10 +9,9 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
-import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.alexander_rodriguez.mihogar.Adapters.AdapterInterface;
 import com.alexander_rodriguez.mihogar.Adapters.RvAdapterAlquiler;
 import com.alexander_rodriguez.mihogar.Adapters.RvAdapterUser;
 import com.alexander_rodriguez.mihogar.Base.BaseActivity;
@@ -21,30 +20,28 @@ import com.alexander_rodriguez.mihogar.R;
 import com.alexander_rodriguez.mihogar.UTILIDADES.TAlquiler;
 import com.alexander_rodriguez.mihogar.UTILIDADES.TUsuario;
 import com.alexander_rodriguez.mihogar.historialUserPakage.HistorialUsuarioActivity;
-import com.alexander_rodriguez.mihogar.Adapters.Models.ModelAlquilerView;
-import com.alexander_rodriguez.mihogar.Adapters.Models.ModelUserView;
 import com.alexander_rodriguez.mihogar.tableActivity.TableActivity;
 import com.alexander_rodriguez.mihogar.viewUser.DialogDetallesAlquiler;
 
 import java.util.ArrayList;
 
-public class HistorialCasaActivity extends BaseActivity<Interface.Presenter> implements Interface.View, RvAdapterUser.Interface, RvAdapterAlquiler.Interface{
+public class HistorialCasaActivity extends BaseActivity<Interface.Presenter> implements Interface.View, AdapterInterface{
 
-    public static final String MODO_SOLO_USUARIOS = "solo_usuarios";
+    public static final String ALL_USERS = "allUsers";
 
-    public static final String MODO_SOLO_ALQUILERES = "solo_alquileres";
+    public static final String USERS_OF_RENTAL = "usersOfRental";
 
-    public static final String MODO_DEFAULT = "default";
+    public static final String RENTALS_OF_USER = "rentalOfUsers";
 
-    public static final String TYPE_MODE = "tipo_modo";
+    public static final String ALL_RENTALS = "allRentals";
+
+    public static final String MODE = "mode";
 
     public static final String TAG_MOSTRAR_PAGOS = "tag_table_pagos";
 
     private RecyclerView recyclerView;
 
     private RvAdapterUser adapterUser;
-
-    private RvAdapterAlquiler adapterAlquiler;
 
     private RecyclerView.LayoutManager manager;
 
@@ -62,7 +59,25 @@ public class HistorialCasaActivity extends BaseActivity<Interface.Presenter> imp
     @NonNull
     @Override
     protected Interface.Presenter createPresenter() {
-        return new Presenter(this, getIntent());
+        String mode = getIntent().getStringExtra(MODE);
+        switch (mode){
+            case ALL_RENTALS:{
+                return new AllRentalPresenter(this, getIntent());
+            }
+            case ALL_USERS:{
+                return new AllUsersPresenter(this, getIntent());
+            }
+            case USERS_OF_RENTAL:{
+                return new RentalUsersPresenter(this, getIntent());
+            }
+            case RENTALS_OF_USER:{
+                return new UserRentalsPresenter(this, getIntent());
+            }
+            default: {
+                salir();
+                return new AllRentalPresenter(this, getIntent());
+            }
+        }
     }
 
     @Override
@@ -89,26 +104,24 @@ public class HistorialCasaActivity extends BaseActivity<Interface.Presenter> imp
     }
 
     @Override
-    public void mostarListUsuarios(ArrayList<ItemUser> list) {
+    public void showList(ArrayList<ItemUser> list, RecyclerView.LayoutManager manager) {
         adapterUser = new RvAdapterUser(this, list);
-
-        manager = new LinearLayoutManager(this);
 
         recyclerView.setLayoutManager(manager);
 
         recyclerView.setAdapter(adapterUser);
     }
-
+/*
     @Override
     public void mostarListAlquileres(ArrayList<ModelAlquilerView> list) {
         adapterAlquiler = new RvAdapterAlquiler(this, list);
-
-        GridLayoutManager manager = new GridLayoutManager(this, 2);
+        //GridLayoutManager manager = new GridLayoutManager(this, 2);
 
         recyclerView.setLayoutManager(manager);
 
         recyclerView.setAdapter(adapterAlquiler);
     }
+*/
 
     @Override
     public void setiMenu(int i) {
@@ -121,33 +134,25 @@ public class HistorialCasaActivity extends BaseActivity<Interface.Presenter> imp
     }
 
     @Override
-    public void onClickUsuario(RvAdapterUser.Holder view) {
-        TextView tv = view.getDNI();
-        String dni = tv.getText().toString();
-        Intent intent = new Intent(this, HistorialUsuarioActivity.class);
-        intent.putExtra(TUsuario.DNI,dni);
+    public void goTo(Intent intent) {
         startActivity(intent);
     }
 
     @Override
-    public void onClickAlquiler(String id) {
-        Bundle bundle = new Bundle();
-        ContentValues alquiler = presenter.getDetallesAlquiler(id);
-
-        DialogDetallesAlquiler dialogDetallesAlquiler = new DialogDetallesAlquiler(this, alquiler);
-        dialogDetallesAlquiler.setOnClickListenerVerCuarto(v -> {
-            Intent i = new Intent(this, HistorialCasaActivity.class);
-            i.putExtra(HistorialCasaActivity.TYPE_MODE, HistorialCasaActivity.MODO_SOLO_USUARIOS);
-            i.putExtra(TAlquiler.ID, id);
-            startActivity(i);
-        });
-        dialogDetallesAlquiler.setOnClickListenerVerPagos(v -> {
-            Intent intent = new Intent(HistorialCasaActivity.this, TableActivity.class);
-            intent.putExtra(TAlquiler.ID, id);
-            startActivity(intent);
-        });
-
+    public void showDialog(DialogDetallesAlquiler dialogDetallesAlquiler) {
         dialogDetallesAlquiler.show(getSupportFragmentManager(), TAG_MOSTRAR_PAGOS);
+    }
+
+    @Override
+    public void onClickHolder(RecyclerView.ViewHolder holder) {
+        presenter.onClickHolder(holder);
+    }
+
+    public void onClickUsuario(RvAdapterUser.Holder view) {
+    }
+
+    public void onClickAlquiler(String id) {
+
 
     }
 }

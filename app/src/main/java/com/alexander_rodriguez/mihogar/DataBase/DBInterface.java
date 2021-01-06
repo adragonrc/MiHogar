@@ -48,6 +48,10 @@ public interface DBInterface {
 
     CollectionReference getUserCR();
 
+    DocumentReference getUserDR(String dni);
+
+    Task<DocumentSnapshot> getUser(String dni);
+
     CollectionReference getAlquilerUserCR();
 
     CollectionReference getMonthlyPaymentCR(String rentalId);
@@ -92,7 +96,7 @@ public interface DBInterface {
 
     Cursor getAllUsuariosADDAlert(String columnas);
 
-    Cursor getUsuariosForAlquiler(String columnas, String ida);
+    Task<QuerySnapshot> getRentalTenant(String field, String ida);
 
     ContentValues getRentByRoom(String columnas, Object numCuarto);
 
@@ -102,7 +106,7 @@ public interface DBInterface {
 
     ContentValues getFilaAlquilerByUserOf(String columnas, Object DNI);
 
-    TableCursor getPagosOf(String columnas, Object idMensualidad);
+    Task<QuerySnapshot> getPayments(String field, Object value);
 
     String[] getIdOfAllAlquileres();
 
@@ -112,7 +116,7 @@ public interface DBInterface {
 
     int contDniOfAlquilerUsuario(String idAlquiler);
 
-    Task<Void> upDateUser(String columna, Object valor, String DNI);
+    Task<Void> upDateUser(String field, Object valor, String DNI);
 
     Task<Void> updateRoom(String field, Object valor, String numeroDeCuarto);
 
@@ -189,5 +193,7 @@ public interface DBInterface {
     String getPathTenant(String DNI);
 
     String getPathRoom(String roomNumber);
+
+    Task<QuerySnapshot> getTenantHistory(String dni);
 
 }

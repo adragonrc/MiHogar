@@ -7,7 +7,9 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.alexander_rodriguez.mihogar.Adapters.AdapterInterface;
 import com.alexander_rodriguez.mihogar.Adapters.RvAdapterAlquiler;
+import com.alexander_rodriguez.mihogar.Adapters.RvAdapterUser;
 import com.alexander_rodriguez.mihogar.Base.BaseActivity;
 import com.alexander_rodriguez.mihogar.Base.IBasePresenter;
 import com.alexander_rodriguez.mihogar.R;
@@ -18,7 +20,7 @@ import com.alexander_rodriguez.mihogar.tableActivity.TableActivity;
 
 import java.util.ArrayList;
 
-public class ListAlquileresActivity extends BaseActivity<IBasePresenter> implements Interface.Vista, RvAdapterAlquiler.Interface{
+public class ListAlquileresActivity extends BaseActivity<IBasePresenter> implements Interface.Vista, AdapterInterface {
     private RvAdapterAlquiler adapterAlquiler;
     private RecyclerView recyclerView;
 
@@ -52,10 +54,14 @@ public class ListAlquileresActivity extends BaseActivity<IBasePresenter> impleme
         recyclerView.setAdapter(adapterAlquiler);
     }
 
+
     @Override
-    public void onClickAlquiler(String id) {
-        Intent intent = new Intent(this, TableActivity.class);
-        intent.putExtra(TAlquiler.ID, id);
-        startActivity(intent);
+    public void onClickHolder(RecyclerView.ViewHolder holder) {
+        if(holder instanceof RvAdapterAlquiler.Holder) {
+            RvAdapterAlquiler.Holder mHolder = (RvAdapterAlquiler.Holder) holder;
+            Intent intent = new Intent(this, TableActivity.class);
+            intent.putExtra(TAlquiler.ID, mHolder.getmId());
+            startActivity(intent);
+        }
     }
 }

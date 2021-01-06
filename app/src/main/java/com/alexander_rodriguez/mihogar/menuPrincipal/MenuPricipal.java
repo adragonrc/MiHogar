@@ -82,7 +82,7 @@ public class MenuPricipal extends BaseActivity<IBasePresenter> implements Interf
 
     public void onClickHistorialCasa(View view) {
         Intent i = new Intent(this, HistorialCasaActivity.class);
-        i.putExtra(HistorialCasaActivity.TYPE_MODE, HistorialCasaActivity.MODO_DEFAULT);
+        i.putExtra(HistorialCasaActivity.MODE, HistorialCasaActivity.ALL_RENTALS);
         startActivity(i);
     }
 

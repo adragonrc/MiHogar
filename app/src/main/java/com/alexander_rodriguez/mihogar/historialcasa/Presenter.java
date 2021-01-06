@@ -7,10 +7,13 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.alexander_rodriguez.mihogar.Base.BaseActivity;
 import com.alexander_rodriguez.mihogar.Base.BasePresenter;
 import com.alexander_rodriguez.mihogar.DataBase.items.ItemUser;
 import com.alexander_rodriguez.mihogar.AdminDate;
+import com.alexander_rodriguez.mihogar.DataBase.models.TRentalTenant;
 import com.alexander_rodriguez.mihogar.R;
 import com.alexander_rodriguez.mihogar.UTILIDADES.TAlquiler;
 import com.alexander_rodriguez.mihogar.Adapters.Models.ModelAlquilerView;
@@ -18,6 +21,9 @@ import com.alexander_rodriguez.mihogar.Adapters.Models.ModelUserView;
 import com.alexander_rodriguez.mihogar.UTILIDADES.TAlquilerUsuario;
 import com.alexander_rodriguez.mihogar.UTILIDADES.TUsuario;
 import com.alexander_rodriguez.mihogar.viewUser.DialogDetallesAlquiler;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -40,15 +46,19 @@ public class Presenter extends BasePresenter<Interface.View> implements Interfac
     private ArrayList<ItemUser> listUsuarios;
     private Intent mIntent;
 
+    private int cont;
+    private int iCont;
+
     public Presenter(Interface.View view, Intent i) {
         super(view);
         adminDate = new AdminDate();
-        this.modo  = i.getStringExtra(HistorialCasaActivity.TYPE_MODE);
+        this.modo  = i.getStringExtra(HistorialCasaActivity.MODE);
         idAlquiler = i.getStringExtra(TAlquiler.ID);
 
         idItemMenuSelected = -1;
         mIntent = i;
     }
+/*
 
     private void mostrarTodo(){
         iMenu = R.menu.menu_historial_mi_casa;
@@ -59,11 +69,11 @@ public class Presenter extends BasePresenter<Interface.View> implements Interfac
                 break;
             }
             case R.id.iVerUsuario:{
-                mostrarUsuarios();
+                showList();
                 break;
             }
             default:
-                mostrarUsuarios();
+                showList();
                 break;
 
         }
@@ -89,10 +99,11 @@ public class Presenter extends BasePresenter<Interface.View> implements Interfac
         listAlquileres = ModelAlquilerView.createListModel(c);
         return listAlquileres;
     }
+*/
 
     @Override
     public void iniciarComandos(){
-        switch (modo){
+      /*  switch (modo){
             case HistorialCasaActivity.MODO_SOLO_ALQUILERES: {
                 mostrarSoloAlquileres();
                 break;
@@ -105,22 +116,20 @@ public class Presenter extends BasePresenter<Interface.View> implements Interfac
                 mostrarTodo();
                 break;
             }
-        }
+        }*/
     }
 
 
     @Override
-    public void mostrarUsuarios() {
-        view.mostarListUsuarios(getListUsuarios());
+    public void showList() {
+//        view.showList(getListUsuarios());
     }
 
-    @Override
-    public void mostrarAlquileres() {
-        view.mostarListAlquileres(getListAlquileres());
-    }
     public void mostrarUsuariosDeAlquiler() {
-
-        view.mostarListUsuarios(getListUsuariosDealquiler());
+        /*if (listUsuarios == null) {
+            loadUsersAndShow();
+        }
+        view.showList(getListUsuariosDealquiler());*/
     }
 
     @Override
@@ -141,41 +150,41 @@ public class Presenter extends BasePresenter<Interface.View> implements Interfac
                 }
             }
         }
-
     }
 
 
     @Override
-    public ContentValues getDetallesAlquiler(String id) {
-        ContentValues cv = db.getFilaAlquilerOf("*", id);
-        Cursor c = db.getUsuariosForAlquiler("*", id);
+    public ContentValues getDetails(String id) {
+       /* ContentValues cv = db.getFilaAlquilerOf("*", id);
+        Cursor c = db.getRentalTenant("*", id);
         int cantidad = -1;
         if (c.moveToNext()){
             cantidad = c.getCount();
         }
         cv.put(DialogDetallesAlquiler.NUM_USUARIOS, cantidad);
-        return cv;
+        return cv;*/
+        return null;
     }
 
     @Override
     public void ordenarPorNombre() {
         Collections.sort(listUsuarios, (o1, o2) -> o1.getName().compareTo(o2.getName()));
-        mostrarUsuarios();
+        showList();
     }
 
     @Override
     public void ordenarPorNumero() {
-        Collections.sort(listAlquileres, (o1, o2) -> {
+      /*  Collections.sort(listAlquileres, (o1, o2) -> {
             int i = Integer.parseInt(o1.getNumCuarto());
             int j = Integer.parseInt(o2.getNumCuarto());
             return i - j;
         });
-        mostrarAlquileres();
+        mostrarAlquileres();*/
     }
 
     @Override
     public void itemSelected(MenuItem item) {
-        int id =  item.getItemId();
+        /*int id =  item.getItemId();
         switch (id){
             case R.id.iVerAlquileres:{
                 idItemMenuSelected = R.id.iVerAlquileres;
@@ -186,7 +195,7 @@ public class Presenter extends BasePresenter<Interface.View> implements Interfac
             }
             case R.id.iVerUsuario:{
                 idItemMenuSelected = R.id.iVerAlquileres;
-                mostrarUsuarios();
+                showList();
                 menu.findItem(R.id.item_ordenar_numero).setVisible(false);
                 menu.findItem(R.id.item_ordenar_nombre).setVisible(true);
                 break;
@@ -203,7 +212,12 @@ public class Presenter extends BasePresenter<Interface.View> implements Interfac
                 view.salir();
                 break;
             }
-        }
+        }*/
+    }
+
+    @Override
+    public void onClickHolder(RecyclerView.ViewHolder holder) {
+
     }
 
     private ArrayList<ModelAlquilerView> getListAlquileres(){
@@ -225,11 +239,38 @@ public class Presenter extends BasePresenter<Interface.View> implements Interfac
     }
 
     private ArrayList<ItemUser> getListUsuariosDealquiler() {
-        if (listUsuarios == null) {
-            String columnas = "*";
-            Cursor c = db.getUsuariosForAlquiler(columnas, idAlquiler);
-            listUsuarios = ModelUserView.createListModel(c, true);
-        }
         return listUsuarios;
     }
+/*
+    private void loadUsersAndShow(){
+        db.getRentalTenant(view.getContext().getString(R.string.mdRTRentalId), idAlquiler)
+                .addOnSuccessListener(this::getRentalTenantSuccess);
+
+    }
+
+    private void getRentalTenantSuccess(QuerySnapshot queryDocumentSnapshots) {
+        cont = queryDocumentSnapshots.size();
+        iCont = 0;
+        for (QueryDocumentSnapshot doc: queryDocumentSnapshots){
+            TRentalTenant rentalTenant = doc.toObject(TRentalTenant.class);
+            db.getUser(rentalTenant.getDNI()).addOnSuccessListener(this::getUserSuccess).addOnFailureListener(this::getUserFailure);
+        }
+    }
+
+    private void getUserFailure(Exception e) {
+        iCont++;
+        if (iCont == cont){
+            view.showList(listUsuarios);
+        }
+    }
+
+    private void getUserSuccess(DocumentSnapshot document) {
+        ItemUser user = ItemUser.newInstance(document);
+        if (user != null)
+            listUsuarios.add(user);
+        iCont++;
+        if (iCont == cont){
+            view.showList(listUsuarios);
+        }
+    }*/
 }

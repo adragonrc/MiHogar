@@ -25,6 +25,7 @@ import com.alexander_rodriguez.mihogar.ButtonsAC.ButtonsAceptarCancelar;
 import com.alexander_rodriguez.mihogar.ButtonsAC.interfazAC;
 import com.alexander_rodriguez.mihogar.DataBase.items.ItemRental;
 import com.alexander_rodriguez.mihogar.DataBase.items.ItemRoom;
+import com.alexander_rodriguez.mihogar.DataBase.parse.ParceRental;
 import com.alexander_rodriguez.mihogar.R;
 import com.alexander_rodriguez.mihogar.Save;
 import com.alexander_rodriguez.mihogar.UTILIDADES.Mensualidad;
@@ -95,7 +96,10 @@ public class ShowRoomActivity extends BaseActivity<Interface.Presenter> implemen
             case R.id.iVerPagos: {
                 String idAlquiler = presenter.getDatosAlquiler().getId();
                 Intent i = new Intent(this, TableActivity.class);
-                i.putExtra(TAlquiler.ID, idAlquiler);
+                i.putExtra(TableActivity.RENTAL_ID, idAlquiler);
+                i.putExtra(TableActivity.PHONE_NUM, presenter.getDatosAlquiler().getPhoneNumber());
+                i.putExtra(TableActivity.EMAIL, presenter.getDatosAlquiler().getEmail());
+                i.putExtra(TableActivity.SEND_MT, true);
                 startActivity(i);
                 break;
             }
@@ -130,7 +134,8 @@ public class ShowRoomActivity extends BaseActivity<Interface.Presenter> implemen
             }else{
                 if(resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE){
                     Exception e = Objects.requireNonNull(result).getError();
-                    Toast.makeText(this, "Posible Error es: "+ e, Toast.LENGTH_SHORT).show();
+                    e.printStackTrace();
+                    //Toast.makeText(this, "Posible Error es: "+ e, Toast.LENGTH_SHORT).show();
                 }
             }
         }
@@ -176,7 +181,8 @@ public class ShowRoomActivity extends BaseActivity<Interface.Presenter> implemen
 
     private void gotoTablePagos() {
         Intent intent = new Intent(this, TableActivity.class);
-        intent.putExtra(TAlquiler.ID, presenter.getDatosAlquiler().getId());
+        ParceRental rental = new ParceRental(presenter.getDatosAlquiler());
+        intent.putExtra("parce", rental);
         startActivity(intent);
     }
 
@@ -241,12 +247,11 @@ public class ShowRoomActivity extends BaseActivity<Interface.Presenter> implemen
         }
     }
 
-
     @Override
     public void onClickVermas(View view) {
         //startActivity(new Intent(this, HistorialCasaActivity.class));
         Intent i = new Intent(this, HistorialCasaActivity.class);
-        i.putExtra(HistorialCasaActivity.TYPE_MODE, HistorialCasaActivity.MODO_SOLO_USUARIOS);
+        i.putExtra(HistorialCasaActivity.MODE, HistorialCasaActivity.USERS_OF_RENTAL);
         i.putExtra(TAlquiler.ID, presenter.getDatosAlquiler().getId());
         startActivity(i);
     }
@@ -373,6 +378,7 @@ public class ShowRoomActivity extends BaseActivity<Interface.Presenter> implemen
     @Override
     public void noPago() {
         perfilCuarto.noPago(listener);
+        btPagarAlquiler.setText(R.string.sPayRent);
         btPagarAlquiler.setOnClickListener(listener);
     }
 

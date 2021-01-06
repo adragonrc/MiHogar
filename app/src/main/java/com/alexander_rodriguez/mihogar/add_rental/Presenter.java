@@ -3,6 +3,7 @@ package com.alexander_rodriguez.mihogar.add_rental;
 import android.widget.ArrayAdapter;
 
 import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.alexander_rodriguez.mihogar.Adapters.RvAdapterUser;
 import com.alexander_rodriguez.mihogar.Base.BasePresenter;
@@ -111,13 +112,31 @@ public class Presenter extends BasePresenter<Interfaz.view> implements Interfaz.
             view.showError("Usuario ya esta en lista: DNI");
             return;
         }
-        SaveUser s  = new SaveUser(m);
-        db.existeUsuario(m.getDni())
-                .addOnSuccessListener(s)
-                .addOnFailureListener(s);
+        guardarModel(m);
+/*
+        db.getTenantHistory(m.getDni())
+                .addOnSuccessListener(this::getTenantHistorySuccess)
+                .addOnFailureListener(this::getTenantHistoryFailure);
+*/
+    }
+
+    private void getTenantHistoryFailure(Exception e) {
 
     }
 
+    private void getTenantHistorySuccess(QuerySnapshot queryDocumentSnapshots) {
+        for (QueryDocumentSnapshot doc : queryDocumentSnapshots) {
+            if (doc.exists())
+                if (db.esUsuarioAntiguo(doc.getId())) {
+                    view.showMessage("El usuario con DNI " + doc.getId() + " ya ha sido registrado");
+                    view.showDialog("Usuario Antiguo");
+                } else {
+                    if (db.esUsuarioInterno(doc.getId())) {
+                        view.showMessage("Usuario ya se encuentra en casa ;v");
+                    }
+                }
+        }
+    }
 
     @Override
     public void avanzar() {
@@ -229,13 +248,16 @@ public class Presenter extends BasePresenter<Interfaz.view> implements Interfaz.
     }
 
     @Override
-    public void setMain(RvAdapterUser.Holder holder) {
-        if(modelSelect != null){
-            modelSelect.setMain(false);
+    public void setMain(RecyclerView.ViewHolder holder) {
+        if(holder instanceof RvAdapterUser.Holder){
+            RvAdapterUser.Holder mHolder = (RvAdapterUser.Holder) holder;
+            if(modelSelect != null){
+                modelSelect.setMain(false);
+            }
+            modelSelect = list.get(mHolder.getAdapterPosition());
+            view.doPrincipal(mHolder);
+            modelSelect.setMain(true);
         }
-        modelSelect = list.get(holder.getAdapterPosition());
-        view.doPrincipal(holder);
-        modelSelect.setMain(true);
     }
 
     @Override
@@ -251,34 +273,20 @@ public class Presenter extends BasePresenter<Interfaz.view> implements Interfaz.
         list.add(m);
         view.mostrarNuevoUsuario(m);
     }
+
     class SaveUser implements OnSuccessListener<DocumentSnapshot>, OnFailureListener{
-        ItemUser userToSave;
-        public SaveUser(ItemUser userToSave){
-            this.userToSave = userToSave;
+        public SaveUser(){
+
         }
 
         @Override
         public void onFailure(@NonNull Exception e) {
-            guardarModel(userToSave);
+
         }
 
         @Override
         public void onSuccess(@NotNull DocumentSnapshot documentSnapshot) {
-            if(documentSnapshot.exists())
-                if (confirmacion){
-                    guardarModel(userToSave);
-                }else{
-                    if (db.esUsuarioAntiguo(userToSave.getDni())){
-                        view.showMessage("El usuario con DNI " + userToSave.getDni() + " ya ha sido registrado");
-                        view.showDialog("Usuario Antiguo");
-                    }else {
-                        if (db.esUsuarioInterno(userToSave.getDni())) {
-                            view.showMessage("Usuario ya se encuentra en casa ;v");
-                        }
-                    }
-                }
-            else
-                guardarModel(userToSave);
+
         }
 
         private void userNotExists(Exception e) {

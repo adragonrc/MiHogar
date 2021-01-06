@@ -143,9 +143,10 @@
     <string name="mdRoomPrice">price_e</string>
     <string name="mdRoomPathImage">pathImage</string>
     <string name="mdRoomTenantsNumber">tenantsNumber</string>
+    <string name="mdRoomCurrentRentalId">currentRentalId</string>
+    <string name="mdRoomPathImageStorage">pahtImageStorage</string>
 
     //rental document metadata
-    <string name="mdCurrentRentalId">currentRentalId</string>
     <string name="mdRentalCurrentMP">currentMP</string>
     <string name="mdRentalDepartureDate">departureDate</string>
     <string name="mdRentalReasonExit">reasonExit.</string>
@@ -153,9 +154,25 @@
     <string name="mdRentalPaymentsNumber">paymentsNumber</string>
     <string name="mdRentalPhoneNumber">phoneNumber</string>
     <string name="mdRentalEmail">email</string>
-    <string name="mdroomCurrentRentalId">currentRentalId</string>
-    <string name="mdroomPahtImageStorage">pahtImageStorage</string>
+
+
+    //rental Tenant document metadata
+    <string name="mdRTDni">DNI</string>
+    <string name="mdRTRentalId">rentalId</string>
+
+    //Payment document metadata
+    <string name="mdPaymentDate">date</string>
+    <string name="mdPaymentAmout">amount</string>
+
+    //PaymentMonthly document metadata
+    <string name="mdPaymentMonthlyPaymentId">monthlyPaymentId</string>
+
+    <string name="sPayRent">PAGAR ALQUILER</string>
     <string name="s_room_without_rental">Agregar alquiler</string>
+    <string name="mdTenantName">name</string>
+    <string name="mdTenantApellidoPat">apellidoPat</string>
+    <string name="mdTenantApellidoMat">apellidoMat</string>
+    <string name="mdTenantPath">path</string>
 
 
 </resources>

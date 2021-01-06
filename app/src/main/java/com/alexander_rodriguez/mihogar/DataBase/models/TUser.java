@@ -1,7 +1,7 @@
 package com.alexander_rodriguez.mihogar.DataBase.models;
 
 public class TUser {
-    protected String nombre;
+    protected String name;
     protected String apellidoPat;
     protected String apellidoMat;
     protected String path;
@@ -10,8 +10,8 @@ public class TUser {
 
     public TUser(){}
 
-    public TUser(String nombre, String apellidoPat, String apellidoMat, String path, boolean alerted, boolean main) {
-        this.nombre = nombre;
+    public TUser(String name, String apellidoPat, String apellidoMat, String path, boolean alerted, boolean main) {
+        this.name = name;
         this.apellidoPat = apellidoPat;
         this.apellidoMat = apellidoMat;
         this.path = path;
@@ -20,7 +20,7 @@ public class TUser {
     }
 
     public String getName() {
-        return nombre;
+        return name;
     }
 
     public String getApellidoPat() {
@@ -41,8 +41,8 @@ public class TUser {
 
     public boolean isAlerted(){ return alerted;}
 
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public void setApellidoPat(String apellidoPat) {

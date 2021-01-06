@@ -1,6 +1,5 @@
 package com.alexander_rodriguez.mihogar.historialUserPakage;
 
-import android.content.ContentValues;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -23,10 +22,11 @@ import androidx.core.view.ViewCompat;
 import com.alexander_rodriguez.mihogar.ActivityShowImage;
 import com.alexander_rodriguez.mihogar.Base.BaseActivity;
 import com.alexander_rodriguez.mihogar.ButtonsAC.ButtonsAceptarCancelar;
+import com.alexander_rodriguez.mihogar.DataBase.items.ItemUser;
+import com.alexander_rodriguez.mihogar.DataBase.parse.ParceTenant;
 import com.alexander_rodriguez.mihogar.R;
 import com.alexander_rodriguez.mihogar.Save;
 import com.alexander_rodriguez.mihogar.UTILIDADES.TUsuario;
-import com.alexander_rodriguez.mihogar.alquilerusuario.AlquilerUsuarioActivity;
 import com.alexander_rodriguez.mihogar.historialcasa.HistorialCasaActivity;
 import com.alexander_rodriguez.mihogar.menu_photo.MenuIterator;
 import com.alexander_rodriguez.mihogar.menu_photo.interfazMenu;
@@ -38,6 +38,8 @@ import java.util.Objects;
 
 public class HistorialUsuarioActivity extends BaseActivity<Interfaz.presenter> implements Interfaz.view {
 
+    public static final String USER_EXTRA = "userExtra";
+    public static final String DNI_EXTRA = "dni";
     private TextView tvNombres;
     private TextView tvApellidoPat;
     private TextView tvApellidoMat;
@@ -58,7 +60,7 @@ public class HistorialUsuarioActivity extends BaseActivity<Interfaz.presenter> i
     private ProfileView profileView;
 
     private String path;
-    private String dni;
+    private ParceTenant tenant;
 
     private interfazMenu interfazMenu;
 
@@ -84,8 +86,7 @@ public class HistorialUsuarioActivity extends BaseActivity<Interfaz.presenter> i
     @NonNull
     @Override
     protected Interfaz.presenter createPresenter() {
-        dni = getIntent().getStringExtra(TUsuario.DNI);
-        return new Presenter(this, dni);
+        return new Presenter(this, getIntent());
     }
 
     @Override
@@ -121,7 +122,7 @@ public class HistorialUsuarioActivity extends BaseActivity<Interfaz.presenter> i
     private void resultOk(CropImage.ActivityResult result){
         Save s = new Save();
         Bitmap bm = BitmapFactory.decodeFile(result.getUri().getPath());
-        path = s.SaveImage(this, bm, getString(R.string.cTenant),  dni);
+        path = s.SaveImage(this, bm, getString(R.string.cTenant),  tenant.getDni());
         presenter.actualizarPhoto(path);
         profileView.setPhotoImage(path);
     }
@@ -146,17 +147,16 @@ public class HistorialUsuarioActivity extends BaseActivity<Interfaz.presenter> i
         return super.onOptionsItemSelected(item);
     }
     @Override
-    public void mostrarDatosUsuario(ContentValues datos, String i) {
-        profileView.setSubTitle(datos.getAsString(TUsuario.DNI));
-        profileView.setTitle(datos.getAsString(TUsuario.NOMBRES));
-
-        tvNombres.setText(datos.getAsString(TUsuario.NOMBRES));
-        tvApellidoPat.setText(datos.getAsString(TUsuario.APELLIDO_PAT));
-        tvApellidoMat.setText(datos.getAsString(TUsuario.APELLIDO_MAT));
+    public void mostrarDatosUsuario(ItemUser datos, String i) {
+        profileView.setSubTitle(datos.getDni());
+        profileView.setTitle(datos.getName());
+        tvNombres.setText(datos.getName());
+        tvApellidoPat.setText(datos.getApellidoPat());
+        tvApellidoMat.setText(datos.getApellidoMat());
         //tvNumeroTel.setText(datos.getAsString(TUsuario.NUMERO_TEL));
         //tvCorreo.setText(datos.getAsString(TUsuario.CORREO));
 
-        path = datos.getAsString(TUsuario.URI);
+        path = datos.getPath();
 
         profileView.setPhotoImage(path);
         tvNumAlquiler.setText(i);
@@ -243,7 +243,7 @@ public class HistorialUsuarioActivity extends BaseActivity<Interfaz.presenter> i
         Intent intent = new Intent(this, ActivityShowImage.class);
         ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(this, profileView.getIvPhoto(), ViewCompat.getTransitionName(profileView.getIvPhoto()));
         intent.putExtra(ActivityShowImage.IS_USER_IMAGE, true);
-        intent.putExtra(TUsuario.DNI, dni);
+        intent.putExtra(TUsuario.DNI, tenant.getDni());
         intent.putExtra(ActivityShowImage.DATA_IMAGE, path);
         startActivity(intent, options.toBundle());
     }
@@ -313,8 +313,8 @@ public class HistorialUsuarioActivity extends BaseActivity<Interfaz.presenter> i
     @Override
     public void onClickPositive(View v) {
         Intent i = new Intent(this, HistorialCasaActivity.class);
-        i.putExtra(HistorialCasaActivity.TYPE_MODE, HistorialCasaActivity.MODO_SOLO_ALQUILERES);
-        i.putExtra(TUsuario.DNI,  Integer.valueOf(dni));
+        i.putExtra(HistorialCasaActivity.MODE, HistorialCasaActivity.RENTALS_OF_USER);
+        i.putExtra(TUsuario.DNI,  Integer.valueOf(tenant.getDni()));
         startActivity(i);
     }
 

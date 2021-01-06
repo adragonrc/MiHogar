@@ -48,11 +48,22 @@
             </TableLayout>
 
             <ImageView
+                android:id="@+id/ivDetails"
+                android:layout_height="24dp"
+                android:layout_width="24dp"
+                android:layout_gravity="center"
+                android:src="@drawable/ic_baseline_feedback_24"
+                android:tint="@color/secondaryColor"
+                android:visibility="gone"/>
+
+            <ImageView
                 android:id="@+id/ivAlert"
                 android:layout_height="24dp"
                 android:layout_width="24dp"
                 android:layout_gravity="center"
-                android:src="@drawable/ic_star_black_24dp"/>
+                android:src="@drawable/ic_baseline_report_problem_24"
+                android:tint="@color/colorPrimary"
+                android:visibility="gone"/>
         </TableRow>
     </TableLayout>
 </LinearLayout>

@@ -20,6 +20,7 @@ import java.io.FileOutputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Locale;
 
 public class PDF {
     public static final String  DIRECTORI_NAME = "docs";
@@ -33,17 +34,20 @@ public class PDF {
     private Font fText = new Font(Font.FontFamily.TIMES_ROMAN, 12, Font.NORMAL);
     private Font fHint = new Font(Font.FontFamily.TIMES_ROMAN, 15, Font.NORMAL);
 
-    public void createFile(){
-        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-        fileName = "VPDF_" + timeStamp + ".pdf";
-
-        File folder = new File(Environment.getExternalStorageDirectory().toString(), DIRECTORI_NAME);
+    public static File getFolder(){
+        return new File(Environment.getExternalStorageDirectory().toString(), DIRECTORI_NAME);
+    }
+    public static String parseName(String id){
+        return "VPDF_" + id + ".pdf";
+    }
+    public void createFile(String id){
+        fileName = parseName(id);
+        File folder = getFolder();
         if (!folder.exists())   folder.mkdir();
         pdfFile = new File(folder, fileName);
-
     }
-    public  void openDocument() throws DocumentException, FileNotFoundException {
-        createFile();
+    public  void openDocument(String id) throws DocumentException, FileNotFoundException {
+        createFile(id);
         document = new Document(PageSize.A4);
         pdfWriter = PdfWriter.getInstance(document, new FileOutputStream((pdfFile)));
         document.open();
@@ -51,7 +55,7 @@ public class PDF {
     }
 
     public void crearVoucher(String numCuarto, String dni, String numVoucher,String costo, String direccion, String fecha) throws FileNotFoundException, DocumentException {
-        openDocument();
+        openDocument(numVoucher);
         addMetaData("Alquiler", "voucher", "AlexRodriguez");
 
         addParagraph("RECIBO DE ALQUILER");

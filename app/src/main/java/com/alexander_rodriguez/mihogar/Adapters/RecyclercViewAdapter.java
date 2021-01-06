@@ -15,6 +15,7 @@ import com.alexander_rodriguez.mihogar.alquilerusuario.Item;
 
 import java.util.ArrayList;
 
+//non usages
 public class RecyclercViewAdapter extends RecyclerView.Adapter<RecyclercViewAdapter.Holder> {
     private Context mContext;
     private ArrayList<Item> list;

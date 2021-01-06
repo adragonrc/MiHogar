@@ -17,6 +17,7 @@ import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.alexander_rodriguez.mihogar.Adapters.AdapterInterface;
 import com.alexander_rodriguez.mihogar.Adapters.RvAdapterUser;
 import com.alexander_rodriguez.mihogar.Base.BaseActivity;
 import com.alexander_rodriguez.mihogar.DataBase.items.ItemUser;
@@ -32,7 +33,7 @@ import com.theartofdev.edmodo.cropper.CropImage;
 
 import java.util.ArrayList;
 
-public class AddRentalActivity extends BaseActivity<Interfaz.presenter> implements Interfaz.view, RvAdapterUser.Interface   {
+public class AddRentalActivity extends BaseActivity<Interfaz.presenter> implements Interfaz.view, AdapterInterface {
     static final int CODE_0 = 0;
 
     private RvAdapterUser adapterUser;
@@ -210,11 +211,6 @@ public class AddRentalActivity extends BaseActivity<Interfaz.presenter> implemen
     }
 
     @Override
-    public void onClickUsuario(RvAdapterUser.Holder holder) {
-        presenter.setMain(holder);
-    }
-
-    @Override
     public void onClickTomarFoto(View view) {
         CropImage.activity().setMaxCropResultSize(0,0)
                 .setAllowFlipping(true)
@@ -314,5 +310,11 @@ public class AddRentalActivity extends BaseActivity<Interfaz.presenter> implemen
 
         sliding.setPanelState(SlidingUpPanelLayout.PanelState.EXPANDED);
         presenter.avanzar();
+    }
+
+    @Override
+    public void onClickHolder(RecyclerView.ViewHolder holder) {
+
+        presenter.setMain(holder);
     }
 }

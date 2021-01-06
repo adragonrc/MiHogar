@@ -8,6 +8,7 @@ import android.widget.ImageView;
 import com.alexander_rodriguez.mihogar.Base.BaseView;
 import com.alexander_rodriguez.mihogar.Base.IBasePresenter;
 import com.alexander_rodriguez.mihogar.ButtonsAC.interfazAC;
+import com.alexander_rodriguez.mihogar.DataBase.items.ItemUser;
 
 public interface Interfaz {
     interface presenter extends IBasePresenter {
@@ -22,7 +23,7 @@ public interface Interfaz {
 
         void mostrarAlerta();
         void noMostrarAlerta();
-        void mostrarDatosUsuario(ContentValues datos, String i);
+        void mostrarDatosUsuario(ItemUser datos, String i);
         void modoError(String error);
 
 

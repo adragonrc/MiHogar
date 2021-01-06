@@ -1,5 +1,7 @@
 package com.alexander_rodriguez.mihogar.DataBase.models;
 
+import android.os.Parcel;
+
 import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.DocumentReference;
 
@@ -29,6 +31,7 @@ public class TRental {
         this.phoneNumber = phoneNumber;
         this.email = email;
     }
+
 
     public Timestamp getEntryDate() {
         return entryDate;

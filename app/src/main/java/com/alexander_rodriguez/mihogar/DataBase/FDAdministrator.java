@@ -145,7 +145,7 @@ public class FDAdministrator implements DBInterface{
     public ArrayList<String> getCuartosAlquilados() {
         ArrayList<String> mList = new ArrayList<>();
         hogarDocument.collection(mContext.getString(R.string.cRoom))
-                .whereEqualTo(mContext.getString(R.string.mdCurrentRentalId), null)
+                .whereEqualTo(mContext.getString(R.string.mdRoomCurrentRentalId), null)
                 .get()
                 .addOnCompleteListener(task -> {
 
@@ -203,7 +203,7 @@ public class FDAdministrator implements DBInterface{
 
     @Override
     public Task<QuerySnapshot> getEmptyRooms() {
-        return getCuartoCR().whereEqualTo(mContext.getString(R.string.mdroomCurrentRentalId), null).get();
+        return getCuartoCR().whereEqualTo(mContext.getString(R.string.mdRoomCurrentRentalId), null).get();
     }
 
     @Override
@@ -222,8 +222,9 @@ public class FDAdministrator implements DBInterface{
     }
 
     @Override
-    public Cursor getUsuariosForAlquiler(String columnas, String ida) {
-        return null;
+    public Task<QuerySnapshot> getRentalTenant(String field, String ida) {
+        return getRentalTenantCR().whereEqualTo(field, ida).get();
+
     }
 
     @Override
@@ -247,8 +248,8 @@ public class FDAdministrator implements DBInterface{
     }
 
     @Override
-    public TableCursor getPagosOf(String columnas, Object idMensualidad) {
-        return null;
+    public Task<QuerySnapshot> getPayments(String field, Object value) {
+        return getPaymentCR().whereEqualTo(field, value).get();
     }
 
     @Override
@@ -263,7 +264,7 @@ public class FDAdministrator implements DBInterface{
 
     @Override
     public String contAlquileresOf(String key, Object value) {
-        return null;
+        return "0";
     }
 
     @Override
@@ -293,7 +294,7 @@ public class FDAdministrator implements DBInterface{
 
     @Override
     public void updateCurrentRoomRent(String numCuarto, String rentalId){
-        getCuartoDR(numCuarto).update(mContext.getString(R.string.mdCurrentRentalId), rentalId);
+        getCuartoDR(numCuarto).update(mContext.getString(R.string.mdRoomCurrentRentalId), rentalId);
     }
 
     @Override
@@ -346,6 +347,16 @@ public class FDAdministrator implements DBInterface{
     public String getPathRoom(String roomNumber){
         return mContext.getString(R.string.cRoom) + "/" +  roomNumber;
     }
+
+    @Override
+    public Task<QuerySnapshot> getTenantHistory(String dni) {
+        return getRentalTenantCR().whereEqualTo(mContext.getString(R.string.mdRTDni), dni).get();
+    }
+
+    private CollectionReference getRentalTenantCR() {
+        return hogarDocument.collection(mContext.getString(R.string.cRentalTenant));
+    }
+
     private @NotNull StorageReference getRoomPhotoStorege(String numeroCuarto) {
         String path = getRoomPhotoStoregeAsString(numeroCuarto);
         return storageRef.child(path);
@@ -373,6 +384,11 @@ public class FDAdministrator implements DBInterface{
     }
 
     @Override
+    public Task<DocumentSnapshot> getUser(String dni){
+        return getUserDR(dni).get();
+    }
+
+    @Override
     public CollectionReference getAlquilerUserCR(){
         return hogarDocument.collection(mContext.getString(R.string.cRentalTenant));
     }
@@ -387,8 +403,9 @@ public class FDAdministrator implements DBInterface{
         return getCuartoCR().document(numCuarto);
     }
 
-    public DocumentReference getUserDR(String numCuarto) {
-        return getUserCR().document(numCuarto);
+
+    public DocumentReference getUserDR(String dni) {
+        return getUserCR().document(dni);
     }
 
     @Override
@@ -484,7 +501,7 @@ public class FDAdministrator implements DBInterface{
 
     @Override
     public Task<QuerySnapshot> consultarNumerosDeCuartoDisponibles() {
-        return getCuartoCR().whereEqualTo(mContext.getString(R.string.mdCurrentRentalId), null).get();
+        return getCuartoCR().whereEqualTo(mContext.getString(R.string.mdRoomCurrentRentalId), null).get();
     }
 
     @Override

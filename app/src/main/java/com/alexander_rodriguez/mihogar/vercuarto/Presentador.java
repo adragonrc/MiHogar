@@ -65,7 +65,7 @@ public class Presentador extends BasePresenter<Interface.view> implements Interf
         if(rental != null) {
             db.updateRental(mContext.getString(R.string.mdRentalDepartureDate), AdminDate.getFechaActual(), rental.getId());
             db.updateRental(mContext.getString(R.string.mdRentalReasonExit), motivo, rental.getId());
-            db.updateRoom(mContext.getString(R.string.mdroomCurrentRentalId), null, numeroCuarto);
+            db.updateRoom(mContext.getString(R.string.mdRoomCurrentRentalId), null, numeroCuarto);
             mostrarDetalles();
             rental = null;
         }
@@ -99,12 +99,11 @@ public class Presentador extends BasePresenter<Interface.view> implements Interf
                             if (!parent.exists()) {
                                 parent.mkdirs();
                             }
-                            File localFile = new File(parent, room.getRoomNumber() + ".jpg");
-                            db.downloadRoomPhoto(room.getRoomNumber(), localFile)
-                                    .addOnSuccessListener(this::downloadRoomPhotoSuccess)
-                                    .addOnFailureListener(this::downloadRoomPhotoFailure);
                         }
                     }
+                    db.downloadRoomPhoto(room.getRoomNumber(), f)
+                            .addOnSuccessListener(this::downloadRoomPhotoSuccess)
+                            .addOnFailureListener(this::downloadRoomPhotoFailure);
                 }
                 if(room.getCurrentRentalId() != null && !room.getCurrentRentalId().isEmpty()){
                     db.getRental(room.getCurrentRentalId())
@@ -309,7 +308,7 @@ public class Presentador extends BasePresenter<Interface.view> implements Interf
             }else{
                 pathStorage = db.getRoomPhotoStoregeAsString(numeroCuarto);
             }
-            db.updateRoom(mContext.getString(R.string.mdroomPahtImageStorage), pathStorage, numeroCuarto);
+            db.updateRoom(mContext.getString(R.string.mdRoomPathImageStorage), pathStorage, numeroCuarto);
         });;
     }
 

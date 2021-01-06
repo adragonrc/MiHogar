@@ -20,11 +20,11 @@ import java.util.ArrayList;
 
 public class RvAdapterUser extends RecyclerView.Adapter<RvAdapterUser.Holder> {
     private final ArrayList<ItemUser> list;
-    private final Interface mInterface;
+    private final AdapterInterface mInterface;
     private View viewSelect;
     private String dniSelect;
     private Holder hMain;
-    public RvAdapterUser(Interface mInterface, ArrayList<ItemUser> list){
+    public RvAdapterUser(AdapterInterface mInterface, ArrayList<ItemUser> list){
         this.mInterface = mInterface;
         this.list = list;
     }
@@ -32,7 +32,7 @@ public class RvAdapterUser extends RecyclerView.Adapter<RvAdapterUser.Holder> {
     @NonNull
     @Override
     public Holder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
-        View v = LayoutInflater.from(mInterface.getContext()).inflate(R.layout.view_user_detalles,viewGroup,false);
+        View v = LayoutInflater.from(mInterface.getContext()).inflate(R.layout.view_user_detalles, viewGroup,false);
         return new Holder(v);
     }
 
@@ -40,11 +40,11 @@ public class RvAdapterUser extends RecyclerView.Adapter<RvAdapterUser.Holder> {
     public void onBindViewHolder(@NonNull Holder holder, int i) {
         final ItemUser item = list.get(i);
         holder.DNI.setText(item.getDni());
-        holder.nombres.setText(item.getName());
+        holder.nombres.setText(item.getAllName());
         String path = item.getPath();
 
         File f = new File(path);
-        if (f.exists())       Picasso.get().load(f).into(holder.ivPhoto);
+        if (f.exists()) Picasso.get().load(f).into(holder.ivPhoto);
 
         if(item.isAlerted())
             holder.ivAlert.setImageDrawable(mInterface.getContext().getResources().getDrawable(R.drawable.ic_add_alert_black_24dp));
@@ -111,7 +111,7 @@ public class RvAdapterUser extends RecyclerView.Adapter<RvAdapterUser.Holder> {
             ivPhoto = itemView.findViewById(R.id.ivPhoto);
             ivAlert = itemView.findViewById(R.id.ivAlert);
             itemView.setOnCreateContextMenuListener(this);
-            itemView.setOnClickListener(v -> mInterface.onClickUsuario(Holder.this));
+            itemView.setOnClickListener(v -> mInterface.onClickHolder(Holder.this));
         }
         @Override
         public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
@@ -124,8 +124,4 @@ public class RvAdapterUser extends RecyclerView.Adapter<RvAdapterUser.Holder> {
             return DNI;
         }
     }
-    public interface Interface extends AdapterInterface{
-        void onClickUsuario(Holder holder);
-    }
-
 }

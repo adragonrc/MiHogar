@@ -2,6 +2,8 @@ package com.alexander_rodriguez.mihogar.add_rental;
 
 import android.widget.ArrayAdapter;
 
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.alexander_rodriguez.mihogar.Adapters.RvAdapterUser;
 import com.alexander_rodriguez.mihogar.Base.BaseView;
 import com.alexander_rodriguez.mihogar.Base.IBasePresenter;
@@ -24,7 +26,7 @@ public interface Interfaz {
 
         void agregarAlquilerNuevo(ModelAA list);
 
-        void setMain(RvAdapterUser.Holder holder);
+        void setMain(RecyclerView.ViewHolder holder);
 
         boolean saveChanges();
     }
