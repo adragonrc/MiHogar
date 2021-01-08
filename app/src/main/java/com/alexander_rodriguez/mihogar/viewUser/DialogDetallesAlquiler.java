@@ -57,11 +57,11 @@ public class DialogDetallesAlquiler extends AppCompatDialogFragment {
 
     private void iniciarViews(){
         tvIdAlquiler = vista.findViewById(R.id.tvIdAlquiler);
-        tvNumUsuarios = vista.findViewById(R.id.tvNumeroInquilinos);
+        tvNumUsuarios = vista.findViewById(R.id.tvTenantsNumber);
         tvNumCuarto = vista.findViewById(R.id.tvNumCuarto);
-        tvFechaInicio = vista.findViewById(R.id.tvFechaIngreso);
-        tvFechaFin = vista.findViewById(R.id.tvFechaSalida);
-        tvMotivoDeSalida = vista.findViewById(R.id.tvMotivoSalida);
+        tvFechaInicio = vista.findViewById(R.id.tvEntryDate);
+        tvFechaFin = vista.findViewById(R.id.tvDepartureDate);
+        tvMotivoDeSalida = vista.findViewById(R.id.tvReason);
 
         btVerCuarto = vista.findViewById(R.id.btVerCuarto);
         btVerPago = vista.findViewById(R.id.btVerPagos);

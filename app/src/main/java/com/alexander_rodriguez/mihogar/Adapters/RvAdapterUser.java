@@ -11,7 +11,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.alexander_rodriguez.mihogar.DataBase.items.ItemUser;
+import com.alexander_rodriguez.mihogar.DataBase.items.ItemTenant;
 import com.alexander_rodriguez.mihogar.R;
 import com.squareup.picasso.Picasso;
 
@@ -19,14 +19,16 @@ import java.io.File;
 import java.util.ArrayList;
 
 public class RvAdapterUser extends RecyclerView.Adapter<RvAdapterUser.Holder> {
-    private final ArrayList<ItemUser> list;
+    private final ArrayList<ItemTenant> list;
     private final AdapterInterface mInterface;
     private View viewSelect;
     private String dniSelect;
     private Holder hMain;
-    public RvAdapterUser(AdapterInterface mInterface, ArrayList<ItemUser> list){
+    private final boolean showMain;
+    public RvAdapterUser(AdapterInterface mInterface, ArrayList<ItemTenant> list, boolean showMain){
         this.mInterface = mInterface;
         this.list = list;
+        this.showMain = showMain;
     }
 
     @NonNull
@@ -38,7 +40,7 @@ public class RvAdapterUser extends RecyclerView.Adapter<RvAdapterUser.Holder> {
 
     @Override
     public void onBindViewHolder(@NonNull Holder holder, int i) {
-        final ItemUser item = list.get(i);
+        final ItemTenant item = list.get(i);
         holder.DNI.setText(item.getDni());
         holder.nombres.setText(item.getAllName());
         String path = item.getPath();
@@ -50,7 +52,7 @@ public class RvAdapterUser extends RecyclerView.Adapter<RvAdapterUser.Holder> {
             holder.ivAlert.setImageDrawable(mInterface.getContext().getResources().getDrawable(R.drawable.ic_add_alert_black_24dp));
         else holder.ivAlert.setVisibility(View.GONE);
 
-        if (item.isMain()){
+        if (showMain && item.isMain()){
             isMain(holder);
         }
     }
@@ -77,7 +79,7 @@ public class RvAdapterUser extends RecyclerView.Adapter<RvAdapterUser.Holder> {
         }
     }
 
-    public void addItem(ItemUser mu){
+    public void addItem(ItemTenant mu){
         list.add(mu);
         if(list.size() == 1){
             notifyDataSetChanged();

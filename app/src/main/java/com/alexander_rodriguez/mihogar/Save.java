@@ -33,16 +33,7 @@ public class Save {
         //  String file_path = Environment.getExternalStorageDirectory().getAbsolutePath() + NameOfFolder;
 
         //  File dir = new File(file_path);
-        File dir = this.context.getExternalFilesDir(Environment.DIRECTORY_PICTURES);
-        if (dir != null)
-            if (!dir.exists()) {
-                dir.mkdirs();
-            }
-        dir = new File(dir, parent);
-        if (!dir.exists()) {
-            dir.mkdirs();
-        }
-        File file = new File(dir, name + ".jpg");
+        File file = createFile(context, parent, name);
         try {
             FileOutputStream fOut = new FileOutputStream(file);
 
@@ -56,6 +47,19 @@ public class Save {
             UnableToSave();
         }
         return "";
+    }
+    public static File createFile(Context mContext, String folder, String name){
+        File parent = mContext.getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+        if (parent != null) {
+            if (!parent.exists()) {
+                parent.mkdirs();
+            }
+            parent = new File(parent, folder);
+            if (!parent.exists()) {
+                parent.mkdirs();
+            }
+        }
+        return new File(parent, name + ".jpg");
     }
 
     private void MakeSureFileWasCreatedThenMakeAvabile(File file){

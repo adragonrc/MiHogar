@@ -9,10 +9,8 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ScrollView;
 
-import com.alexander_rodriguez.mihogar.DataBase.items.ItemUser;
+import com.alexander_rodriguez.mihogar.DataBase.items.ItemTenant;
 import com.alexander_rodriguez.mihogar.R;
-import com.alexander_rodriguez.mihogar.alquilerusuario.Item;
-import com.alexander_rodriguez.mihogar.modelos.ModelUsuario;
 
 public class RegistroUsuarioView extends ScrollView {
     private EditText etDNI;
@@ -57,16 +55,15 @@ public class RegistroUsuarioView extends ScrollView {
         iniciarViews();
     }
 
-    public ItemUser getDatos(){
+    public ItemTenant getDatos(){
         //Save s = new Save();
         //currentImagePath = s.SaveImage(this, bmGuardar);
-        ItemUser mu = new ItemUser(etDNI.getText().toString(),
+        return new ItemTenant(etDNI.getText().toString(),
                 etNombre.getText().toString(),
                 etApellidoPat.getText().toString(),
                 etApellidoMat.getText().toString(),
                 path,
                 false);
-        return mu;
     }
 
     protected void iniciarViews(){

@@ -10,9 +10,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.alexander_rodriguez.mihogar.Base.BaseView;
 import com.alexander_rodriguez.mihogar.Base.IBasePresenter;
-import com.alexander_rodriguez.mihogar.Adapters.Models.ModelAlquilerView;
-import com.alexander_rodriguez.mihogar.Adapters.Models.ModelUserView;
-import com.alexander_rodriguez.mihogar.DataBase.items.ItemUser;
+import com.alexander_rodriguez.mihogar.DataBase.items.ItemRental;
+import com.alexander_rodriguez.mihogar.DataBase.items.ItemTenant;
 import com.alexander_rodriguez.mihogar.viewUser.DialogDetallesAlquiler;
 
 import java.util.ArrayList;
@@ -36,7 +35,9 @@ public interface Interface {
     }
     interface View extends BaseView {
 
-        void showList(ArrayList<ItemUser> list,  RecyclerView.LayoutManager layout);
+        void showUsersList(ArrayList<ItemTenant> list, RecyclerView.LayoutManager layout, boolean showMain);
+
+        void showRentalsList(ArrayList<ItemRental> list, RecyclerView.LayoutManager layout);
 
         void setiMenu(int i);
 

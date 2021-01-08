@@ -10,7 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.alexander_rodriguez.mihogar.DataBase.items.ItemRoom;
-import com.alexander_rodriguez.mihogar.DataBase.items.ItemUser;
+import com.alexander_rodriguez.mihogar.DataBase.items.ItemTenant;
 import com.alexander_rodriguez.mihogar.DataBase.models.TMonthlyPayment;
 import com.alexander_rodriguez.mihogar.DataBase.models.TPayment;
 import com.alexander_rodriguez.mihogar.DataBase.models.TRental;
@@ -21,6 +21,7 @@ import com.alexander_rodriguez.mihogar.modelos.ModelUsuario;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.Timestamp;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -273,7 +274,7 @@ public class FDAdministrator implements DBInterface{
     }
 
     @Override
-    public Task<Void> upDateUser(String field, Object valor, String DNI) {
+    public Task<Void> updateTenant(String field, Object valor, String DNI) {
     return getUserDR(DNI).update(field, valor);
     }
 
@@ -298,11 +299,6 @@ public class FDAdministrator implements DBInterface{
     }
 
     @Override
-    public void updateTenantRoomNum(String numCuarto, int num){
-        getCuartoDR(numCuarto).update(mContext.getString(R.string.mdRoomTenantsNumber), num);
-    }
-
-    @Override
     public void updateCurrentRentMP(String rentalID, DocumentReference id){
         getRentalDR(rentalID).update(mContext.getString(R.string.mdRentalCurrentMP), id);
     }
@@ -324,7 +320,14 @@ public class FDAdministrator implements DBInterface{
     @Override
     public UploadTask saveRoomPhoto(String numeroCuarto, String path) {
         Uri file = Uri.fromFile(new File(path));
-        StorageReference riversRef = getRoomPhotoStorege(numeroCuarto);
+        StorageReference riversRef = getRoomPhotoStorage(numeroCuarto);
+        return riversRef.putFile(file);
+    }
+
+    @Override
+    public UploadTask saveTenantPhoto(String dni, @NotNull String path) {
+        Uri file = Uri.fromFile(new File(path));
+        StorageReference riversRef = getTenantPhotoStorage(dni);
         return riversRef.putFile(file);
     }
 
@@ -334,8 +337,13 @@ public class FDAdministrator implements DBInterface{
     }
 
     @Override
+    public String getTenantPhotoStoregeAsString(String dni) {
+        return mContext.getString(R.string.cHogar) + "/" +usuario.getUid()+"/"+mContext.getString(R.string.cTenant)+"/"+dni+".jpg";
+    }
+
+    @Override
     public FileDownloadTask downloadRoomPhoto(String roomNumber, File localFile) {
-        return getRoomPhotoStorege(roomNumber).getFile(localFile);
+        return getRoomPhotoStorage(roomNumber).getFile(localFile);
     }
 
     @Override
@@ -357,8 +365,12 @@ public class FDAdministrator implements DBInterface{
         return hogarDocument.collection(mContext.getString(R.string.cRentalTenant));
     }
 
-    private @NotNull StorageReference getRoomPhotoStorege(String numeroCuarto) {
+    private @NotNull StorageReference getRoomPhotoStorage(String numeroCuarto) {
         String path = getRoomPhotoStoregeAsString(numeroCuarto);
+        return storageRef.child(path);
+    }
+    private @NotNull StorageReference getTenantPhotoStorage(String dni) {
+        String path = getTenantPhotoStoregeAsString(dni);
         return storageRef.child(path);
     }
 
@@ -419,6 +431,21 @@ public class FDAdministrator implements DBInterface{
     }
 
     @Override
+    public Task<QuerySnapshot> getRentalsOfRoom(String roomNumber) {
+        return  getRentalCR().whereEqualTo(mContext.getString(R.string.mdRentalRoomNumber), roomNumber).get();
+    }
+
+    @Override
+    public Task<Void> terminateContract(String id, String motivo, String numeroCuarto) {
+        return firestore.runTransaction(transaction -> {
+            updateRental(mContext.getString(R.string.mdRentalDepartureDate), Timestamp.now(), id);
+            updateRental(mContext.getString(R.string.mdRentalReasonExit), motivo, id);
+            updateRoom(mContext.getString(R.string.mdRoomCurrentRentalId), null, numeroCuarto);
+            return null;
+        });
+    }
+
+    @Override
     public boolean usuarioAlertado(Object DNI) {
         return false;
     }
@@ -429,7 +456,7 @@ public class FDAdministrator implements DBInterface{
     }
 
     @Override
-    public Task<Void> agregarInquilino(ItemUser mu) {
+    public Task<Void> agregarInquilino(ItemTenant mu) {
         WriteBatch batch = firestore.batch();
 
         batch.set(getUserCR().document(mu.getDni()), mu);
@@ -439,16 +466,20 @@ public class FDAdministrator implements DBInterface{
 
 
     @Override
-    public Task<Void> agregarInquilinos(ArrayList<ItemUser> list, String rentalId) {
+    public Task<Void> agregarInquilinos(ArrayList<ItemTenant> list, String rentalId) {
         WriteBatch batch = firestore.batch();
-        for (ItemUser u: list) {
+        for (ItemTenant u: list) {
             if(u.isMain()){
                 getRentalDR(rentalId).update(mContext.getString(R.string.mdRentalMainTenant), u.getDni());
             }
+            saveTenantPhoto(u.getDni(), u.getPath()).addOnFailureListener(e -> {
+                Toast.makeText(mContext, mContext.getString(R.string.sUploadPhotoError), Toast.LENGTH_SHORT).show();
+            });
             TRentalTenant tRentalTenant = new TRentalTenant(rentalId, u.getDni(), u.isMain(), true);
             batch.set(getUserCR().document(u.getDni()), u.getRoot());
             batch.set(getAlquilerUserCR().document(), tRentalTenant);
         }
+
         return batch.commit();
     }
 

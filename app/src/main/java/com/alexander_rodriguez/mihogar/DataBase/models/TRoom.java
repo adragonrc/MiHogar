@@ -5,26 +5,24 @@ import com.alexander_rodriguez.mihogar.DataBase.items.ItemRoom;
 public class TRoom {
     protected String details;
     protected String currentRentalId;
-    protected int tenantsNumber;
     protected String price_e;
     protected String pathImage;
+    protected String pahtImageStorage;
 
-    public TRoom(){
+    public TRoom(){}
 
-    }
     public TRoom(ItemRoom room){
         this.details = room.getDetails();
         this.currentRentalId = room.getCurrentRentalId();
-        this.tenantsNumber = room.getTenantsNumber();
         this.price_e = room.getPrice_e();
         this.pathImage = room.getPathImage();
     }
-    public TRoom(String currentRentalId, String details, int tenantsNumber, String pathImage, String price_e) {
+    public TRoom(String currentRentalId, String details, String pathImage, String price_e, String pahtImageStorage) {
         this.details = details;
         this.currentRentalId = currentRentalId;
-        this.tenantsNumber = tenantsNumber;
         this.price_e = price_e;
         this.pathImage = pathImage;
+        this.pahtImageStorage = pahtImageStorage;
     }
 
     public String getDetails() {
@@ -59,11 +57,11 @@ public class TRoom {
         this.pathImage = pathImage;
     }
 
-    public int getTenantsNumber() {
-        return tenantsNumber;
+    public String getPahtImageStorage() {
+        return pahtImageStorage;
     }
 
-    public void setTenantsNumber(int tenantsNumber) {
-        this.tenantsNumber = tenantsNumber;
+    public void setPahtImageStorage(String pahtImageStorage) {
+        this.pahtImageStorage = pahtImageStorage;
     }
 }

@@ -1,26 +1,21 @@
 package com.alexander_rodriguez.mihogar.historialcasa;
 
-import android.content.ContentValues;
 import android.content.Intent;
-import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.TextView;
+import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.alexander_rodriguez.mihogar.Adapters.AdapterInterface;
-import com.alexander_rodriguez.mihogar.Adapters.RvAdapterAlquiler;
+import com.alexander_rodriguez.mihogar.Adapters.RVARentals;
 import com.alexander_rodriguez.mihogar.Adapters.RvAdapterUser;
 import com.alexander_rodriguez.mihogar.Base.BaseActivity;
-import com.alexander_rodriguez.mihogar.DataBase.items.ItemUser;
+import com.alexander_rodriguez.mihogar.DataBase.items.ItemRental;
+import com.alexander_rodriguez.mihogar.DataBase.items.ItemTenant;
 import com.alexander_rodriguez.mihogar.R;
-import com.alexander_rodriguez.mihogar.UTILIDADES.TAlquiler;
-import com.alexander_rodriguez.mihogar.UTILIDADES.TUsuario;
-import com.alexander_rodriguez.mihogar.historialUserPakage.HistorialUsuarioActivity;
-import com.alexander_rodriguez.mihogar.tableActivity.TableActivity;
 import com.alexander_rodriguez.mihogar.viewUser.DialogDetallesAlquiler;
 
 import java.util.ArrayList;
@@ -33,14 +28,22 @@ public class HistorialCasaActivity extends BaseActivity<Interface.Presenter> imp
 
     public static final String RENTALS_OF_USER = "rentalOfUsers";
 
+    public static final String RENTALS_OF_ROOM = "rentalsOfRoom";
+
     public static final String ALL_RENTALS = "allRentals";
 
     public static final String MODE = "mode";
 
     public static final String TAG_MOSTRAR_PAGOS = "tag_table_pagos";
+    public static final String EXTRA_ROOM_NUMBER = "extraRoomNumber";
+    public static final String EXTRA_RENTAL_ID = "extraRentalId";
+    public static final String EXTRA_DNI = "dni";
+
 
     private RecyclerView recyclerView;
-
+    
+    private View nothingToshow;
+    
     private RvAdapterUser adapterUser;
 
     private RecyclerView.LayoutManager manager;
@@ -70,10 +73,13 @@ public class HistorialCasaActivity extends BaseActivity<Interface.Presenter> imp
             case USERS_OF_RENTAL:{
                 return new RentalUsersPresenter(this, getIntent());
             }
-            case RENTALS_OF_USER:{
+            case RENTALS_OF_USER:
+            case RENTALS_OF_ROOM:{
                 return new UserRentalsPresenter(this, getIntent());
+
             }
             default: {
+                showMessage("default mode");
                 salir();
                 return new AllRentalPresenter(this, getIntent());
             }
@@ -101,15 +107,25 @@ public class HistorialCasaActivity extends BaseActivity<Interface.Presenter> imp
     @Override
     protected void iniciarViews() {
         recyclerView = findViewById(R.id.recyclerView);
+        nothingToshow = findViewById(R.id.nothingToShow);
     }
 
     @Override
-    public void showList(ArrayList<ItemUser> list, RecyclerView.LayoutManager manager) {
-        adapterUser = new RvAdapterUser(this, list);
-
+    public void showUsersList(ArrayList<ItemTenant> list, RecyclerView.LayoutManager manager, boolean showMain) {
+        recyclerView.setVisibility(View.VISIBLE);
+        nothingToshow.setVisibility(View.GONE);
+        adapterUser = new RvAdapterUser(this, list, showMain);
         recyclerView.setLayoutManager(manager);
-
         recyclerView.setAdapter(adapterUser);
+    }
+
+    @Override
+    public void showRentalsList(ArrayList<ItemRental> list, RecyclerView.LayoutManager manager) {
+        recyclerView.setVisibility(View.VISIBLE);
+        nothingToshow.setVisibility(View.GONE);
+        RVARentals adapter = new RVARentals(this, list);
+        recyclerView.setLayoutManager(manager);
+        recyclerView.setAdapter(adapter);
     }
 /*
     @Override

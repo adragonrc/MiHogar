@@ -61,10 +61,10 @@ public class RvAdapterAlquiler extends RecyclerView.Adapter<RvAdapterAlquiler.Ho
     }
 
     public class Holder extends RecyclerView.ViewHolder implements View.OnCreateContextMenuListener{
-        private TextView fecha;
-        private TextView numCuarto;
+        private final TextView fecha;
+        private final TextView numCuarto;
         private String mId;
-        private CardView cardView;
+        private final CardView cardView;
 
         public Holder(@NonNull View itemView) {
             super(itemView);
@@ -73,12 +73,7 @@ public class RvAdapterAlquiler extends RecyclerView.Adapter<RvAdapterAlquiler.Ho
 
             cardView = itemView.findViewById(R.id.idCardView);
             cardView.setOnCreateContextMenuListener(this);
-            cardView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    view.onClickHolder(Holder.this);
-                }
-            });
+            cardView.setOnClickListener(v -> view.onClickHolder(Holder.this));
         }
 
         public String getmId() {

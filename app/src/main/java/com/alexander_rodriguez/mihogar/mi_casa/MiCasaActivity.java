@@ -36,6 +36,8 @@ public class MiCasaActivity extends BaseActivity<Interface.Presenter> implements
     private DialogInterfaz.DialogImputPresenter dialogImputPresenter;
     private RvAdapterCuartos adapterCuartos;
     private RecyclerView.LayoutManager manager;
+    private View nothingToShow;
+    private View progressBar;
     private byte opcion;
     @Override
     protected void iniciarComandos() {
@@ -112,6 +114,8 @@ public class MiCasaActivity extends BaseActivity<Interface.Presenter> implements
 
     @Override
     protected void iniciarViews() {
+        nothingToShow = findViewById(R.id.nothingToShow);
+        progressBar = findViewById(R.id.progressBar);
         rv = findViewById(R.id.recyclerView);
     }
 
@@ -146,6 +150,12 @@ public class MiCasaActivity extends BaseActivity<Interface.Presenter> implements
 
     @Override
     public void mostratCuartos(ArrayList<ModelCuartoView> items) {
+        nothingToShow.setVisibility(View.GONE);
+        rv.setVisibility(View.VISIBLE);
+        progressBar.setVisibility(View.GONE);
+
+        nothingToShow.setVisibility(View.GONE);
+        rv.setVisibility(View.VISIBLE);
         adapterCuartos = new RvAdapterCuartos(this, items);
         rv.setAdapter(adapterCuartos);
     }
@@ -184,13 +194,15 @@ public class MiCasaActivity extends BaseActivity<Interface.Presenter> implements
     }
 
     @Override
-    public void actualizarLista() {
-        adapterCuartos.notifyDataSetChanged();
+    public void notifyChangedOn(int posList) {
+        adapterCuartos.notifyItemChanged(posList);
     }
 
     @Override
-    public void notifyChangedOn(int posList) {
-        adapterCuartos.notifyItemChanged(posList);
+    public void nothingHere() {
+        nothingToShow.setVisibility(View.VISIBLE);
+        rv.setVisibility(View.GONE);
+        progressBar.setVisibility(View.VISIBLE);
     }
 
     @Override
@@ -202,6 +214,11 @@ public class MiCasaActivity extends BaseActivity<Interface.Presenter> implements
             i.putExtra(TCuarto.NUMERO, numero);
             startActivity(i);
         }
+    }
+
+    @Override
+    public void setProgressBarVisibility(int visibility) {
+        progressBar.setVisibility(visibility);
     }
 
     private class PresenterDialogOptions implements DialogInterfaz.DialogOptionPresenter {

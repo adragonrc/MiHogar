@@ -7,7 +7,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.alexander_rodriguez.mihogar.Adapters.RvAdapterUser;
 import com.alexander_rodriguez.mihogar.Base.BaseView;
 import com.alexander_rodriguez.mihogar.Base.IBasePresenter;
-import com.alexander_rodriguez.mihogar.DataBase.items.ItemUser;
+import com.alexander_rodriguez.mihogar.DataBase.items.ItemTenant;
 import com.alexander_rodriguez.mihogar.viewregistraralquiler.ModelAA;
 import com.alexander_rodriguez.mihogar.view_registrar_usuario.interfazUserView;
 
@@ -20,7 +20,7 @@ public interface Interfaz {
 
         void onClickAddUser();
 
-        void agregarUsuario(ItemUser datos);
+        void agregarUsuario(ItemTenant datos);
 
         void avanzar();
 
@@ -42,7 +42,7 @@ public interface Interfaz {
 
         void sinCuartos();
 
-        void mostrarNuevoUsuario(ItemUser m);
+        void mostrarNuevoUsuario(ItemTenant m);
 
         void doPrincipal(RvAdapterUser.Holder holder);
     }

@@ -7,7 +7,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.alexander_rodriguez.mihogar.DataBase.items.ItemRoom;
-import com.alexander_rodriguez.mihogar.DataBase.items.ItemUser;
+import com.alexander_rodriguez.mihogar.DataBase.items.ItemTenant;
 import com.alexander_rodriguez.mihogar.DataBase.models.TMonthlyPayment;
 import com.alexander_rodriguez.mihogar.DataBase.models.TPayment;
 import com.alexander_rodriguez.mihogar.DataBase.models.TRental;
@@ -19,7 +19,6 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FileDownloadTask;
-import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 import org.jetbrains.annotations.NotNull;
@@ -116,7 +115,7 @@ public interface DBInterface {
 
     int contDniOfAlquilerUsuario(String idAlquiler);
 
-    Task<Void> upDateUser(String field, Object valor, String DNI);
+    Task<Void> updateTenant(String field, Object valor, String DNI);
 
     Task<Void> updateRoom(String field, Object valor, String numeroDeCuarto);
 
@@ -130,9 +129,9 @@ public interface DBInterface {
 
     boolean agregarInquilino(String DNI, String nombres, String apellidoPat, String apellidoMat, String URI);
 
-    Task<Void> agregarInquilino(ItemUser mu);
+    Task<Void> agregarInquilino(ItemTenant mu);
 
-    Task<Void> agregarInquilinos(ArrayList<ItemUser> list, String  idAlquiler);
+    Task<Void> agregarInquilinos(ArrayList<ItemTenant> list, String  idAlquiler);
 
     boolean agregarAlquiler(String numC, String fecha, String pagosRealizados, String numTel, String correo);
 
@@ -174,8 +173,6 @@ public interface DBInterface {
 
     void updateCurrentRoomRent(String numCuarto, String rentalId);
 
-    void updateTenantRoomNum(String numCuarto, int size);
-
     void updateCurrentRentMP(String rentalId, DocumentReference id);
 
     DocumentReference getDocument(DocumentReference currentMP);
@@ -186,14 +183,22 @@ public interface DBInterface {
 
     UploadTask saveRoomPhoto(String numeroCuarto, String path);
 
+    UploadTask saveTenantPhoto(String dni, String path);
+
     String getRoomPhotoStoregeAsString(String numeroCuarto) ;
 
-    FileDownloadTask downloadRoomPhoto(String roomNumber, File localFile);
+    String getTenantPhotoStoregeAsString(String dni);
+
+    FileDownloadTask downloadRoomPhoto(String roomNumber,@NonNull File localFile);
 
     String getPathTenant(String DNI);
 
     String getPathRoom(String roomNumber);
 
     Task<QuerySnapshot> getTenantHistory(String dni);
+
+    Task<QuerySnapshot> getRentalsOfRoom(String roomNumber);
+
+    Task<Void> terminateContract(String id,  String motivo, String numeroCuarto);
 
 }

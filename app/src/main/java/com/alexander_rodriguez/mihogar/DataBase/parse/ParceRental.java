@@ -15,7 +15,7 @@ public class ParceRental extends TRental implements Parcelable {
     public ParceRental(){}
 
     public ParceRental(ItemRental r) {
-        super(r.getEntryDate(), r.getDepartureDate(), r.getReasonExit(), r.isEnabled(), r.getRoomNumber(), r.getCurrentMP(), r.getMainTenant(), r.getPaymentsNumber(), r.getPhoneNumber(), r.getEmail());
+        super(r.getEntryDate(), r.getDepartureDate(), r.getReasonExit(), r.getRoomNumber(), r.getCurrentMP(), r.getMainTenant(), r.getTenantsNumber(), r.getPaymentsNumber(), r.getPhoneNumber(), r.getEmail());
         id = r.getId();
     }
 
@@ -24,12 +24,12 @@ public class ParceRental extends TRental implements Parcelable {
         entryDate = (Timestamp) in.readValue(Timestamp.class.getClassLoader());
         departureDate = (Timestamp) in.readValue(Timestamp.class.getClassLoader());
         reasonExit = in.readString();
-        enabled = in.readByte() != 0x00;
         roomNumber = in.readString();
         String s = in.readString();
         s = s == null? "": s;
         currentMP = FirebaseFirestore.getInstance().document(s);
         mainTenant = in.readString();
+        tenantsNumber = in.readInt();
         paymentsNumber = in.readInt();
         phoneNumber = in.readString();
         email = in.readString();
@@ -46,10 +46,10 @@ public class ParceRental extends TRental implements Parcelable {
         dest.writeValue(entryDate);
         dest.writeValue(departureDate);
         dest.writeString(reasonExit);
-        dest.writeByte((byte) (enabled ? 0x01 : 0x00));
         dest.writeString(roomNumber);
         dest.writeString(currentMP.getPath());
         dest.writeString(mainTenant);
+        dest.writeInt(tenantsNumber);
         dest.writeInt(paymentsNumber);
         dest.writeString(phoneNumber);
         dest.writeString(email);

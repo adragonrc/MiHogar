@@ -6,4 +6,5 @@ public interface BaseView{
     Context getContext();
     void showMessage(String mensaje);
     void solicitarPermiso();
+    void setProgressBarVisibility(int visibility);
 }

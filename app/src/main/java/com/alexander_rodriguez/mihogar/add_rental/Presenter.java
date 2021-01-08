@@ -7,7 +7,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.alexander_rodriguez.mihogar.Adapters.RvAdapterUser;
 import com.alexander_rodriguez.mihogar.Base.BasePresenter;
-import com.alexander_rodriguez.mihogar.DataBase.items.ItemUser;
+import com.alexander_rodriguez.mihogar.DataBase.items.ItemTenant;
 import com.alexander_rodriguez.mihogar.DataBase.models.TMonthlyPayment;
 import com.alexander_rodriguez.mihogar.DataBase.models.TPayment;
 import com.alexander_rodriguez.mihogar.AdminDate;
@@ -37,9 +37,9 @@ public class Presenter extends BasePresenter<Interfaz.view> implements Interfaz.
     private AdminDate adminDate;
     private ArrayList<String> cuartosDisponibles;
 
-    private ArrayList<ItemUser> list;
+    private ArrayList<ItemTenant> list;
 
-    private ItemUser modelSelect;
+    private ItemTenant modelSelect;
 
     private ModelAA modelToSave;
 
@@ -54,7 +54,7 @@ public class Presenter extends BasePresenter<Interfaz.view> implements Interfaz.
     }
 
     private boolean isNuevo(String dni){
-        for (ItemUser m: list ){
+        for (ItemTenant m: list ){
             if (m.getDni().equals(dni)){
                 return false;
             }
@@ -102,10 +102,10 @@ public class Presenter extends BasePresenter<Interfaz.view> implements Interfaz.
     }
 
     @Override
-    public void agregarUsuario(ItemUser m) {
+    public void agregarUsuario(ItemTenant m) {
         int err = m.getErrorIfExist();
         if (err != -1) {
-            view.showMessage("Campo vacio en el campo: " + ItemUser.getLabelName(err));
+            view.showMessage("Campo vacio en el campo: " + ItemTenant.getLabelName(err));
             return;
         }
         if (!isNuevo(m.getDni())){
@@ -166,7 +166,6 @@ public class Presenter extends BasePresenter<Interfaz.view> implements Interfaz.
 
     private void finish(){
         db.updateCurrentRoomRent(modelToSave.getRoomNumber(), rentalId);
-        db.updateTenantRoomNum(modelToSave.getRoomNumber(), list.size());
         view.showMessage("OK");
         view.close();
     }
@@ -192,7 +191,7 @@ public class Presenter extends BasePresenter<Interfaz.view> implements Interfaz.
         if (cont < list.size()-1) {
             db.revertir(TAlquilerUsuario.T_NOMBRE, TAlquilerUsuario.ID_AL, idAlquiler);
             for (int i = 0; i < cont; i++) {
-                ItemUser m = list.get(i);
+                ItemTenant m = list.get(i);
                 db.revertir(TUsuario.T_NOMBRE, TUsuario.DNI, m.getDni());
             }
             view.showError("No se pudo agregar los usuarios");
@@ -202,8 +201,8 @@ public class Presenter extends BasePresenter<Interfaz.view> implements Interfaz.
         /*long idAlquiler = db.getIdMaxAlquiler();*/
         rentalId = document.getId();
         Save s = new Save();
-        int cont = 0;;
-        for (ItemUser m : list) {
+        int cont = 0;
+        for (ItemTenant m : list) {
             m.setPath(s.SaveImage(view.getContext(), m.getPath(), view.getContext().getString(R.string.cTenant), m.getDni()));
         }
         db.agregarInquilinos(list, rentalId)
@@ -236,7 +235,7 @@ public class Presenter extends BasePresenter<Interfaz.view> implements Interfaz.
 
             return;
         }*/
-
+        modelToSave.setTenantsNumber(list.size());
         if(modelToSave.isCorrect()){
             db.agregarAlquiler(modelToSave.getRoot())
                     .addOnSuccessListener(this::addRentalWasSuccess)
@@ -265,7 +264,7 @@ public class Presenter extends BasePresenter<Interfaz.view> implements Interfaz.
         return list.isEmpty();
     }
 
-    private void guardarModel(ItemUser m){
+    private void guardarModel(ItemTenant m){
         if(list.isEmpty()) {
             m.setMain(true);
             modelSelect = m;

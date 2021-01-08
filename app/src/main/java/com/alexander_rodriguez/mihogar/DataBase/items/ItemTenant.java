@@ -7,28 +7,28 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
-public class ItemUser extends TUser {
+public class ItemTenant extends TUser {
     protected String dni;
 
-    public ItemUser(){}
+    public ItemTenant(){}
 
-    public ItemUser(String dni, String name, String apellidoPat, String apellidoMat, String path, boolean main) {
+    public ItemTenant(String dni, String name, String apellidoPat, String apellidoMat, String path, boolean main) {
         super(name, apellidoPat, apellidoMat, path, false, main);
         this.dni = dni;
     }
-    public ItemUser(String dni, String name, String apellidoPat, String apellidoMat, String path, boolean alert, boolean main) {
+    public ItemTenant(String dni, String name, String apellidoPat, String apellidoMat, String path, boolean alert, boolean main) {
         super(name, apellidoPat, apellidoMat, path, alert, main);
         this.dni = dni;
     }
 
-    public ItemUser(TUser user) {
+    public ItemTenant(TUser user) {
         super(user.getName(), user.getApellidoPat(), user.getApellidoMat(), user.getPath(), user.isAlerted(), user.isMain());
     }
 
-    public static ItemUser newInstance(DocumentSnapshot doc) {
+    public static ItemTenant newInstance(DocumentSnapshot doc) {
         TUser user = doc.toObject(TUser.class);
         if(user != null) {
-            ItemUser iu = new ItemUser(user);
+            ItemTenant iu = new ItemTenant(user);
             iu.setDni(doc.getId());
             return iu;
         }

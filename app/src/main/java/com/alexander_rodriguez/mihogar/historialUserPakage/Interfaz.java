@@ -1,14 +1,12 @@
 package com.alexander_rodriguez.mihogar.historialUserPakage;
 
-import android.content.ContentValues;
-import android.graphics.Bitmap;
+import android.content.Intent;
 import android.view.View;
-import android.widget.ImageView;
 
 import com.alexander_rodriguez.mihogar.Base.BaseView;
 import com.alexander_rodriguez.mihogar.Base.IBasePresenter;
 import com.alexander_rodriguez.mihogar.ButtonsAC.interfazAC;
-import com.alexander_rodriguez.mihogar.DataBase.items.ItemUser;
+import com.alexander_rodriguez.mihogar.DataBase.items.ItemTenant;
 
 public interface Interfaz {
     interface presenter extends IBasePresenter {
@@ -17,13 +15,18 @@ public interface Interfaz {
         void actualizarApeMat(String apellidoMat);
 
 
-        void actualizarPhoto(String path);
+        void updatePhoto(String path);
+
+        void onClickPositive(View v);
+
+        void onClickPhoto(View view);
+        
     }
     interface view extends BaseView, interfazAC {
 
         void mostrarAlerta();
         void noMostrarAlerta();
-        void mostrarDatosUsuario(ItemUser datos, String i);
+        void mostrarDatosUsuario(ItemTenant datos, String i);
         void modoError(String error);
 
 
@@ -40,5 +43,9 @@ public interface Interfaz {
         void actualizarApeMat(String apellidoMaterno);
 
         void salir();
+
+        void reloadRoomPhoto();
+
+        void showImage(Intent intent);
     }
 }

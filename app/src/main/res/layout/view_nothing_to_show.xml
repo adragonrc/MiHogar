@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/nothing_here"
+        android:layout_gravity="center"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Nothing to show"
+        android:fontFamily="sans-serif-condensed-medium"
+        android:textSize="24sp"
+        android:textColor="@color/secondaryLightColor"
+        android:layout_gravity="center"
+        android:textStyle="bold"
+        android:layout_marginTop="64dp"/>
+</FrameLayout>

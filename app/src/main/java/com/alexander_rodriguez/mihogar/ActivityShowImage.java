@@ -18,8 +18,6 @@ import com.alexander_rodriguez.mihogar.Base.BasePresenter;
 import com.alexander_rodriguez.mihogar.Base.IBasePresenter;
 import com.alexander_rodriguez.mihogar.DataBase.DBInterface;
 import com.alexander_rodriguez.mihogar.DataBase.FDAdministrator;
-import com.alexander_rodriguez.mihogar.UTILIDADES.TCuarto;
-import com.alexander_rodriguez.mihogar.UTILIDADES.TUsuario;
 import com.alexander_rodriguez.mihogar.menu_photo.MenuIterator;
 import com.alexander_rodriguez.mihogar.menu_photo.interfazMenu;
 import com.theartofdev.edmodo.cropper.CropImage;
@@ -33,6 +31,9 @@ public class ActivityShowImage extends BaseActivity<IBasePresenter> {
     public static final String IS_USER_IMAGE = "photo_user";
     public static final String NAME_PHOTO = "name_photo";
     public static final int BACK_PRESSED = 16908332;
+    public static final String EXTRA_DNI = "dni";
+    private static final String EXTRA_ROOM_NUMBER = "roomNumber";
+    private static final String EXTRA_PATH = "path";
     private Bitmap bmGuardar;
     private ImageView photoView;
     private String path;
@@ -133,19 +134,26 @@ public class ActivityShowImage extends BaseActivity<IBasePresenter> {
         try {
             Save s = new Save();
             if (getIntent().getBooleanExtra(ActivityShowImage.IS_CUARTO_IMAGE, false)) {
-                String roomNumber = getIntent().getStringExtra(TCuarto.NUMERO);
+                String roomNumber = getIntent().getStringExtra(EXTRA_ROOM_NUMBER);
                 path = s.SaveImage(this, bmGuardar, getString(R.string.cRoom), roomNumber);
-                db.updateRoom(TCuarto.URL, path, roomNumber);
+                db.updateRoom(getString(R.string.mdRoomPathImage), path, roomNumber);
+                db.saveRoomPhoto(roomNumber, path).addOnFailureListener(this::savePhotoFailure);
             } else {
                 if (getIntent().getBooleanExtra(ActivityShowImage.IS_USER_IMAGE, false)) {
-                    String DNI = getIntent().getStringExtra(TUsuario.DNI);
+                    String DNI = getIntent().getStringExtra(EXTRA_DNI);
                     path = s.SaveImage(this, bmGuardar, getString(R.string.cTenant), DNI);
-                    db.updateRoom(TUsuario.URI, path, DNI);
+                    db.updateTenant(getString(R.string.mdTenantPath), path, DNI);
+                    db.saveTenantPhoto(DNI, path).addOnFailureListener(this::savePhotoFailure);
                 }
             }
         }catch (IOError e){
             showMessage("No se pudo guardar");
         }
+    }
+
+    private void savePhotoFailure(Exception e) {
+        e.printStackTrace();
+        showMessage(getString(R.string.sUploadPhotoError));
     }
 }
 

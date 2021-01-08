@@ -14,16 +14,16 @@ public class ModelAA extends TRental {
 
 
     public ModelAA(Timestamp entryDate, String roomNumber, int paymentsNumber, String phoneNumber, String email, String price ) {
-        super(entryDate, null, "", true, roomNumber, null,null, paymentsNumber, phoneNumber, email);
+        super(entryDate, null, "",  roomNumber, null,null,  0, paymentsNumber, phoneNumber, email);
         this.price = price;
     }
-    public ModelAA(Timestamp entryDate, Timestamp departureDate, String reasonExit, boolean enabled, String roomNumber, DocumentReference currentMP, String mainTenant, int paymentsNumber, String phoneNumber, String email) {
-        super(entryDate, departureDate, reasonExit, enabled, roomNumber, currentMP, mainTenant, paymentsNumber, phoneNumber, email);
+    public ModelAA(Timestamp entryDate, Timestamp departureDate, String reasonExit, String roomNumber, DocumentReference currentMP, String mainTenant, int paymentsNumber, String phoneNumber, String email) {
+        super(entryDate, departureDate, reasonExit, roomNumber, currentMP, mainTenant,0, paymentsNumber, phoneNumber, email);
     }
 
 
     public TRental getRoot(){
-        return new TRental(entryDate, departureDate, reasonExit, enabled, roomNumber, currentMP, mainTenant, paymentsNumber, phoneNumber, email);
+        return new TRental(entryDate, departureDate, reasonExit, roomNumber, currentMP, mainTenant, tenantsNumber, paymentsNumber, phoneNumber, email);
     }
 
     public String getPrice() {

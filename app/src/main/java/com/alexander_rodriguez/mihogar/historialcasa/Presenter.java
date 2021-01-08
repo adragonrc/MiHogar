@@ -9,21 +9,13 @@ import android.view.MenuItem;
 
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.alexander_rodriguez.mihogar.Base.BaseActivity;
 import com.alexander_rodriguez.mihogar.Base.BasePresenter;
-import com.alexander_rodriguez.mihogar.DataBase.items.ItemUser;
+import com.alexander_rodriguez.mihogar.DataBase.items.ItemTenant;
 import com.alexander_rodriguez.mihogar.AdminDate;
-import com.alexander_rodriguez.mihogar.DataBase.models.TRentalTenant;
 import com.alexander_rodriguez.mihogar.R;
 import com.alexander_rodriguez.mihogar.UTILIDADES.TAlquiler;
 import com.alexander_rodriguez.mihogar.Adapters.Models.ModelAlquilerView;
 import com.alexander_rodriguez.mihogar.Adapters.Models.ModelUserView;
-import com.alexander_rodriguez.mihogar.UTILIDADES.TAlquilerUsuario;
-import com.alexander_rodriguez.mihogar.UTILIDADES.TUsuario;
-import com.alexander_rodriguez.mihogar.viewUser.DialogDetallesAlquiler;
-import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -43,7 +35,7 @@ public class Presenter extends BasePresenter<Interface.View> implements Interfac
     private boolean showMain;
 
     private ArrayList<ModelAlquilerView> listAlquileres;
-    private ArrayList<ItemUser> listUsuarios;
+    private ArrayList<ItemTenant> listUsuarios;
     private Intent mIntent;
 
     private int cont;
@@ -229,7 +221,7 @@ public class Presenter extends BasePresenter<Interface.View> implements Interfac
         return listAlquileres;
     }
 
-    private ArrayList<ItemUser> getListUsuarios(){
+    private ArrayList<ItemTenant> getListUsuarios(){
         if (listUsuarios == null) {
             String columnas = "*";
             Cursor c = db.getAllUsuariosADDAlert(columnas);
@@ -238,7 +230,7 @@ public class Presenter extends BasePresenter<Interface.View> implements Interfac
         return listUsuarios;
     }
 
-    private ArrayList<ItemUser> getListUsuariosDealquiler() {
+    private ArrayList<ItemTenant> getListUsuariosDealquiler() {
         return listUsuarios;
     }
 /*

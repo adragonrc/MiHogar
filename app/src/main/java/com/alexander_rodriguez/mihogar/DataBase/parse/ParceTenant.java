@@ -3,12 +3,11 @@ package com.alexander_rodriguez.mihogar.DataBase.parse;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import com.alexander_rodriguez.mihogar.DataBase.items.ItemUser;
-import com.alexander_rodriguez.mihogar.DataBase.models.TUser;
+import com.alexander_rodriguez.mihogar.DataBase.items.ItemTenant;
 
-public class ParceTenant  extends ItemUser implements Parcelable{
+public class ParceTenant  extends ItemTenant implements Parcelable{
 
-    public ParceTenant(ItemUser user) {
+    public ParceTenant(ItemTenant user) {
         super(user);
         dni = user.getDni();
     }

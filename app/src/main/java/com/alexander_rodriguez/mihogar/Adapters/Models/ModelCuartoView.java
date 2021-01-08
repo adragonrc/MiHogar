@@ -14,6 +14,7 @@ public class ModelCuartoView extends ItemRoom {
     public ModelCuartoView(TRoom room) {
         super(room);
     }
+
     public ModelCuartoView(TRoom room, int posList) {
         super(room); this.posList = posList;
     }

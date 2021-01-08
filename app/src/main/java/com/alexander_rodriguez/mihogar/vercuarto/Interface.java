@@ -12,6 +12,8 @@ public interface Interface {
     interface Presenter extends IBasePresenter {
         ItemRental getDatosAlquiler();
 
+        ItemRoom getRoom();
+
         void mostrarDetalles();
 
         void deshacerContrato(String motivo);

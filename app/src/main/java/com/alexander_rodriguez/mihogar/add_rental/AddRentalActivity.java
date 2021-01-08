@@ -20,7 +20,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.alexander_rodriguez.mihogar.Adapters.AdapterInterface;
 import com.alexander_rodriguez.mihogar.Adapters.RvAdapterUser;
 import com.alexander_rodriguez.mihogar.Base.BaseActivity;
-import com.alexander_rodriguez.mihogar.DataBase.items.ItemUser;
+import com.alexander_rodriguez.mihogar.DataBase.items.ItemTenant;
 import com.alexander_rodriguez.mihogar.R;
 import com.alexander_rodriguez.mihogar.viewregistraralquiler.AgregarAlquilerView;
 import com.alexander_rodriguez.mihogar.UTILIDADES.TCuarto;
@@ -40,7 +40,7 @@ public class AddRentalActivity extends BaseActivity<Interfaz.presenter> implemen
 
     private RecyclerView recyclerView;
 
-    private ArrayList<ItemUser> rvAdapter;
+    private ArrayList<ItemTenant> rvAdapter;
 
     private boolean cancelDialog;
 
@@ -77,7 +77,7 @@ public class AddRentalActivity extends BaseActivity<Interfaz.presenter> implemen
     @Override
     protected void iniciarComandos() {
         rvAdapter = new ArrayList<>();
-        adapterUser = new RvAdapterUser(this, rvAdapter);
+        adapterUser = new RvAdapterUser(this, rvAdapter, true);
 
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setHasFixedSize(true);
@@ -281,7 +281,7 @@ public class AddRentalActivity extends BaseActivity<Interfaz.presenter> implemen
         onBackPressed();
     }
 
-    public void mostrarNuevoUsuario(ItemUser m){
+    public void mostrarNuevoUsuario(ItemTenant m){
         if (tvAviso.getVisibility() == View.VISIBLE){
             tvAviso.setVisibility(View.GONE);
             recyclerView.setVisibility(View.VISIBLE);

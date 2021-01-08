@@ -23,22 +23,20 @@ public class ItemRental extends TRental {
     private String sDepartureDate;
 
     public ItemRental(String id, Timestamp entryDate, Timestamp departureDate, String reasonExit, boolean enabled, String roomNumber, String phoneNumber, String email) {
-        super(entryDate, departureDate, reasonExit, enabled, roomNumber, null, null, 0, phoneNumber, email);
+        super(entryDate, departureDate, reasonExit, roomNumber, null, null, 0, 0, phoneNumber, email);
         this.id = id;
     }
 
-    public ItemRental(Timestamp entryDate, Timestamp departureDate, String reasonExit, boolean enabled, String roomNumber, DocumentReference currentMP, String mainTenant, int paymentsNumber, String phoneNumber, String email) {
-        super(entryDate, departureDate, reasonExit, enabled, roomNumber, currentMP, mainTenant, paymentsNumber, phoneNumber, email);
+    public ItemRental(Timestamp entryDate, Timestamp departureDate, String reasonExit, boolean enabled, String roomNumber, DocumentReference currentMP, String mainTenant, int tenantsNumber, int paymentsNumber, String phoneNumber, String email) {
+        super(entryDate, departureDate, reasonExit, roomNumber, currentMP, mainTenant, tenantsNumber, paymentsNumber, phoneNumber, email);
 
     }
 
     public ItemRental(TRental r) {
-        super(r.getEntryDate(), r.getDepartureDate(), r.getReasonExit(), r.isEnabled(), r.getRoomNumber(), r.getCurrentMP(), r.getMainTenant(), r.getPaymentsNumber(), r.getPhoneNumber(), r.getEmail());
+        super(r.getEntryDate(), r.getDepartureDate(), r.getReasonExit(), r.getRoomNumber(), r.getCurrentMP(), r.getMainTenant(), r.getTenantsNumber(), r.getPaymentsNumber(), r.getPhoneNumber(), r.getEmail());
     }
 
-    public ItemRental() {
-
-    }
+    public ItemRental() {}
 
     @Contract(pure = true)
     public static @NotNull String getLabelName(int i){
@@ -53,7 +51,9 @@ public class ItemRental extends TRental {
 
     public static @Nullable ItemRental newInstance(@NotNull DocumentSnapshot documentSnapshot) {
         TRental r = documentSnapshot.toObject(TRental.class);
-        return r == null? null: new ItemRental(r);
+        ItemRental rental = r == null? null:new ItemRental(r);
+        rental.setId(documentSnapshot.getId());
+        return rental;
     }
 
 
@@ -94,18 +94,19 @@ public class ItemRental extends TRental {
         return paymentDate;
     }
 
-    private String dateToString(Date date, String cache){
+    private String dateToString(Timestamp date, String cache){
+        if(date == null) return "";
         if(cache == null || cache.isEmpty()){
-            cache = (new SimpleDateFormat(AdminDate.FORMAT_DATE, Locale.getDefault())).format(date);
+            cache = (new SimpleDateFormat(AdminDate.FORMAT_DATE, Locale.getDefault())).format(date.toDate());
         }
         return cache;
     }
 
     public String getEntryDateAsString() {
-        return dateToString(entryDate.toDate(), sEntryDate);
+        return dateToString(entryDate, sEntryDate);
     }
 
     public String getDepartureDateAsString() {
-        return dateToString(departureDate.toDate(), sDepartureDate);
+        return dateToString(departureDate, sDepartureDate);
     }
 }

@@ -82,7 +82,7 @@ public class MenuPricipal extends BaseActivity<IBasePresenter> implements Interf
 
     public void onClickHistorialCasa(View view) {
         Intent i = new Intent(this, HistorialCasaActivity.class);
-        i.putExtra(HistorialCasaActivity.MODE, HistorialCasaActivity.ALL_RENTALS);
+        i.putExtra(HistorialCasaActivity.MODE, HistorialCasaActivity.ALL_USERS);
         startActivity(i);
     }
 
@@ -101,7 +101,6 @@ public class MenuPricipal extends BaseActivity<IBasePresenter> implements Interf
                         finish();
                         MenuPricipal.this.finish();
                        /* Intent i = new Intent(MenuPricipal.this, RegistrarCasaActivity.class);
-
                         i.putExtra(RegistrarCasaActivity.ON_EXIT, true);
                         i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                         startActivity(i);

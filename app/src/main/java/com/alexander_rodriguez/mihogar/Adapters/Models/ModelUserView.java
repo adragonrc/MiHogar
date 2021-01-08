@@ -3,8 +3,7 @@ package com.alexander_rodriguez.mihogar.Adapters.Models;
 import android.content.Intent;
 import android.database.Cursor;
 
-import com.alexander_rodriguez.mihogar.DataBase.items.ItemUser;
-import com.alexander_rodriguez.mihogar.UTILIDADES.TAlquiler;
+import com.alexander_rodriguez.mihogar.DataBase.items.ItemTenant;
 import com.alexander_rodriguez.mihogar.UTILIDADES.TAlquilerUsuario;
 import com.alexander_rodriguez.mihogar.UTILIDADES.TUsuario;
 import com.alexander_rodriguez.mihogar.modelos.ModelUsuario;
@@ -57,7 +56,7 @@ public class ModelUserView  {
         this.path = path==null ? "": path;
     }
 
-    public ModelUserView(ItemUser m) {
+    public ModelUserView(ItemTenant m) {
         this.dni = m.getDni();
         this.nombres = m.getName();
         this.path = m.getPath();
@@ -65,8 +64,8 @@ public class ModelUserView  {
         main = false;
         this.path = path==null ? "": path;
     }
-    public static ArrayList<ItemUser> createListModel(Cursor c, boolean showMain){
-        ArrayList<ItemUser> list = new ArrayList<>();
+    public static ArrayList<ItemTenant> createListModel(Cursor c, boolean showMain){
+        ArrayList<ItemTenant> list = new ArrayList<>();
         if (c.moveToFirst()){
             do{
                 ModelUserView mcv = new ModelUserView(c, showMain);

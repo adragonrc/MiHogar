@@ -142,17 +142,18 @@
     <string name="mdRoomDescription">description</string>
     <string name="mdRoomPrice">price_e</string>
     <string name="mdRoomPathImage">pathImage</string>
-    <string name="mdRoomTenantsNumber">tenantsNumber</string>
     <string name="mdRoomCurrentRentalId">currentRentalId</string>
     <string name="mdRoomPathImageStorage">pahtImageStorage</string>
 
     //rental document metadata
     <string name="mdRentalCurrentMP">currentMP</string>
     <string name="mdRentalDepartureDate">departureDate</string>
-    <string name="mdRentalReasonExit">reasonExit.</string>
+    <string name="mdRentalReasonExit">reasonExit</string>
     <string name="mdRentalMainTenant">mainTenant</string>
+    <string name="mdRentalTenantsNumber">tenantsNumber</string>
     <string name="mdRentalPaymentsNumber">paymentsNumber</string>
     <string name="mdRentalPhoneNumber">phoneNumber</string>
+    <string name="mdRentalRoomNumber">roomNumber</string>
     <string name="mdRentalEmail">email</string>
 
 
@@ -167,12 +168,14 @@
     //PaymentMonthly document metadata
     <string name="mdPaymentMonthlyPaymentId">monthlyPaymentId</string>
 
-    <string name="sPayRent">PAGAR ALQUILER</string>
-    <string name="s_room_without_rental">Agregar alquiler</string>
+    //Tenant document metadata
     <string name="mdTenantName">name</string>
     <string name="mdTenantApellidoPat">apellidoPat</string>
     <string name="mdTenantApellidoMat">apellidoMat</string>
     <string name="mdTenantPath">path</string>
 
+    <string name="sPayRent">PAGAR ALQUILER</string>
+    <string name="s_room_without_rental">Agregar alquiler</string>
+    <string name="sUploadPhotoError">Photo could not be uploaded</string>
 
 </resources>

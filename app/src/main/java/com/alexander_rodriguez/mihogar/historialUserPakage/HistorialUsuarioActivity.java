@@ -22,8 +22,7 @@ import androidx.core.view.ViewCompat;
 import com.alexander_rodriguez.mihogar.ActivityShowImage;
 import com.alexander_rodriguez.mihogar.Base.BaseActivity;
 import com.alexander_rodriguez.mihogar.ButtonsAC.ButtonsAceptarCancelar;
-import com.alexander_rodriguez.mihogar.DataBase.items.ItemUser;
-import com.alexander_rodriguez.mihogar.DataBase.parse.ParceTenant;
+import com.alexander_rodriguez.mihogar.DataBase.items.ItemTenant;
 import com.alexander_rodriguez.mihogar.R;
 import com.alexander_rodriguez.mihogar.Save;
 import com.alexander_rodriguez.mihogar.UTILIDADES.TUsuario;
@@ -60,7 +59,8 @@ public class HistorialUsuarioActivity extends BaseActivity<Interfaz.presenter> i
     private ProfileView profileView;
 
     private String path;
-    private ParceTenant tenant;
+
+    private ItemTenant tenant;
 
     private interfazMenu interfazMenu;
 
@@ -123,31 +123,24 @@ public class HistorialUsuarioActivity extends BaseActivity<Interfaz.presenter> i
         Save s = new Save();
         Bitmap bm = BitmapFactory.decodeFile(result.getUri().getPath());
         path = s.SaveImage(this, bm, getString(R.string.cTenant),  tenant.getDni());
-        presenter.actualizarPhoto(path);
+        presenter.updatePhoto(path);
         profileView.setPhotoImage(path);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-        switch (id){
-            case R.id.app_bar_edit:{
-                interfazMenu.onEdit();
-                break;
-            }
-            case R.id.app_bar_shared:{
-                interfazMenu.onShared(path);
-                break;
-            }
-            case BACK_PRESSED:{
-                onBackPressed();
-                break;
-            }
+        if (id == R.id.app_bar_edit) {
+            interfazMenu.onEdit();
+        } else if (id == R.id.app_bar_shared) {
+            interfazMenu.onShared(path);
+        } else if (id == BACK_PRESSED) {
+            onBackPressed();
         }
         return super.onOptionsItemSelected(item);
     }
     @Override
-    public void mostrarDatosUsuario(ItemUser datos, String i) {
+    public void mostrarDatosUsuario(ItemTenant datos, String i) {
         profileView.setSubTitle(datos.getDni());
         profileView.setTitle(datos.getName());
         tvNombres.setText(datos.getName());
@@ -160,6 +153,7 @@ public class HistorialUsuarioActivity extends BaseActivity<Interfaz.presenter> i
 
         profileView.setPhotoImage(path);
         tvNumAlquiler.setText(i);
+        tenant = datos;
     }
 
     @Override
@@ -236,19 +230,8 @@ public class HistorialUsuarioActivity extends BaseActivity<Interfaz.presenter> i
     }
 
     public void onClickPhoto(View view){
-        if(Objects.requireNonNull(path).equals("")) {
-            Toast.makeText(this, "Sin foto", Toast.LENGTH_SHORT).show();
-            return;
-        }
-        Intent intent = new Intent(this, ActivityShowImage.class);
-        ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(this, profileView.getIvPhoto(), ViewCompat.getTransitionName(profileView.getIvPhoto()));
-        intent.putExtra(ActivityShowImage.IS_USER_IMAGE, true);
-        intent.putExtra(TUsuario.DNI, tenant.getDni());
-        intent.putExtra(ActivityShowImage.DATA_IMAGE, path);
-        startActivity(intent, options.toBundle());
+        presenter.onClickPhoto(view);
     }
-
-
 
     @Override
     public void actualizarNombres(String nombres) {
@@ -277,6 +260,17 @@ public class HistorialUsuarioActivity extends BaseActivity<Interfaz.presenter> i
     @Override
     public void salir(){
         onBackPressed();
+    }
+
+    @Override
+    public void reloadRoomPhoto() {
+            profileView.setPhotoImage(path);
+    }
+
+    @Override
+    public void showImage(Intent intent) {
+        ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(this, profileView.getIvPhoto(), ViewCompat.getTransitionName(profileView.getIvPhoto()));
+        startActivity(intent, options.toBundle());
     }
 
     @Override
@@ -312,10 +306,7 @@ public class HistorialUsuarioActivity extends BaseActivity<Interfaz.presenter> i
 
     @Override
     public void onClickPositive(View v) {
-        Intent i = new Intent(this, HistorialCasaActivity.class);
-        i.putExtra(HistorialCasaActivity.MODE, HistorialCasaActivity.RENTALS_OF_USER);
-        i.putExtra(TUsuario.DNI,  Integer.valueOf(tenant.getDni()));
-        startActivity(i);
+        presenter.onClickPositive(v);
     }
 
     @Override

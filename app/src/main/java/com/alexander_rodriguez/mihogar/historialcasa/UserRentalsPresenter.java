@@ -7,22 +7,74 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.alexander_rodriguez.mihogar.Adapters.RvAdapterAlquiler;
 import com.alexander_rodriguez.mihogar.Base.BasePresenter;
+import com.alexander_rodriguez.mihogar.DataBase.items.ItemRental;
 import com.alexander_rodriguez.mihogar.UTILIDADES.TAlquiler;
 import com.alexander_rodriguez.mihogar.tableActivity.TableActivity;
 import com.alexander_rodriguez.mihogar.viewUser.DialogDetallesAlquiler;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
+
+import java.util.ArrayList;
 
 public class UserRentalsPresenter extends BasePresenter<Interface.View> implements Interface.Presenter {
+    private String rentalId;
+    private String roomNumber;
+
+    private int iMenu;
+    private int idItemMenuSelected;
+
+    private Menu menu;
+
+    private boolean showMain;
+
+    private ArrayList<ItemRental> list;
+    private Intent mIntent;
+
+    private int cont;
+    private int iCont;
     public UserRentalsPresenter(Interface.View view, Intent intent) {
         super(view);
+        rentalId = intent.getStringExtra(HistorialCasaActivity.EXTRA_RENTAL_ID);
+        roomNumber = intent.getStringExtra(HistorialCasaActivity.EXTRA_ROOM_NUMBER);
+        list = new ArrayList<>();
+        if(roomNumber == null || roomNumber.isEmpty()){
+            view.showMessage("lost data");
+        }
     }
 
     @Override
     public void showList() {
+        if(list == null ) list = new ArrayList<>();
+        if(list.isEmpty())
+            if(roomNumber != null && !roomNumber.isEmpty()) {
+                db.getRentalsOfRoom(roomNumber).addOnSuccessListener(this::getRentalsSuccess)
+                        .addOnFailureListener(this::getRentalsFailure);
+            }
+        else
+            view.showRentalsList(list, new LinearLayoutManager(view.getContext()));
+    }
 
+    private void getRentalsFailure(Exception e) {
+        view.showMessage("No se pudo descargar los datos");
+        e.printStackTrace();
+    }
+
+    private void getRentalsSuccess(QuerySnapshot queryDocumentSnapshots) {
+        if(rentalId == null) rentalId = "";
+        for (DocumentSnapshot doc : queryDocumentSnapshots){
+            ItemRental rental = ItemRental.newInstance(doc);
+            if(!rental.getId().equals(rentalId)){
+                list.add(rental);
+            }
+        }
+        if(!list.isEmpty()){
+            view.showRentalsList(list, new LinearLayoutManager(view.getContext()));
+        }
     }
 
     @Override
@@ -78,6 +130,6 @@ public class UserRentalsPresenter extends BasePresenter<Interface.View> implemen
 
     @Override
     public void iniciarComandos() {
-
+        showList();
     }
 }

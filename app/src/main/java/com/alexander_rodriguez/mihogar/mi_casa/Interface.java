@@ -16,10 +16,6 @@ public interface Interface{
         void verCuartosLibres();
         void ordenarPorFecha();
 
-        Task<DocumentSnapshot> getRental(String currentRentalId);
-
-        void mostratCuartos(ArrayList<ModelCuartoView> list);
-
         ArrayList<ModelCuartoView> getList();
     }
 
@@ -31,8 +27,8 @@ public interface Interface{
         void showDialogOptions(String idAlquiler);
         void showDialogImput(String idAlquiler);
 
-        void actualizarLista();
-
         void notifyChangedOn(int posList);
+
+        void nothingHere();
     }
 }

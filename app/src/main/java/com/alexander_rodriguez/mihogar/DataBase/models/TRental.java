@@ -1,7 +1,5 @@
 package com.alexander_rodriguez.mihogar.DataBase.models;
 
-import android.os.Parcel;
-
 import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.DocumentReference;
 
@@ -9,29 +7,28 @@ public class TRental {
     protected Timestamp entryDate;
     protected Timestamp departureDate;
     protected String reasonExit;
-    protected boolean enabled;
     protected String roomNumber;
     protected DocumentReference currentMP;
     protected String mainTenant;
+    protected int tenantsNumber;
     protected int paymentsNumber;
     protected String phoneNumber;
     protected String email;
 
     public TRental(){}
 
-    public TRental(Timestamp entryDate, Timestamp departureDate, String reasonExit, boolean enabled, String roomNumber, DocumentReference currentMP, String mainTenant, int paymentsNumber, String phoneNumber, String email) {
+    public TRental(Timestamp entryDate, Timestamp departureDate, String reasonExit, String roomNumber, DocumentReference currentMP, String mainTenant, int tenantsNumber, int paymentsNumber, String phoneNumber, String email) {
         this.entryDate = entryDate;
         this.departureDate = departureDate;
         this.reasonExit = reasonExit;
-        this.enabled = enabled;
         this.roomNumber = roomNumber;
         this.currentMP = currentMP;
         this.mainTenant = mainTenant;
+        this.tenantsNumber = tenantsNumber;
         this.paymentsNumber = paymentsNumber;
         this.phoneNumber = phoneNumber;
         this.email = email;
     }
-
 
     public Timestamp getEntryDate() {
         return entryDate;
@@ -45,8 +42,12 @@ public class TRental {
         return reasonExit;
     }
 
-    public boolean isEnabled() {
-        return enabled;
+    public int getTenantsNumber() {
+        return tenantsNumber;
+    }
+
+    public void setTenantsNumber(int tenantsNumber) {
+        this.tenantsNumber = tenantsNumber;
     }
 
     public String getRoomNumber() {

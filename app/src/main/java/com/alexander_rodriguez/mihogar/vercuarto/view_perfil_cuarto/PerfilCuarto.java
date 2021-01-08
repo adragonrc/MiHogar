@@ -1,6 +1,5 @@
 package com.alexander_rodriguez.mihogar.vercuarto.view_perfil_cuarto;
 
-import android.content.ContentValues;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.View;
@@ -14,7 +13,6 @@ import androidx.cardview.widget.CardView;
 
 import com.alexander_rodriguez.mihogar.DataBase.items.ItemRental;
 import com.alexander_rodriguez.mihogar.R;
-import com.alexander_rodriguez.mihogar.UTILIDADES.TAlquiler;
 
 public class PerfilCuarto extends ScrollView{
     private TextView tvNumeroInquilinos;
@@ -162,10 +160,10 @@ public class PerfilCuarto extends ScrollView{
     }
 
     protected void iniciarViews() {
-        tvNumeroInquilinos = findViewById(R.id.tvNumeroInquilinos);
+        tvNumeroInquilinos = findViewById(R.id.tvTenantsNumber);
         tvMensualidad = findViewById(R.id.vcTvMensualidad);
         tvDetalles = findViewById(R.id.tvDetalles);
-        tvFechaI = findViewById(R.id.tvFechaIngreso);
+        tvFechaI = findViewById(R.id.tvEntryDate);
         tvFechaC = findViewById(R.id.tvFechaDePago);
         tvNumeroTel = findViewById(R.id.hutvNumTel);
         tvCorreo = findViewById(R.id.hutvCorreo);

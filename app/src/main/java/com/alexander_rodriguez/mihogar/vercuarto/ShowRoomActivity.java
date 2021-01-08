@@ -94,7 +94,7 @@ public class ShowRoomActivity extends BaseActivity<Interface.Presenter> implemen
         int id = item.getItemId();
         switch (id) {
             case R.id.iVerPagos: {
-                String idAlquiler = presenter.getDatosAlquiler().getId();
+                String idAlquiler = presenter.getRoom().getCurrentRentalId();
                 Intent i = new Intent(this, TableActivity.class);
                 i.putExtra(TableActivity.RENTAL_ID, idAlquiler);
                 i.putExtra(TableActivity.PHONE_NUM, presenter.getDatosAlquiler().getPhoneNumber());
@@ -252,7 +252,7 @@ public class ShowRoomActivity extends BaseActivity<Interface.Presenter> implemen
         //startActivity(new Intent(this, HistorialCasaActivity.class));
         Intent i = new Intent(this, HistorialCasaActivity.class);
         i.putExtra(HistorialCasaActivity.MODE, HistorialCasaActivity.USERS_OF_RENTAL);
-        i.putExtra(TAlquiler.ID, presenter.getDatosAlquiler().getId());
+        i.putExtra(TAlquiler.ID, presenter.getRoom().getCurrentRentalId());
         startActivity(i);
     }
 
@@ -340,9 +340,10 @@ public class ShowRoomActivity extends BaseActivity<Interface.Presenter> implemen
 
     @Override
     public void onClickVerAlquileres(View view) {
-        Intent i = new Intent(this, ListAlquileresActivity.class);
-        i.putExtra(TCuarto.NUMERO, numCuarto);
-        i.putExtra(TAlquiler.ID, presenter.getDatosAlquiler().getId());
+        Intent i = new Intent(this, HistorialCasaActivity.class);
+        i.putExtra(HistorialCasaActivity.MODE, HistorialCasaActivity.RENTALS_OF_ROOM);
+        i.putExtra(HistorialCasaActivity.EXTRA_ROOM_NUMBER, numCuarto);
+        i.putExtra(HistorialCasaActivity.EXTRA_RENTAL_ID, presenter.getRoom().getCurrentRentalId());
         startActivity(i);
     }
 

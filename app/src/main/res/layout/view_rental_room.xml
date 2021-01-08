@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="8dp"
+    app:cardCornerRadius="0dp"
+    android:orientation="vertical">
+
+    <TableLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:fontFamily="sans-serif-condensed-medium"
+            android:textColor="@color/colorPrimary"
+            android:textSize="16sp"
+            android:text="@string/sMotSalida"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/tvReason"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:lines="2"
+            android:text="qwertyuiopa sdfghjkzxcvb nvrdfbhjsbcasbjads bdjasbdjabdja"
+            android:layout_marginBottom="2dp"
+            android:gravity="center" />
+        <TableRow>
+
+            <TextView
+                android:textColor="@color/colorAccent"
+                android:text="Numero de inquilinos. "/>
+
+            <TextView
+                android:id="@+id/tvTenantsNumber"
+                android:gravity="center"
+                android:layout_weight="1"
+                android:text="8"/>
+        </TableRow>
+
+        <TableRow>
+
+            <TextView
+                android:textColor="@color/colorAccent"
+                android:text="Fecha de ingreso. "/>
+
+            <TextView
+                android:id="@+id/tvEntryDate"
+                android:gravity="center"
+                android:layout_weight="1"
+                android:text="12/02/2020"/>
+        </TableRow>
+
+        <TableRow>
+
+            <TextView
+                android:textColor="@color/colorAccent"
+                android:text="Fecha de salida. "/>
+
+            <TextView
+                android:id="@+id/tvDepartureDate"
+                android:gravity="center"
+                android:layout_weight="1"
+                android:text="12/02/2021"/>
+        </TableRow>
+
+    </TableLayout>
+</androidx.cardview.widget.CardView>

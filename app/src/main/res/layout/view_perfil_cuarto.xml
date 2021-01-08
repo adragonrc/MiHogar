@@ -74,7 +74,7 @@
                         <TextView
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:id="@+id/tvNumeroInquilinos"
+                            android:id="@+id/tvTenantsNumber"
                             android:layout_weight="1"
                             android:gravity="right"
                             android:text="9" />
@@ -133,7 +133,7 @@
                         android:textColor="@color/colorPrimary" />
 
                     <TextView
-                        android:id="@+id/tvFechaIngreso"
+                        android:id="@+id/tvEntryDate"
                         style="@style/styleLinearLayoutIntern"
                         android:visibility="visible" />
                 </LinearLayout>

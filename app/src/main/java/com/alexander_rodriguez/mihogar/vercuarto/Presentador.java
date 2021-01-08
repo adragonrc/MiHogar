@@ -17,6 +17,7 @@ import com.alexander_rodriguez.mihogar.DataBase.models.TRoom;
 import com.alexander_rodriguez.mihogar.AdminDate;
 import com.alexander_rodriguez.mihogar.PDF;
 import com.alexander_rodriguez.mihogar.R;
+import com.alexander_rodriguez.mihogar.Save;
 import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -63,22 +64,29 @@ public class Presentador extends BasePresenter<Interface.view> implements Interf
     @Override
     public void deshacerContrato(String motivo) {
         if(rental != null) {
-            db.updateRental(mContext.getString(R.string.mdRentalDepartureDate), AdminDate.getFechaActual(), rental.getId());
-            db.updateRental(mContext.getString(R.string.mdRentalReasonExit), motivo, rental.getId());
-            db.updateRoom(mContext.getString(R.string.mdRoomCurrentRentalId), null, numeroCuarto);
-            mostrarDetalles();
-            rental = null;
+            db.terminateContract(rental.getId(), motivo, numeroCuarto)
+                    .addOnSuccessListener(this::terminateContractSuccess)
+                    .addOnFailureListener(this::terminateContractFailure);
         }
     }
 
-    private void actualizarDatos(){
-        db.getRentalDR(room.getCurrentRentalId()).get();
-        view.pago();
+    private void terminateContractFailure(@NotNull Exception e) {
+        view.showMessage("No se pudo anular el contrato");
+        e.printStackTrace();
+    }
+
+    private void terminateContractSuccess(Void aVoid) {
+        rental = null;
+        room.setCurrentRentalId(null);
+        mostrarDetalles();
     }
 
     @Override
     public void mostrarDetalles(){
-        db.getRoom(numeroCuarto).addOnSuccessListener(this::getRoomSucces);
+        if(room == null)
+            db.getRoom(numeroCuarto).addOnSuccessListener(this::getRoomSucces);
+        else
+            getRental();
     }
 
     private void getRoomSucces(DocumentSnapshot documentSnapshot) {
@@ -87,32 +95,41 @@ public class Presentador extends BasePresenter<Interface.view> implements Interf
             if(tRoom != null) {
                 room = new ItemRoom(tRoom);
                 room.setRoomNumber(documentSnapshot.getId());
+                File f;
                 if(room.getPathImage() != null && !room.getPathImage().isEmpty()) {
-                    File f = new File(room.getPathImage());
-                    if (!f.exists()) {
-                        File parent = mContext.getExternalFilesDir(Environment.DIRECTORY_PICTURES);
-                        if (parent != null){
-                            if (!parent.exists()) {
-                                parent.mkdirs();
-                            }
-                            parent = new File(parent, mContext.getString(R.string.cRoom));
-                            if (!parent.exists()) {
-                                parent.mkdirs();
-                            }
-                        }
-                    }
+                    f = new File(room.getPathImage());
+                }else{
+                    f = Save.createFile(mContext, mContext.getString(R.string.cRoom), room.getRoomNumber());
+                }
+
+                if(room.getPahtImageStorage() != null && !room.getPahtImageStorage().isEmpty()){
                     db.downloadRoomPhoto(room.getRoomNumber(), f)
                             .addOnSuccessListener(this::downloadRoomPhotoSuccess)
                             .addOnFailureListener(this::downloadRoomPhotoFailure);
                 }
-                if(room.getCurrentRentalId() != null && !room.getCurrentRentalId().isEmpty()){
-                    db.getRental(room.getCurrentRentalId())
-                            .addOnSuccessListener(this::getAlquilerSuccess);
-                }else{
-                    view.showCuartolibre(room);
-                }
+
+                getRental();
             }
         }
+    }
+
+    private void getRental() {
+        if(room.getCurrentRentalId() != null && !room.getCurrentRentalId().isEmpty()){
+            if(rental == null){
+                db.getRental(room.getCurrentRentalId())
+                        .addOnSuccessListener(this::getAlquilerSuccess);
+            }else{
+                getMP();
+            }
+        }else{
+            view.showCuartolibre(room);
+        }
+    }
+
+    private void getMP() {
+        DocumentReference mp = rental.getCurrentMP();
+        if(mp != null) mp.get().addOnSuccessListener(this::getCurrentMPSuccess);
+        else view.showMessage("Current Monthly Payment wasn't found");
     }
 
     private void downloadRoomPhotoFailure(@NotNull Exception e) {
@@ -128,21 +145,19 @@ public class Presentador extends BasePresenter<Interface.view> implements Interf
             rental = ItemRental.newInstance(documentSnapshot);
             if(rental != null) {
                 rental.setId(documentSnapshot.getId());
-                DocumentReference mp = rental.getCurrentMP();
-                if(mp != null) mp.get().addOnSuccessListener(this::getCurrentMPSuccess);
-                else view.showMessage("Current Monthly Payment wasn't found");
-                return;
+                getMP();
             }
-        }
-        view.showCuartolibre(room);
+        }else
+            view.showCuartolibre(room);
     }
 
     private void getCurrentMPSuccess(DocumentSnapshot documentSnapshot) {
         if(!documentSnapshot.exists()){
             view.showMessage("Current Monthly Payment wasn't found");
+            view.showCuartoAlquilado(room, rental.getTenantsNumber(), "00.00");
             return;
         }
-        int num = room.getTenantsNumber();
+        int num = rental.getTenantsNumber();
 
         monthlyPayment = documentSnapshot.toObject(TMonthlyPayment.class);
 
@@ -312,5 +327,8 @@ public class Presentador extends BasePresenter<Interface.view> implements Interf
         });;
     }
 
-
+    @Override
+    public ItemRoom getRoom() {
+        return room;
+    }
 }

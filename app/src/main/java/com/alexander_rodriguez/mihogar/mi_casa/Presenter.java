@@ -19,13 +19,14 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 public class Presenter extends BasePresenter<Interface.View> implements Interface.Presenter{
-    private ArrayList<ModelCuartoView> list;
+    private final ArrayList<ModelCuartoView> list;
     private Context mContext;
     private int contCallBack;
 
     public Presenter(Interface.View view) {
         super(view);
         mContext = view.getContext();
+        list = new ArrayList<>();
     }
 
     @Override
@@ -76,13 +77,7 @@ public class Presenter extends BasePresenter<Interface.View> implements Interfac
         view.mostratCuartos(list);
     }
 
-    @Override
-    public Task<DocumentSnapshot> getRental(String currentRentalId) {
-        return db.getRental(currentRentalId);
-    }
-
-    @Override
-    public void mostratCuartos(ArrayList<ModelCuartoView> list) {
+    private void mostratCuartos(ArrayList<ModelCuartoView> list) {
         view.mostratCuartos(list);
     }
 
@@ -98,8 +93,7 @@ public class Presenter extends BasePresenter<Interface.View> implements Interfac
     }
 
     public void refresh(){
-        if(list == null) list = new ArrayList<>();
-        else if(!list.isEmpty()) list.clear();
+        if(!list.isEmpty()) list.clear();
 
         db.getAllRoom().addOnSuccessListener(this::getAllRoomsSuccess);
     }
@@ -113,9 +107,11 @@ public class Presenter extends BasePresenter<Interface.View> implements Interfac
             room.setRoomNumber(roomDoc.getId());
             if(room.getCurrentRentalId() != null && !room.getCurrentRentalId().isEmpty()) {
                 MListener listener = new MListener(room);
-                getRental(room.getCurrentRentalId()).addOnSuccessListener(listener);
+                db.getRental(room.getCurrentRentalId()).addOnSuccessListener(listener);
             }
         }
+        if(list.isEmpty())
+            view.nothingHere();
         mostratCuartos(list);
         //new DownloadRentalsTask(this).execute(queryDocumentSnapshots);
     }

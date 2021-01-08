@@ -11,16 +11,11 @@ public class ItemRoom extends TRoom{
     private String roomNumber;
 
     public ItemRoom(TRoom room) {
-        super(room.getCurrentRentalId(), room.getDetails(), room.getTenantsNumber(), room.getPathImage(), room.getPrice_e());
+        super(room.getCurrentRentalId(), room.getDetails(), room.getPathImage(), room.getPrice_e(), room.getPahtImageStorage());
     }
-
-    public ItemRoom(String currentRentalId, String details, int numberTenants, String pathImage, String price_e) {
-        super(currentRentalId, details, numberTenants, pathImage, price_e);
-    }
-
 
     public ItemRoom(String details, String pathImage, String price_e, String roomNumber) {
-        super(null, details, 0, pathImage, price_e);
+        super(null, details, pathImage, price_e, null);
         this.roomNumber = roomNumber;
     }
 
