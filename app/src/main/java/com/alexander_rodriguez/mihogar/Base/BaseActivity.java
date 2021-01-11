@@ -2,10 +2,10 @@ package com.alexander_rodriguez.mihogar.Base;
 
 import android.Manifest;
 import android.content.Context;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -13,9 +13,9 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
+import com.alexander_rodriguez.mihogar.R;
 import com.theartofdev.edmodo.cropper.CropImage;
 
 
@@ -26,6 +26,8 @@ public abstract class BaseActivity<P extends IBasePresenter> extends AppCompatAc
     public static final int BACK_PRESSED = 16908332;
     public static String[] PERMISOS = {Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE};
     protected final static int MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE = 1;
+
+    protected ProgressBar progressBar;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -96,5 +98,11 @@ public abstract class BaseActivity<P extends IBasePresenter> extends AppCompatAc
 
     public void solicitarPermiso(){
         ActivityCompat. requestPermissions(this, BaseActivity.PERMISOS, MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE);
+    }
+
+    @Override
+    public void setProgressBarVisibility(int visibility) {
+        progressBar.setIndeterminate(visibility == View.VISIBLE);
+        progressBar.setVisibility(visibility);
     }
 }

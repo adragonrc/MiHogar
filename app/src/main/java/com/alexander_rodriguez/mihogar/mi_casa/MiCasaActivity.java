@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -37,7 +38,6 @@ public class MiCasaActivity extends BaseActivity<Interface.Presenter> implements
     private RvAdapterCuartos adapterCuartos;
     private RecyclerView.LayoutManager manager;
     private View nothingToShow;
-    private View progressBar;
     private byte opcion;
     @Override
     protected void iniciarComandos() {
@@ -152,10 +152,6 @@ public class MiCasaActivity extends BaseActivity<Interface.Presenter> implements
     public void mostratCuartos(ArrayList<ModelCuartoView> items) {
         nothingToShow.setVisibility(View.GONE);
         rv.setVisibility(View.VISIBLE);
-        progressBar.setVisibility(View.GONE);
-
-        nothingToShow.setVisibility(View.GONE);
-        rv.setVisibility(View.VISIBLE);
         adapterCuartos = new RvAdapterCuartos(this, items);
         rv.setAdapter(adapterCuartos);
     }
@@ -214,11 +210,6 @@ public class MiCasaActivity extends BaseActivity<Interface.Presenter> implements
             i.putExtra(TCuarto.NUMERO, numero);
             startActivity(i);
         }
-    }
-
-    @Override
-    public void setProgressBarVisibility(int visibility) {
-        progressBar.setVisibility(visibility);
     }
 
     private class PresenterDialogOptions implements DialogInterfaz.DialogOptionPresenter {

@@ -2,6 +2,7 @@ package com.alexander_rodriguez.mihogar.mi_casa;
 
 import android.content.Context;
 import android.database.Cursor;
+import android.view.View;
 
 import com.alexander_rodriguez.mihogar.Base.BasePresenter;
 import com.alexander_rodriguez.mihogar.DataBase.models.TRental;
@@ -46,7 +47,7 @@ public class Presenter extends BasePresenter<Interface.View> implements Interfac
 
     @Override
     public void verTodos() {
-        if(list == null ) refresh();
+        if(list.isEmpty()) refresh();
         else
             mostratCuartos(list);
     }
@@ -78,6 +79,7 @@ public class Presenter extends BasePresenter<Interface.View> implements Interfac
     }
 
     private void mostratCuartos(ArrayList<ModelCuartoView> list) {
+        view.setProgressBarVisibility(View.GONE);
         view.mostratCuartos(list);
     }
 

@@ -5,6 +5,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.os.Environment;
+import android.view.View;
 
 import androidx.core.content.ContextCompat;
 
@@ -83,8 +84,10 @@ public class Presentador extends BasePresenter<Interface.view> implements Interf
 
     @Override
     public void mostrarDetalles(){
-        if(room == null)
+        if(room == null) {
+            view.setProgressBarVisibility(View.VISIBLE);
             db.getRoom(numeroCuarto).addOnSuccessListener(this::getRoomSucces);
+        }
         else
             getRental();
     }
