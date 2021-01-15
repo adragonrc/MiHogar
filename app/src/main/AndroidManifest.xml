@@ -15,13 +15,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:configChanges="orientation" >
-        <activity android:name=".registrarcasa.RegistrarCasaActivity" >
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <action android:name="android.intent.action.VIEW" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
+        <activity android:name=".registrarcasa.RegistrarCasaActivity"/>
 
         <activity android:name=".ViewPdfActivity" />
         <activity
@@ -55,7 +49,11 @@
         <activity android:name=".menuPrincipal.MenuPricipal"/>
 
         <activity android:name=".mainactivity.MainActivity">
-
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
 
         <activity
@@ -77,6 +75,9 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/file_paths" />
         </provider>
+        <meta-data
+            android:name="preloaded_fonts"
+            android:resource="@array/preloaded_fonts" />
 
     </application>
 </manifest>

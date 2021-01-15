@@ -10,6 +10,7 @@ import com.alexander_rodriguez.mihogar.Base.BaseActivity;
 import com.alexander_rodriguez.mihogar.R;
 import com.alexander_rodriguez.mihogar.menuPrincipal.MenuPricipal;
 import com.alexander_rodriguez.mihogar.registrarcasa.RegistrarCasaActivity;
+import com.google.android.gms.common.SignInButton;
 
 public class MainActivity extends BaseActivity<Interface.presenter> implements Interface.view {
     private EditText etUser;
@@ -17,6 +18,8 @@ public class MainActivity extends BaseActivity<Interface.presenter> implements I
     @Override
     protected void iniciarComandos() {
 
+        SignInButton signInButton = findViewById(R.id.sigin_google);
+        signInButton.setSize(SignInButton.SIZE_STANDARD);
     }
 
     @Override

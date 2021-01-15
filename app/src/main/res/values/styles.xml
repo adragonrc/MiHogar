@@ -10,7 +10,7 @@
         <item name="android:textColorPrimary">@color/primaryTextColor</item>
         <item name="android:textColorSecondary">@color/secondaryTextColor</item>
         <item name="android:windowActivityTransitions">true</item>
-        <item name="android:fontFamily">sans-serif-condensed-light</item>
+        <item name="android:fontFamily">@font/roboto</item>
 
     </style>
     <style name="Theme.Preferences" parent="Theme.AppCompat.Light.DarkActionBar">
