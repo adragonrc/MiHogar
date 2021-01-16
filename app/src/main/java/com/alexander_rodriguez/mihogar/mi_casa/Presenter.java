@@ -80,7 +80,10 @@ public class Presenter extends BasePresenter<Interface.View> implements Interfac
 
     private void mostratCuartos(ArrayList<ModelCuartoView> list) {
         view.setProgressBarVisibility(View.GONE);
-        view.mostratCuartos(list);
+        if(list.isEmpty())
+            view.nothingHere();
+        else
+            view.mostratCuartos(list);
     }
 
     private ArrayList<ModelCuartoView> getListCuartosAlquilados(){
@@ -112,8 +115,6 @@ public class Presenter extends BasePresenter<Interface.View> implements Interfac
                 db.getRental(room.getCurrentRentalId()).addOnSuccessListener(listener);
             }
         }
-        if(list.isEmpty())
-            view.nothingHere();
         mostratCuartos(list);
         //new DownloadRentalsTask(this).execute(queryDocumentSnapshots);
     }

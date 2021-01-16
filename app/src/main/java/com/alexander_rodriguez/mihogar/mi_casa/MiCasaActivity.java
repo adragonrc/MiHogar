@@ -198,7 +198,6 @@ public class MiCasaActivity extends BaseActivity<Interface.Presenter> implements
     public void nothingHere() {
         nothingToShow.setVisibility(View.VISIBLE);
         rv.setVisibility(View.GONE);
-        progressBar.setVisibility(View.VISIBLE);
     }
 
     @Override

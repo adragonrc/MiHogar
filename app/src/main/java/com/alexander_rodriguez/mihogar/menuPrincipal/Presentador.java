@@ -12,4 +12,9 @@ public class Presentador extends BasePresenter<Interface.View>  {
     public void iniciarComandos() {
 
     }
+
+    @Override
+    protected void userNotLogin() {
+        view.goToLogin();
+    }
 }

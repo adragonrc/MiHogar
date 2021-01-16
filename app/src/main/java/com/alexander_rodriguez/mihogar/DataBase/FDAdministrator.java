@@ -18,13 +18,16 @@ import com.alexander_rodriguez.mihogar.DataBase.models.TRentalTenant;
 import com.alexander_rodriguez.mihogar.R;
 import com.alexander_rodriguez.mihogar.TableCursor;
 import com.alexander_rodriguez.mihogar.modelos.ModelUsuario;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.Timestamp;
+import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.GoogleAuthProvider;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -64,29 +67,19 @@ public class FDAdministrator implements DBInterface{
         firestore = FirebaseFirestore.getInstance();
 
         mAuth = FirebaseAuth.getInstance();
-        if(mAuth.getCurrentUser() == null)
-            FirebaseAuth.getInstance().signInWithEmailAndPassword("alexrodriguez@gmail.com","hola12").addOnSuccessListener(new OnSuccessListener<AuthResult>() {
-                @Override
-                public void onSuccess(AuthResult authResult) {
-                    usuario = authResult.getUser();
-                    hogarReference = firestore.collection(mContext.getString(R.string.cHogar));
-                    hogarDocument = hogarReference.document(usuario.getUid());
-                    Toast.makeText(mContext, "login success", Toast.LENGTH_SHORT).show();
-                }
-            }).addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                            Toast.makeText(mContext, "can not login", Toast.LENGTH_SHORT).show();
-                        }
-                    });
-
-        else{
-            Toast.makeText(mContext, "really success", Toast.LENGTH_SHORT).show();
-            usuario = mAuth.getCurrentUser();
-            hogarReference = firestore.collection(mContext.getString(R.string.cHogar));
-            hogarDocument = hogarReference.document(usuario.getUid());
-        }
         //colegioReference = firestore.collection(mContext.getString(R.string.collection_colegio));
+    }
+
+    @Override
+    public void initData() {
+        usuario = mAuth.getCurrentUser();
+        hogarReference = firestore.collection(mContext.getString(R.string.cHogar));
+        hogarDocument = hogarReference.document(usuario.getUid());
+    }
+
+    @Override
+    public void signOut() {
+        mAuth.signOut();
     }
 
     public CollectionReference getHogarReference() {
@@ -411,6 +404,11 @@ public class FDAdministrator implements DBInterface{
     }
 
     @Override
+    public Task<AuthResult> sigIn(String email, String pass) {
+        return mAuth.signInWithEmailAndPassword(email, pass);
+    }
+
+    @Override
     public DocumentReference getCuartoDR(String numCuarto) {
         return getCuartoCR().document(numCuarto);
     }
@@ -443,6 +441,18 @@ public class FDAdministrator implements DBInterface{
             updateRoom(mContext.getString(R.string.mdRoomCurrentRentalId), null, numeroCuarto);
             return null;
         });
+    }
+
+    @Override
+    public Task<AuthResult> sigInWithGoogle(GoogleSignInAccount account) {
+        AuthCredential credential = GoogleAuthProvider.getCredential(account.getIdToken(), null);
+        return mAuth.signInWithCredential(credential);
+    }
+
+    @Override
+    public FirebaseUser getCurrentUser() {
+        if(usuario == null) usuario = mAuth.getCurrentUser();
+        return usuario;
     }
 
     @Override

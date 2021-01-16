@@ -77,7 +77,7 @@
     <style name="keyTiempo">value_tiempo_pago</style>
     <style name="valueTiempo">key_tiempo_pago</style>
     <string name="sNombreUser">Nombres.</string>
-    <string name="id">identificador</string>
+    <string name="email">identificador</string>
     <string name="password">password</string>
     <string name="direccion">direccion</string>
     <string name="correo">Correo electronico</string>

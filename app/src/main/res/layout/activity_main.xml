@@ -67,7 +67,7 @@
                 android:layout_height="wrap_content"
                 android:ems="10"
                 android:hint="Correo electronico"
-                android:text="adragonrc@gmail.com"
+                android:text="alexrodriguez@gmail.com"
                 android:inputType="textPersonName|textEmailAddress"
                 android:textColor="@color/primaryTextColor" />
         </com.google.android.material.textfield.TextInputLayout>
@@ -84,18 +84,33 @@
                 android:layout_height="wrap_content"
                 android:ems="10"
                 android:hint="Contraseña"
-                android:text="panzadeoro"
+                android:text="hola12"
                 android:inputType="textPassword"
                 android:textColor="@color/primaryTextColor" />
         </com.google.android.material.textfield.TextInputLayout>
 
-        <TextView
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:gravity="end"
-            android:text="Se te olvidó tu contraseña?"
-            android:textColor="@color/colorAccent" />
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Se te olvidó tu contraseña?"
+                android:textColor="@color/colorAccent"
+                android:onClick="ocForgotPassword"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Nuevo Usuario?\nRegistrate"
+                android:lines="2"
+                android:gravity="end"
+                android:textColor="@color/colorAccent"/>
+        </LinearLayout>
 
         <Button
             android:layout_width="wrap_content"
@@ -103,7 +118,8 @@
             style="@style/Widget.AppCompat.Button.Colored"
             android:text="Login"
             android:layout_gravity="center"
-            android:layout_marginTop="12dp" />
+            android:layout_marginTop="12dp"
+            android:onClick="signIn"/>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -143,7 +159,8 @@
             <com.google.android.gms.common.SignInButton
                 android:id="@+id/sigin_google"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content"
+                android:onClick="signInWithGoogle"/>
         </LinearLayout>
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

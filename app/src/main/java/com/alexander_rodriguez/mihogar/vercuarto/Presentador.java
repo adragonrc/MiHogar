@@ -101,6 +101,9 @@ public class Presentador extends BasePresenter<Interface.view> implements Interf
                 File f;
                 if(room.getPathImage() != null && !room.getPathImage().isEmpty()) {
                     f = new File(room.getPathImage());
+                    if(!f.getParentFile().exists()){
+                        f.getParentFile().mkdirs();
+                    }
                 }else{
                     f = Save.createFile(mContext, mContext.getString(R.string.cRoom), room.getRoomNumber());
                 }

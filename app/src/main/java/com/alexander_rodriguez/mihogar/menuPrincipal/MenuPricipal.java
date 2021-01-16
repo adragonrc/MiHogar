@@ -39,19 +39,19 @@ public class MenuPricipal extends BaseActivity<IBasePresenter> implements Interf
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_configuraciones, menu);
+        getMenuInflater().inflate(R.menu.menu_main_menu, menu);
         return true;
     }
 
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-        int config = R.id.item_Ajustes;
+        int config = R.id.imPreferences;
         if (id == config) {
             startActivity(new Intent(this, Preferencias.class));
         }else{
-            /*if (id == R.id.about){
+            if (id == R.id.imSignOut){
                 alertDialog().show();
-            }*/
+            }
         }
         return super.onOptionsItemSelected(item);
 
@@ -86,20 +86,14 @@ public class MenuPricipal extends BaseActivity<IBasePresenter> implements Interf
         startActivity(i);
     }
 
-    @Override
-    public void onBackPressed() {
-        alertDialog().show();
-    }
-
     public AlertDialog alertDialog(){
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Mensaje").
-                setMessage("¿Desea salir?").
+                setMessage("¿Cerrar sesión?").
                 setPositiveButton("OK", new DialogInterface.OnClickListener(){
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        finish();
-                        MenuPricipal.this.finish();
+                        presenter.signOut();
                        /* Intent i = new Intent(MenuPricipal.this, RegistrarCasaActivity.class);
                         i.putExtra(RegistrarCasaActivity.ON_EXIT, true);
                         i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);

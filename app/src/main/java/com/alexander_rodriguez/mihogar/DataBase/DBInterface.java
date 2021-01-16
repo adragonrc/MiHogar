@@ -13,7 +13,10 @@ import com.alexander_rodriguez.mihogar.DataBase.models.TPayment;
 import com.alexander_rodriguez.mihogar.DataBase.models.TRental;
 import com.alexander_rodriguez.mihogar.TableCursor;
 import com.alexander_rodriguez.mihogar.modelos.ModelUsuario;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -36,6 +39,8 @@ public interface DBInterface {
         }
         return cv;
     }
+
+    Task<AuthResult> sigIn(String email, String pass);
 
     DocumentReference getCuartoDR(String numCuarto);
 
@@ -201,4 +206,11 @@ public interface DBInterface {
 
     Task<Void> terminateContract(String id,  String motivo, String numeroCuarto);
 
+    Task<AuthResult> sigInWithGoogle(GoogleSignInAccount account);
+
+    FirebaseUser getCurrentUser();
+
+    void initData();
+
+    void signOut();
 }

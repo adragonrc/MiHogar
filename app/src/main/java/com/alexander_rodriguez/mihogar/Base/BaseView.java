@@ -7,4 +7,5 @@ public interface BaseView{
     void showMessage(String mensaje);
     void solicitarPermiso();
     void setProgressBarVisibility(int visibility);
+    void goToLogin();
 }

@@ -30,7 +30,7 @@ public class Presentador extends BasePresenter<interfaz.view> implements interfa
         editor.putString(c.getString(R.string.direccion), dir);
         editor.putString(c.getString(R.string.correo), corr);
         editor.putBoolean(c.getString(R.string.start), true);
-        editor.commit();
+        editor.apply();
         view.avanzar();
     }
 
