@@ -1,34 +1,33 @@
 package com.alexander_rodriguez.mihogar.registrarcasa;
 
-import android.Manifest;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.view.View;
-import android.widget.Toast;
+import android.widget.Button;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 
 import com.alexander_rodriguez.mihogar.Base.BaseActivity;
 import com.alexander_rodriguez.mihogar.R;
 import com.alexander_rodriguez.mihogar.menuPrincipal.MenuPricipal;
-import com.google.android.material.textfield.TextInputEditText;
+import com.alexander_rodriguez.mihogar.registrarcasa.details.DetailsView;
+import com.alexander_rodriguez.mihogar.registrarcasa.register.RegisterView;
 
 public class RegistrarCasaActivity extends BaseActivity<interfaz.presentador> implements interfaz.view {
-    public static final int ON_BACK_PRESED = -1;
-    public static final String ON_EXIT = "exit";
-    private TextInputEditText etDireccion;
-    private TextInputEditText etCorreo;
-
+    public static final String EXTRA_ONLY_DETAILS = "onlyDetails";
+    public static final String EXTRA_MODE = "mode";
+    public static final String EXTRA_NEW_USER = "newUser";
+    private RegisterView register;
+    private DetailsView details;
+    private LinearLayout llContainer;
+    private Button btNext;
+    private TextView tvSubtitle;
     @Override
     protected void iniciarComandos() {
         setTitle("Registro");
-        permisos();
-        if(getIntent().getBooleanExtra(ON_EXIT, false)){
-            finish();
-        }
     }
+
 
     @Override
     protected int getLayout() {
@@ -44,24 +43,51 @@ public class RegistrarCasaActivity extends BaseActivity<interfaz.presentador> im
     @NonNull
     @Override
     protected interfaz.presentador createPresenter() {
-        return new Presentador(this);
+        return new Presentador(this, getIntent());
     }
 
     @Override
     protected void iniciarViews() {
-        etDireccion = findViewById(R.id.etDireccion);
-        etCorreo = findViewById(R.id.etCorreo);
+        llContainer = findViewById(R.id.llContainer);
+        btNext = findViewById(R.id.btNext);
+        tvSubtitle = findViewById(R.id.tvSubtitle);
+        /*
+        etCountry = findViewById(R.id.etCountry);
+        etRegion = findViewById(R.id.etRegion);
+        etAddress = findViewById(R.id.etAddress);
+        etZipCode = findViewById(R.id.etZipCode);
+        */
+
+        /*Geocoder geocoder = new Geocoder(this, Locale.getDefault());
+
+        //List<Address> addresses = geocoder.getFromLocation(lat, lng, 1);
+        RequestQueue queue = Volley.newRequestQueue(this);
+        String url = "http://ip-api.com/json";
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, url, null, this::getLocationResponse, this::getLocationErrorResponse);
+
+        // Add the request to the RequestQueue.
+        queue.add(jsonObjectRequest);*/
+    }
+/*
+    private void getLocationResponse(JSONObject jsonObject) {
+        try {
+            Geolocation geolocation = new Geolocation(jsonObject);
+            if (geolocation.isSuccess()){
+                etCountry.setText(geolocation.getCountry());
+                etRegion.setText(geolocation.getCity());
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
     }
 
-    @Override
-    public void ocAceptar(View view){
-        String direccion = etDireccion.getText().toString();
-        String correo = etCorreo.getText().toString();
-        presenter.ingresar(direccion, correo);
-    }
+    private void getLocationErrorResponse(VolleyError error) {
+
+    }*/
+
     @Override
     public void salir(){
-        finish();
+        //finish();
     }
 
     @Override
@@ -69,18 +95,28 @@ public class RegistrarCasaActivity extends BaseActivity<interfaz.presentador> im
         startActivity(new Intent(this, MenuPricipal.class));
     }
 
-    protected void permisos(){
-        int permissionCheck = ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE);
-        if (permissionCheck != PackageManager.PERMISSION_GRANTED){
-            if (!ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.WRITE_EXTERNAL_STORAGE))
-                ActivityCompat. requestPermissions(this, PERMISOS, MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE);
+    @Override
+    public void onlyDetailsMode() {
+        tvSubtitle.setText(R.string.sDetails);
+        btNext.setText(R.string.sGuardar);
+        if(register != null) {
+            llContainer.removeView(register);
+            register = null;
         }
+        details = (DetailsView) getLayoutInflater().inflate(R.layout.fragment_details, llContainer, false);
+        llContainer.addView(details, 3);
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        if (!(grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED)){
-            Toast.makeText(this, "Los vouchers no seran crados", Toast.LENGTH_SHORT).show();
-        }
+    public void newUserMode() {
+        tvSubtitle.setText(R.string.sRegistry);
+        btNext.setText(R.string.sRegistrar);
+        register = (RegisterView) getLayoutInflater().inflate(R.layout.fragment_register, llContainer, false);
+        llContainer.addView(register, 3);
     }
+
+    public void ocNext(View view) {
+        presenter.ingresar(register, details);
+    }
+
 }

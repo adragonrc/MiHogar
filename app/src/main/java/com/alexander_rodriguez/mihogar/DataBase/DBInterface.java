@@ -8,6 +8,7 @@ import androidx.annotation.Nullable;
 
 import com.alexander_rodriguez.mihogar.DataBase.items.ItemRoom;
 import com.alexander_rodriguez.mihogar.DataBase.items.ItemTenant;
+import com.alexander_rodriguez.mihogar.DataBase.models.THouse;
 import com.alexander_rodriguez.mihogar.DataBase.models.TMonthlyPayment;
 import com.alexander_rodriguez.mihogar.DataBase.models.TPayment;
 import com.alexander_rodriguez.mihogar.DataBase.models.TRental;
@@ -16,6 +17,7 @@ import com.alexander_rodriguez.mihogar.modelos.ModelUsuario;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
@@ -213,4 +215,12 @@ public interface DBInterface {
     void initData();
 
     void signOut();
+
+    Task<AuthResult> createUser(String email, String pass);
+
+    Task<DocumentSnapshot> getHouseDR();
+
+    Task<Void> updateHouseDetails(THouse house);
+
+    void setAuthStateListener(FirebaseAuth.AuthStateListener listener);
 }

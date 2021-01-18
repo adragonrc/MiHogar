@@ -11,7 +11,24 @@
         <item name="android:textColorSecondary">@color/secondaryTextColor</item>
         <item name="android:windowActivityTransitions">true</item>
         <item name="android:fontFamily">@font/roboto</item>
+    </style>
 
+    <style name="AppThemeMaterial" parent="Theme.MaterialComponents.Light.NoActionBar.Bridge">
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="colorSecondary">@color/secondaryColor</item>
+        <item name="android:textColorPrimary">@color/primaryTextColor</item>
+        <item name="android:textColorSecondary">@color/secondaryTextColor</item>
+        <item name="android:fontFamily">@font/roboto</item>
+        <item name="boxStrokeColor">@color/colorAccent</item>
+        <item name="boxStrokeWidth">2dp</item>
+    </style>
+    <style name="TextInputStyle" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+        <item name="android:textColorHint">@color/colorAccent</item>
+        <item name="boxStrokeColor">@color/text_input_selector</item>
+        <item name="counterOverflowTextColor">@color/colorPrimaryDark</item>
+        <item name="counterTextColor">@color/colorAccent</item>
     </style>
     <style name="Theme.Preferences" parent="Theme.AppCompat.Light.DarkActionBar">
         <item name="colorPrimary">@color/colorPrimary</item>

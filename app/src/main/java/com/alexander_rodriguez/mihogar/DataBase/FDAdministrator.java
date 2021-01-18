@@ -11,6 +11,7 @@ import androidx.annotation.Nullable;
 
 import com.alexander_rodriguez.mihogar.DataBase.items.ItemRoom;
 import com.alexander_rodriguez.mihogar.DataBase.items.ItemTenant;
+import com.alexander_rodriguez.mihogar.DataBase.models.THouse;
 import com.alexander_rodriguez.mihogar.DataBase.models.TMonthlyPayment;
 import com.alexander_rodriguez.mihogar.DataBase.models.TPayment;
 import com.alexander_rodriguez.mihogar.DataBase.models.TRental;
@@ -19,8 +20,6 @@ import com.alexander_rodriguez.mihogar.R;
 import com.alexander_rodriguez.mihogar.TableCursor;
 import com.alexander_rodriguez.mihogar.modelos.ModelUsuario;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.Timestamp;
 import com.google.firebase.auth.AuthCredential;
@@ -50,6 +49,7 @@ public class FDAdministrator implements DBInterface{
     public final static int GOOGLE_SING = 123;
     public final static String TAG_SUCCESS = "tag_success";
     public final static String TAG_FAILURE = "tag_failure";
+    public static FirebaseAuth.AuthStateListener authStatuslistener;
     private FirebaseFirestore firestore;
     private FirebaseStorage storage;
     private StorageReference storageRef;
@@ -71,15 +71,34 @@ public class FDAdministrator implements DBInterface{
     }
 
     @Override
+    public void setAuthStateListener(FirebaseAuth.AuthStateListener listener) {
+        if(authStatuslistener != null);
+            mAuth.removeAuthStateListener(authStatuslistener);
+        authStatuslistener = listener;
+        mAuth.addAuthStateListener(authStatuslistener);
+    }
+
+    public FirebaseAuth getmAuth() {
+        return mAuth;
+    }
+
+    @Override
     public void initData() {
         usuario = mAuth.getCurrentUser();
-        hogarReference = firestore.collection(mContext.getString(R.string.cHogar));
-        hogarDocument = hogarReference.document(usuario.getUid());
+        if(usuario != null) {
+            hogarReference = firestore.collection(mContext.getString(R.string.cHogar));
+            hogarDocument = hogarReference.document(usuario.getUid());
+        }
     }
 
     @Override
     public void signOut() {
         mAuth.signOut();
+    }
+
+    @Override
+    public Task<AuthResult> createUser(String email, String pass) {
+        return mAuth.createUserWithEmailAndPassword(email, pass);
     }
 
     public CollectionReference getHogarReference() {
@@ -138,7 +157,7 @@ public class FDAdministrator implements DBInterface{
     @Override
     public ArrayList<String> getCuartosAlquilados() {
         ArrayList<String> mList = new ArrayList<>();
-        hogarDocument.collection(mContext.getString(R.string.cRoom))
+        getHogarDocument().collection(mContext.getString(R.string.cRoom))
                 .whereEqualTo(mContext.getString(R.string.mdRoomCurrentRentalId), null)
                 .get()
                 .addOnCompleteListener(task -> {
@@ -160,7 +179,7 @@ public class FDAdministrator implements DBInterface{
 
     @Override
     public Cursor getAllAlquileres(String columnas, String key, Object value) {
-        hogarDocument.collection(mContext.getString(R.string.cAlquileres))
+        getHogarDocument().collection(mContext.getString(R.string.cAlquileres))
                 .get()
                 .addOnCompleteListener(task -> {
                    Iterator<QueryDocumentSnapshot> iterator = getTasksIterator(task);
@@ -267,6 +286,11 @@ public class FDAdministrator implements DBInterface{
     }
 
     @Override
+    public Task<Void> updateHouseDetails(THouse house) {
+        return getHogarDocument().set(house);
+    }
+
+    @Override
     public Task<Void> updateTenant(String field, Object valor, String DNI) {
     return getUserDR(DNI).update(field, valor);
     }
@@ -355,7 +379,7 @@ public class FDAdministrator implements DBInterface{
     }
 
     private CollectionReference getRentalTenantCR() {
-        return hogarDocument.collection(mContext.getString(R.string.cRentalTenant));
+        return getHogarDocument().collection(mContext.getString(R.string.cRentalTenant));
     }
 
     private @NotNull StorageReference getRoomPhotoStorage(String numeroCuarto) {
@@ -374,8 +398,13 @@ public class FDAdministrator implements DBInterface{
     }
 
     @Override
+    public Task<DocumentSnapshot> getHouseDR() {
+        return getHogarDocument().get();
+    }
+
+    @Override
     public CollectionReference getRentalCR(){
-        return hogarDocument.collection(mContext.getString(R.string.cAlquileres));
+        return getHogarDocument().collection(mContext.getString(R.string.cAlquileres));
     }
 
     @Override
@@ -385,7 +414,7 @@ public class FDAdministrator implements DBInterface{
 
     @Override
     public CollectionReference getUserCR() {
-        return hogarDocument.collection(mContext.getString(R.string.cTenant));
+        return getHogarDocument().collection(mContext.getString(R.string.cTenant));
     }
 
     @Override
@@ -395,12 +424,12 @@ public class FDAdministrator implements DBInterface{
 
     @Override
     public CollectionReference getAlquilerUserCR(){
-        return hogarDocument.collection(mContext.getString(R.string.cRentalTenant));
+        return getHogarDocument().collection(mContext.getString(R.string.cRentalTenant));
     }
 
     @Override
     public CollectionReference getCuartoCR() {
-        return hogarDocument.collection(mContext.getString(R.string.cRoom));
+        return getHogarDocument().collection(mContext.getString(R.string.cRoom));
     }
 
     @Override
@@ -425,7 +454,7 @@ public class FDAdministrator implements DBInterface{
 
     @Override
     public CollectionReference getPaymentCR() {
-        return hogarDocument.collection(mContext.getString(R.string.cPayment));
+        return getHogarDocument().collection(mContext.getString(R.string.cPayment));
     }
 
     @Override
@@ -451,7 +480,7 @@ public class FDAdministrator implements DBInterface{
 
     @Override
     public FirebaseUser getCurrentUser() {
-        if(usuario == null) usuario = mAuth.getCurrentUser();
+        usuario = mAuth.getCurrentUser();
         return usuario;
     }
 

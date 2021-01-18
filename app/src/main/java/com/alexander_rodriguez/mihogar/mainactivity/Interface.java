@@ -1,5 +1,6 @@
 package com.alexander_rodriguez.mihogar.mainactivity;
 
+import android.content.Intent;
 import android.view.View;
 
 import com.alexander_rodriguez.mihogar.Base.BaseView;
@@ -18,10 +19,16 @@ public interface Interface {
     interface view extends BaseView {
         void ingresar();
 
+        void showLogin();
+
         void negarIngreso();
 
         void ocForgotPassword(View view);
 
         void setID(String s);
+
+        void goToRegister(String mode);
+
+        void finish();
     }
 }

@@ -6,6 +6,7 @@
 
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
         android:allowBackup="true"
@@ -15,7 +16,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:configChanges="orientation" >
-        <activity android:name=".registrarcasa.RegistrarCasaActivity"/>
+        <activity android:name=".registrarcasa.RegistrarCasaActivity"
+            android:theme="@style/AppThemeMaterial"/>
 
         <activity android:name=".ViewPdfActivity" />
         <activity

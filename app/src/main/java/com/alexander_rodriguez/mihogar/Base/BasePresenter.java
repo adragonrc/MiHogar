@@ -2,17 +2,9 @@ package com.alexander_rodriguez.mihogar.Base;
 
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
-import android.widget.Toast;
-
-import androidx.annotation.NonNull;
 
 import com.alexander_rodriguez.mihogar.DataBase.DBInterface;
-import com.alexander_rodriguez.mihogar.DataBase.DataBaseAdmin;
 import com.alexander_rodriguez.mihogar.DataBase.FDAdministrator;
-import com.alexander_rodriguez.mihogar.R;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 
 public abstract class BasePresenter<V extends BaseView> implements IBasePresenter{
@@ -31,8 +23,12 @@ public abstract class BasePresenter<V extends BaseView> implements IBasePresente
         db.getWritableDatabase();
 */
         db = new FDAdministrator(view.getContext());
+        db.initData();
+        db.setAuthStateListener(this::authStateChanged);
         sp = PreferenceManager.getDefaultSharedPreferences(view.getContext());
+    }
 
+    private void authStateChanged(FirebaseAuth firebaseAuth) {
         if(db.getCurrentUser() == null ) {
             userNotLogin();
         }
@@ -47,7 +43,7 @@ public abstract class BasePresenter<V extends BaseView> implements IBasePresente
     }
 
     protected void userNotLogin(){
-
+        view.goToLogin();
     }
 
     public void attachView(V mvpView) {
@@ -72,6 +68,5 @@ public abstract class BasePresenter<V extends BaseView> implements IBasePresente
     @Override
     public void signOut() {
         db.signOut();
-        view.goToLogin();
     }
 }

@@ -2,6 +2,7 @@ package com.alexander_rodriguez.mihogar.ButtonsAC;
 
 import android.content.Context;
 import android.util.AttributeSet;
+import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
 
@@ -36,17 +37,14 @@ public class ButtonsAceptarCancelar extends LinearLayout {
         button1 = findViewById(R.id.positiveButton);
     }
 
-    public void setOnClickListenerButtonN(OnClickListener listener){
-        button0.setOnClickListener(listener);
+    public void setListener(Listener listener) {
+        button0.setOnClickListener(listener::ocNegative);
+        button1.setOnClickListener(listener::ocPositive);
     }
 
-    public void setOnClickListenerButtonP(OnClickListener listener){
-        button1.setOnClickListener(listener);
-    }
-
-    public void setTextButtons(String negativeText, String positiveText){
-        button0.setText(negativeText);
-        button1.setText(positiveText);
+    public void setTextButtons(@Nullable String negativeText,@Nullable String positiveText){
+        if(negativeText != null)button0.setText(negativeText);
+        if(positiveText != null)button1.setText(positiveText);
     }
 
     public Button getButton0() {
@@ -57,4 +55,8 @@ public class ButtonsAceptarCancelar extends LinearLayout {
         return button1;
     }
 
+    public interface Listener {
+        void ocPositive(View view);
+        void ocNegative(View view);
+    }
 }
