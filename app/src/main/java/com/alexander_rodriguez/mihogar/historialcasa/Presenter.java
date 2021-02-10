@@ -2,7 +2,6 @@ package com.alexander_rodriguez.mihogar.historialcasa;
 
 import android.content.ContentValues;
 import android.content.Intent;
-import android.database.Cursor;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -10,22 +9,23 @@ import android.view.MenuItem;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.alexander_rodriguez.mihogar.Base.BasePresenter;
+import com.alexander_rodriguez.mihogar.DataBase.DBInterface;
 import com.alexander_rodriguez.mihogar.DataBase.items.ItemTenant;
 import com.alexander_rodriguez.mihogar.AdminDate;
 import com.alexander_rodriguez.mihogar.R;
-import com.alexander_rodriguez.mihogar.UTILIDADES.TAlquiler;
-import com.alexander_rodriguez.mihogar.Adapters.Models.ModelAlquilerView;
-import com.alexander_rodriguez.mihogar.Adapters.Models.ModelUserView;
+import com.alexander_rodriguez.mihogar.adapters.Models.ModelAlquilerView;
+import com.alexander_rodriguez.mihogar.mi_casa.MyHouseFragment;
 
 import java.util.ArrayList;
 import java.util.Collections;
 
-public class Presenter extends BasePresenter<Interface.View> implements Interface.Presenter {
+public class Presenter extends BasePresenter<Interface.View> implements Interface.Presenter, FragmentParent.presenter {
     private AdminDate adminDate;
 
     private String modo;
-    private String idAlquiler;
+    private String rentalID;
     private String dni;
+    private String roomNumber;
 
     private int iMenu;
     private int idItemMenuSelected;
@@ -45,83 +45,52 @@ public class Presenter extends BasePresenter<Interface.View> implements Interfac
         super(view);
         adminDate = new AdminDate();
         this.modo  = i.getStringExtra(HistorialCasaActivity.MODE);
-        idAlquiler = i.getStringExtra(TAlquiler.ID);
-
+        rentalID = i.getStringExtra(HistorialCasaActivity.EXTRA_RENTAL_ID_IGNORE);
+        dni = i.getStringExtra(HistorialCasaActivity.EXTRA_DNI);
+        roomNumber = i.getStringExtra(HistorialCasaActivity.EXTRA_ROOM_NUMBER);
         idItemMenuSelected = -1;
         mIntent = i;
     }
-/*
-
-    private void mostrarTodo(){
-        iMenu = R.menu.menu_historial_mi_casa;
-        modo = HistorialCasaActivity.MODO_DEFAULT;
-        switch (idItemMenuSelected){
-            case R.id.iVerAlquileres:{
-                mostrarAlquileres();
-                break;
-            }
-            case R.id.iVerUsuario:{
-                showList();
-                break;
-            }
-            default:
-                showList();
-                break;
-
-        }
-    }
-    private void mostrarSoloUsuarios(){
-        mostrarUsuariosDeAlquiler();
-        iMenu = 0;
-    }
-    private void mostrarSoloAlquileres(){
-        mostrarAlquileresDeUsuario();
-        iMenu = 0;
-    }
-
-    private void mostrarAlquileresDeUsuario() {
-        int dni = mIntent.getIntExtra(TUsuario.DNI, -1);
-        if (dni != -1) {
-            view.mostarListAlquileres(getListAlquileresDeUsuario(dni));
-        }
-    }
-
-    private ArrayList<ModelAlquilerView> getListAlquileresDeUsuario(int dni) {
-        Cursor c = db.getAllAlquileres("*", TAlquilerUsuario.DNI, dni);
-        listAlquileres = ModelAlquilerView.createListModel(c);
-        return listAlquileres;
-    }
-*/
 
     @Override
     public void iniciarComandos(){
-      /*  switch (modo){
-            case HistorialCasaActivity.MODO_SOLO_ALQUILERES: {
-                mostrarSoloAlquileres();
+        String mode = mIntent.getStringExtra(HistorialCasaActivity.MODE);
+        MyHouseFragment fragment;
+        switch (mode){
+            case HistorialCasaActivity.ALL_RENTALS: {
+                fragment = MyHouseFragment.newInstance(view);
+
+                fragment.setPresenter(new AllRentalPresenter(fragment, this));
                 break;
             }
-            case HistorialCasaActivity.MODO_SOLO_USUARIOS:{
-                mostrarSoloUsuarios();
+            case HistorialCasaActivity.ALL_USERS:{
+                fragment = MyHouseFragment.newInstance(view);
+                fragment.setPresenter(new AllUsersPresenter(fragment, this));
                 break;
             }
-            default:{
-                mostrarTodo();
+            case HistorialCasaActivity.USERS_OF_RENTAL:{
+                fragment = MyHouseFragment.newInstance(view);
+                fragment.setPresenter(new RentalUsersPresenter(fragment, this));
                 break;
             }
-        }*/
-    }
+            case HistorialCasaActivity.RENTALS_OF_USER:
+            case HistorialCasaActivity.RENTALS_OF_ROOM:{
+                fragment = MyHouseFragment.newInstance(view, roomNumber, rentalID);
+                fragment.setPresenter(new UserRentalsPresenter(fragment, this));
+                break;
 
-
-    @Override
-    public void showList() {
-//        view.showList(getListUsuarios());
-    }
-
-    public void mostrarUsuariosDeAlquiler() {
-        /*if (listUsuarios == null) {
-            loadUsersAndShow();
+            }
+            default: {
+                fragment= MyHouseFragment.newInstance(view);
+                view.showMessage("default mode not implemented");
+                view.salir();
+            }
         }
-        view.showList(getListUsuariosDealquiler());*/
+        view.showFragment(fragment);
+    }
+
+
+    public void showList() {
     }
 
     @Override
@@ -158,14 +127,12 @@ public class Presenter extends BasePresenter<Interface.View> implements Interfac
         return null;
     }
 
-    @Override
-    public void ordenarPorNombre() {
+    private void ordenarPorNombre() {
         Collections.sort(listUsuarios, (o1, o2) -> o1.getName().compareTo(o2.getName()));
         showList();
     }
 
-    @Override
-    public void ordenarPorNumero() {
+    private void ordenarPorNumero() {
       /*  Collections.sort(listAlquileres, (o1, o2) -> {
             int i = Integer.parseInt(o1.getNumCuarto());
             int j = Integer.parseInt(o2.getNumCuarto());
@@ -212,57 +179,8 @@ public class Presenter extends BasePresenter<Interface.View> implements Interfac
 
     }
 
-    private ArrayList<ModelAlquilerView> getListAlquileres(){
-        if (listAlquileres == null) {
-            String columnas = "*";
-            Cursor c = db.getAllAlquileres(columnas);
-            listAlquileres = ModelAlquilerView.createListModel(c);
-        }
-        return listAlquileres;
+    @Override
+    public DBInterface getDB() {
+        return db;
     }
-
-    private ArrayList<ItemTenant> getListUsuarios(){
-        if (listUsuarios == null) {
-            String columnas = "*";
-            Cursor c = db.getAllUsuariosADDAlert(columnas);
-            listUsuarios = ModelUserView.createListModel(c, false);
-        }
-        return listUsuarios;
-    }
-
-    private ArrayList<ItemTenant> getListUsuariosDealquiler() {
-        return listUsuarios;
-    }
-/*
-    private void loadUsersAndShow(){
-        db.getRentalTenant(view.getContext().getString(R.string.mdRTRentalId), idAlquiler)
-                .addOnSuccessListener(this::getRentalTenantSuccess);
-
-    }
-
-    private void getRentalTenantSuccess(QuerySnapshot queryDocumentSnapshots) {
-        cont = queryDocumentSnapshots.size();
-        iCont = 0;
-        for (QueryDocumentSnapshot doc: queryDocumentSnapshots){
-            TRentalTenant rentalTenant = doc.toObject(TRentalTenant.class);
-            db.getUser(rentalTenant.getDNI()).addOnSuccessListener(this::getUserSuccess).addOnFailureListener(this::getUserFailure);
-        }
-    }
-
-    private void getUserFailure(Exception e) {
-        iCont++;
-        if (iCont == cont){
-            view.showList(listUsuarios);
-        }
-    }
-
-    private void getUserSuccess(DocumentSnapshot document) {
-        ItemUser user = ItemUser.newInstance(document);
-        if (user != null)
-            listUsuarios.add(user);
-        iCont++;
-        if (iCont == cont){
-            view.showList(listUsuarios);
-        }
-    }*/
 }

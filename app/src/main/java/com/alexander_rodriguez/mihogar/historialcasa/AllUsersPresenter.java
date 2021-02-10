@@ -3,24 +3,29 @@ package com.alexander_rodriguez.mihogar.historialcasa;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
+import android.view.View;
 
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.alexander_rodriguez.mihogar.Adapters.RvAdapterUser;
+import com.alexander_rodriguez.mihogar.adapters.RvAdapterUser;
 import com.alexander_rodriguez.mihogar.AdminDate;
-import com.alexander_rodriguez.mihogar.Base.BasePresenter;
+import com.alexander_rodriguez.mihogar.DataBase.DBInterface;
 import com.alexander_rodriguez.mihogar.DataBase.items.ItemTenant;
 import com.alexander_rodriguez.mihogar.DataBase.parse.ParceTenant;
 import com.alexander_rodriguez.mihogar.historialUserPakage.HistorialUsuarioActivity;
+import com.alexander_rodriguez.mihogar.mi_casa.FragmentInterface;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 
-public class AllUsersPresenter extends BasePresenter<Interface.View> implements Interface.Presenter {
+public class AllUsersPresenter  implements FragmentInterface.presenter{
+
+    private final FragmentInterface.view view;
+    private final FragmentParent.presenter parent;
+    private final DBInterface db;
+
     private AdminDate adminDate;
 
     private String modo;
@@ -41,13 +46,14 @@ public class AllUsersPresenter extends BasePresenter<Interface.View> implements 
     private int iCont;
 
     private LinearLayoutManager manager;
-    public AllUsersPresenter(Interface.View view, Intent intent) {
-        super(view);
+    public AllUsersPresenter(FragmentInterface.view view, FragmentParent.presenter parent) {
+        this.view = view;
+        this.parent = parent;
+        this.db = parent.getDB();
         list = new ArrayList<>();
         manager = new LinearLayoutManager(view.getContext());
     }
 
-    @Override
     public void showList() {
         if(list.isEmpty())
             loadUsersAndShow();
@@ -56,6 +62,7 @@ public class AllUsersPresenter extends BasePresenter<Interface.View> implements 
     }
 
     private void loadUsersAndShow(){
+        view.setProgressBarVisibility(View.VISIBLE);
         db.getUserCR().get().addOnSuccessListener(this::getUsersSuccess).addOnFailureListener(this::getUsersFailure);
     }
 
@@ -70,34 +77,29 @@ public class AllUsersPresenter extends BasePresenter<Interface.View> implements 
             if(user != null){
                 list.add(user);
             }
-            view.showUsersList(list, manager, false);
         }
+        showTenants(list);
+    }
+    private void showTenants(ArrayList<ItemTenant> list) {
+        if(list.isEmpty())
+            view.nothingHere();
+        else
+            view.showUsersList(list, manager, false);
     }
 
-
-    @Override
-    public void crearMenu(MenuInflater menuInflater, Menu menu) {
-
-    }
-
-    @Override
     public ContentValues getDetails(String id) {
         return null;
     }
 
+
     @Override
-    public void ordenarPorNombre() {
+    public void onCreate() {
 
     }
 
     @Override
-    public void ordenarPorNumero() {
-
-    }
-
-    @Override
-    public void itemSelected(MenuItem item) {
-
+    public void onResume() {
+        iniciarComandos();
     }
 
     @Override
@@ -112,7 +114,6 @@ public class AllUsersPresenter extends BasePresenter<Interface.View> implements 
         }
     }
 
-    @Override
     public void iniciarComandos() {
         showList();
     }

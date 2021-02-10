@@ -7,18 +7,20 @@ public class TPayment {
     protected String rentalId;
     protected String romNumber;
     protected String monthlyPaymentId;
-    protected String amount;
+    protected Double amount;
     protected String dni;
+    protected String paymentParent;
 
     public TPayment(){}
 
-    public TPayment(Timestamp date, String rentalId, String romNumber, String monthlyPaymentId, String amount, String dni) {
+    public TPayment(Timestamp date, String rentalId, String romNumber, String monthlyPaymentId, Double amount, String dni, String paymentParent) {
         this.date = date;
         this.rentalId = rentalId;
         this.romNumber = romNumber;
         this.monthlyPaymentId = monthlyPaymentId;
         this.amount = amount;
         this.dni = dni;
+        this.paymentParent = paymentParent;
     }
 
     public Timestamp getDate() {
@@ -53,15 +55,27 @@ public class TPayment {
         this.monthlyPaymentId = monthlyPaymentId;
     }
 
-    public String getAmount() {
+    public Double getAmount() {
         return amount;
     }
 
-    public void setAmount(String amount) {
+    public void setAmount(Double amount) {
         this.amount = amount;
     }
 
     public String getDni() {
         return dni;
+    }
+
+    public String getPaymentParent() {
+        return paymentParent;
+    }
+
+    public void setDni(String dni) {
+        this.dni = dni;
+    }
+
+    public void setPaymentParent(String paymentParent) {
+        this.paymentParent = paymentParent;
     }
 }

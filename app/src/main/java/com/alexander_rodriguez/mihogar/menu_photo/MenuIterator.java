@@ -41,7 +41,4 @@ public class MenuIterator implements interfazMenu{
     public void onEdit() {
         mActivity.startCropImage();
     }
-
-
-
 }

@@ -11,6 +11,7 @@ import androidx.annotation.Nullable;
 
 import com.alexander_rodriguez.mihogar.DataBase.items.ItemRoom;
 import com.alexander_rodriguez.mihogar.DataBase.items.ItemTenant;
+import com.alexander_rodriguez.mihogar.DataBase.models.TAdvance;
 import com.alexander_rodriguez.mihogar.DataBase.models.THouse;
 import com.alexander_rodriguez.mihogar.DataBase.models.TMonthlyPayment;
 import com.alexander_rodriguez.mihogar.DataBase.models.TPayment;
@@ -306,6 +307,20 @@ public class FDAdministrator implements DBInterface{
     }
 
     @Override
+    public Task<Void> updateMonthlyPayment(String rentalID, String id, String field, Object data) {
+        return updateDocument(getMonthlyPaymentDR(rentalID, id), field, data);
+    }
+
+    @Override
+    public Task<Void> updatePayment(String id, String field, Object data) {
+        return updateDocument(getPaymentDR(id), field, data);
+    }
+
+    private Task<Void> updateDocument(DocumentReference doc, String field, Object data){
+        return doc.update(field, data);
+    }
+
+    @Override
     public void upDateAlquilerUsuario(String columna, Object valor, Object idAl, Object dni) {
 
     }
@@ -325,7 +340,17 @@ public class FDAdministrator implements DBInterface{
     }
 
     @Override
+    public Task<QuerySnapshot> getAllAdvance(String id) {
+        return getAdvanceCR(id).get();
+    }
+
+    @Override
     public Task<QuerySnapshot> getAllRoom() {
+        return getCuartoCR().get();
+    }
+
+    @Override
+    public Task<QuerySnapshot> getAllTenants() {
         return getCuartoCR().get();
     }
 
@@ -343,6 +368,7 @@ public class FDAdministrator implements DBInterface{
 
     @Override
     public UploadTask saveTenantPhoto(String dni, @NotNull String path) {
+
         Uri file = Uri.fromFile(new File(path));
         StorageReference riversRef = getTenantPhotoStorage(dni);
         return riversRef.putFile(file);
@@ -451,11 +477,28 @@ public class FDAdministrator implements DBInterface{
     public CollectionReference getMonthlyPaymentCR(String rentalId){
         return getRentalDR(rentalId).collection(mContext.getString(R.string.cMonthlyPayment));
     }
+    public DocumentReference getMonthlyPaymentDR(String rentalID, String id){
+        return getMonthlyPaymentCR(rentalID).document(id);
+    };
 
     @Override
     public CollectionReference getPaymentCR() {
         return getHogarDocument().collection(mContext.getString(R.string.cPayment));
     }
+
+    public DocumentReference getPaymentDR(String id) {
+        return getPaymentCR().document(id);
+    }
+
+    @Override
+    public Task<DocumentSnapshot> getPayment(String id) {
+        return getPaymentDR(id).get();
+    }
+
+    public CollectionReference getAdvanceCR(String id) {
+        return getPaymentDR(id).collection(mContext.getString(R.string.cAdvance));
+    }
+
 
     @Override
     public Task<QuerySnapshot> getRentalsOfRoom(String roomNumber) {
@@ -511,9 +554,10 @@ public class FDAdministrator implements DBInterface{
             if(u.isMain()){
                 getRentalDR(rentalId).update(mContext.getString(R.string.mdRentalMainTenant), u.getDni());
             }
-            saveTenantPhoto(u.getDni(), u.getPath()).addOnFailureListener(e -> {
-                Toast.makeText(mContext, mContext.getString(R.string.sUploadPhotoError), Toast.LENGTH_SHORT).show();
-            });
+            if(!u.getPath().isEmpty())
+                saveTenantPhoto(u.getDni(), u.getPath()).addOnFailureListener(e -> {
+                    Toast.makeText(mContext, mContext.getString(R.string.sUploadPhotoError), Toast.LENGTH_SHORT).show();
+                });
             TRentalTenant tRentalTenant = new TRentalTenant(rentalId, u.getDni(), u.isMain(), true);
             batch.set(getUserCR().document(u.getDni()), u.getRoot());
             batch.set(getAlquilerUserCR().document(), tRentalTenant);
@@ -546,7 +590,11 @@ public class FDAdministrator implements DBInterface{
     @Override
     public Task<DocumentReference> addPayment(TPayment payment) {
         return getPaymentCR().add(payment);
+    }
 
+    @Override
+    public Task<DocumentReference> addAdvanced(String id, TAdvance advance) {
+        return getAdvanceCR(id).add(advance);
     }
 
     @Override

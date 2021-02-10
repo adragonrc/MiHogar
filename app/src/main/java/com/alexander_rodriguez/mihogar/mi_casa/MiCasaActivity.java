@@ -3,46 +3,39 @@ package com.alexander_rodriguez.mihogar.mi_casa;
 import android.content.Intent;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.ProgressBar;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
+import androidx.fragment.app.FragmentManager;
+import androidx.lifecycle.Lifecycle;
 
-import com.alexander_rodriguez.mihogar.Adapters.AdapterInterface;
-import com.alexander_rodriguez.mihogar.Adapters.RvAdapterCuartos;
 import com.alexander_rodriguez.mihogar.Base.BaseActivity;
 import com.alexander_rodriguez.mihogar.R;
 import com.alexander_rodriguez.mihogar.UTILIDADES.TAlquiler;
-import com.alexander_rodriguez.mihogar.UTILIDADES.TCuarto;
-import com.alexander_rodriguez.mihogar.Adapters.Models.ModelCuartoView;
+import com.alexander_rodriguez.mihogar.historialcasa.AllUsersPresenter;
 import com.alexander_rodriguez.mihogar.mydialog.DialogImput;
 import com.alexander_rodriguez.mihogar.mydialog.DialogInterfaz;
 import com.alexander_rodriguez.mihogar.mydialog.DialogOptions;
 import com.alexander_rodriguez.mihogar.mydialog.PresenterDialogImput;
 import com.alexander_rodriguez.mihogar.tableActivity.TableActivity;
-import com.alexander_rodriguez.mihogar.vercuarto.ShowRoomActivity;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 
-import java.util.ArrayList;
-
-public class MiCasaActivity extends BaseActivity<Interface.Presenter> implements Interface.View, AdapterInterface {
-    private RecyclerView rv;
+public class MiCasaActivity extends BaseActivity<Interface.Presenter> implements Interface.View {
     private DialogOptions dop;
     private DialogInterfaz.DialogOptionPresenter dialogOptionPresenter;
     private DialogImput imput ;
     private DialogInterfaz.DialogImputPresenter dialogImputPresenter;
-    private RvAdapterCuartos adapterCuartos;
-    private RecyclerView.LayoutManager manager;
-    private View nothingToShow;
-    private byte opcion;
+
+    private MyHouseFragment roomFragment;
+    private MyHouseFragment tenantFragment;
+    private MyHouseFragment active;
+
+    private FragmentManager fm;
+
     @Override
     protected void iniciarComandos() {
         setTitle("Mi Casa");
-        opcion = 0;
         dop = new DialogOptions();
         imput = new DialogImput();
         dialogOptionPresenter = new PresenterDialogOptions(dop);
@@ -53,27 +46,11 @@ public class MiCasaActivity extends BaseActivity<Interface.Presenter> implements
 
             }
         };
-        manager = new LinearLayoutManager(this);
-        rv.setLayoutManager(manager);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        switch (opcion){
-            case 0:{
-                presenter.verTodos();
-                break;
-            }
-            case 1:{
-                presenter.verCuartosAlquilados();
-                break;
-            }
-            case 2:{
-                presenter.verCuartosLibres();
-                break;
-            }
-        }
     }
 
     @Override
@@ -84,20 +61,8 @@ public class MiCasaActivity extends BaseActivity<Interface.Presenter> implements
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-
-        if (id == R.id.iTodos) {
-            opcion = 0;
-            presenter.verTodos();
-        } else if (id == R.id.iCuartosAlquilados) {
-            opcion = 1;
-            presenter.verCuartosAlquilados();
-        } else if (id == R.id.iCuartosLibres) {
-            opcion = 2;
-            presenter.verCuartosLibres();
-        } else if (id == R.id.itFecha) {
-            presenter.ordenarPorFecha();
-        }
+        presenter.onOptionItemSelected(item);
+        
         return super.onOptionsItemSelected(item);
     }
 
@@ -114,46 +79,20 @@ public class MiCasaActivity extends BaseActivity<Interface.Presenter> implements
 
     @Override
     protected void iniciarViews() {
-        nothingToShow = findViewById(R.id.nothingToShow);
-        progressBar = findViewById(R.id.progressBar);
-        rv = findViewById(R.id.recyclerView);
-    }
 
-    @Override
-    public boolean onContextItemSelected(MenuItem item) {
-        /*if (adapterUsuarios.getViewSelect().equals(item.getActionView())){
-            Toast.makeText(this, "Usar getAction", Toast.LENGTH_SHORT).show();
-        }else{
-            Toast.makeText(this, "No Usar getAction", Toast.LENGTH_SHORT).show();
-        }
-        int id = item.getItemId();
-        switch (id){
-            case R.id.opVerUsuario: {
-                break;
-            }
-            case R.id.opVerPagos: {
-                Intent i = new Intent(getContext(), TableActivity.class);
-                i.putExtra(TAlquiler.ID, adapterUsuarios.getDniSelect());
-                getContext().startActivity(i);
-                break;
-            }
-            case R.id.opTerminarA: {
-                showDialogImput(adapterUsuarios.getDniSelect());
-                break;
-            }
-            default:
-                Toast.makeText(this, "Caso no encontrado", Toast.LENGTH_SHORT).show();
-        }
-        */
-        return super.onContextItemSelected(item);
-    }
+        roomFragment = new MyHouseFragment(this);
+        tenantFragment = new MyHouseFragment(this);
+        fm = getSupportFragmentManager();
 
-    @Override
-    public void mostratCuartos(ArrayList<ModelCuartoView> items) {
-        nothingToShow.setVisibility(View.GONE);
-        rv.setVisibility(View.VISIBLE);
-        adapterCuartos = new RvAdapterCuartos(this, items);
-        rv.setAdapter(adapterCuartos);
+        roomFragment.setPresenter(new AllRoomsPresenter(roomFragment, presenter));
+        tenantFragment.setPresenter(new AllUsersPresenter(tenantFragment, presenter));
+
+        BottomNavigationView bottomNavigationView = findViewById(R.id.bottomNavigationView);
+        bottomNavigationView.setOnNavigationItemSelectedListener(presenter::onNavigationItemSelected);
+
+        fm.beginTransaction().add(R.id.container, tenantFragment, "1").setMaxLifecycle(tenantFragment, Lifecycle.State.STARTED).commit();
+        fm.beginTransaction().add(R.id.container, roomFragment, "2").setMaxLifecycle(roomFragment, Lifecycle.State.RESUMED).hide(tenantFragment).commit();
+        active = roomFragment;
     }
 
     /*
@@ -191,25 +130,32 @@ public class MiCasaActivity extends BaseActivity<Interface.Presenter> implements
 
     @Override
     public void notifyChangedOn(int posList) {
-        adapterCuartos.notifyItemChanged(posList);
+        active.notifyChangedOn(posList);
     }
 
     @Override
     public void nothingHere() {
-        nothingToShow.setVisibility(View.VISIBLE);
-        rv.setVisibility(View.GONE);
     }
 
     @Override
-    public void onClickHolder(RecyclerView.ViewHolder holder) {
-        if(holder instanceof RvAdapterCuartos.Holder){
-            RvAdapterCuartos.Holder mHolder = (RvAdapterCuartos.Holder) holder;
-            String numero = mHolder.getTvTitle().getText().toString();
-            Intent i = new Intent(this, ShowRoomActivity.class);
-            i.putExtra(TCuarto.NUMERO, numero);
-            startActivity(i);
-        }
+    public void showRooms() {
+        fm.beginTransaction().hide(active).setMaxLifecycle(active, Lifecycle.State.STARTED)
+                .show(roomFragment).setMaxLifecycle(roomFragment, Lifecycle.State.RESUMED).commit();
+        active = roomFragment;
     }
+
+    @Override
+    public void showTenants() {
+        fm.beginTransaction().hide(active).setMaxLifecycle(active, Lifecycle.State.STARTED)
+                .show(tenantFragment).setMaxLifecycle(tenantFragment, Lifecycle.State.RESUMED).commit();
+        active = tenantFragment;
+    }
+
+    @Override
+    public void goTo(Intent intent) {
+        startActivity(intent);
+    }
+
 
     private class PresenterDialogOptions implements DialogInterfaz.DialogOptionPresenter {
         private final DialogOptions dop;

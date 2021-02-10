@@ -9,50 +9,26 @@ import android.view.MenuItem;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.alexander_rodriguez.mihogar.Base.BasePresenter;
+import com.alexander_rodriguez.mihogar.mi_casa.FragmentInterface;
 
-public class AllRentalPresenter extends BasePresenter<Interface.View> implements Interface.Presenter {
-    public AllRentalPresenter(Interface.View view, Intent intent) {
-        super(view);
-    }
-
-    @Override
-    public void showList() {
-
-    }
-
-
-    @Override
-    public void crearMenu(MenuInflater menuInflater, Menu menu) {
+public class AllRentalPresenter implements FragmentInterface.presenter {
+    public AllRentalPresenter(FragmentInterface.view view, FragmentParent.presenter parent) {
 
     }
 
     @Override
-    public ContentValues getDetails(String id) {
-        return null;
-    }
+    public void onCreate() {
 
-    @Override
-    public void ordenarPorNombre() {
 
     }
 
     @Override
-    public void ordenarPorNumero() {
-
-    }
-
-    @Override
-    public void itemSelected(MenuItem item) {
+    public void onResume() {
 
     }
 
     @Override
     public void onClickHolder(RecyclerView.ViewHolder holder) {
-
-    }
-
-    @Override
-    public void iniciarComandos() {
 
     }
 }

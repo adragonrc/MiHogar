@@ -71,7 +71,7 @@ public class Presenter extends BasePresenter<Interfaz.view> implements Interfaz.
             TMonthlyPayment payment = doc.toObject(TMonthlyPayment.class);
             TableLayout tl = (TableLayout) LayoutInflater.from(view.getContext()).inflate(R.layout.view_table_layout, vg, false);
             String idMensualidad = doc.getId();
-            String costo = payment.getAmount();
+            String costo = String.valueOf(payment.getAmount());
 
             String date = AdminDate.dateToString(payment.getDateInit().toDate());
             tl.addView(crateTitleMensualidad("Mensualidad: "+ idMensualidad, date, tl));
@@ -106,7 +106,7 @@ public class Presenter extends BasePresenter<Interfaz.view> implements Interfaz.
 
     private View creatRowPago(ItemPayment payment, ViewGroup vg){
         TableRowView v =(TableRowView) LayoutInflater.from(view.getContext()).inflate(R.layout.view_fila_of_pagos, vg, false);
-        v.setText(payment.getId(), AdminDate.dateToString(payment.getDate().toDate()), payment.getAmount());
+        v.setText(payment.getId(), AdminDate.dateToString(payment.getDate().toDate()), String.valueOf(payment.getAmount()));
         v.setOnClickListener(new PaymentListener(payment));
         return v;
     }
@@ -184,8 +184,9 @@ public class Presenter extends BasePresenter<Interfaz.view> implements Interfaz.
     public void crearPDF(){
         PDF pdf = new PDF();
         String direccion = sp.getString(view.getContext().getString(R.string.direccion), "---");
+        PDF.Model pdfModel = new PDF.Model(rental.getRoomNumber(), paymentAux.getDni(), viewClicked.getTextId(), viewClicked.getTextMonto(), direccion, viewClicked.getTextFecha());
         try {
-            pdf.crearVoucher(rental.getRoomNumber(), paymentAux.getDni(), viewClicked.getTextId(), viewClicked.getTextMonto(), direccion, viewClicked.getTextFecha());
+            pdf.crearVoucher(pdfModel);
             db.agregarVoucher(pdf.getPdfFile().getAbsolutePath(), viewClicked.getTextId());
             view.gotoShowPDF(pdf.getPdfFile().getAbsolutePath(), rental);
         } catch (FileNotFoundException e) {

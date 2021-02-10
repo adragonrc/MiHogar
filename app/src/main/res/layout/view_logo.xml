@@ -23,7 +23,7 @@
             android:fontFamily="@font/elsie_swash_caps"
             android:gravity="center"
             android:text="@string/sTitle"
-            android:textColor="@color/colorPrimary"
+            android:textColor="@color/primaryColor"
             android:textSize="24sp"
             android:textStyle="bold" />
 

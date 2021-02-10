@@ -9,7 +9,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -18,8 +17,8 @@ import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.alexander_rodriguez.mihogar.Adapters.AdapterInterface;
-import com.alexander_rodriguez.mihogar.Adapters.RvAdapterUser;
+import com.alexander_rodriguez.mihogar.adapters.AdapterInterface;
+import com.alexander_rodriguez.mihogar.adapters.RvAdapterUser;
 import com.alexander_rodriguez.mihogar.Base.BaseActivity;
 import com.alexander_rodriguez.mihogar.DataBase.items.ItemTenant;
 import com.alexander_rodriguez.mihogar.R;

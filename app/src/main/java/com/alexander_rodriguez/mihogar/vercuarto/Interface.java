@@ -1,5 +1,7 @@
 package com.alexander_rodriguez.mihogar.vercuarto;
 
+import android.widget.TableLayout;
+
 import com.alexander_rodriguez.mihogar.Base.BaseView;
 import com.alexander_rodriguez.mihogar.Base.IBasePresenter;
 import com.alexander_rodriguez.mihogar.DataBase.items.ItemRental;
@@ -33,6 +35,14 @@ public interface Interface {
         void crearPDF();
 
         String getResponsable();
+
+        void addAdvance(Double amount);
+
+        double getAmount();
+
+        double getRemainingPayment();
+
+        void ocShowDetailsAdvance();
     }
     interface view extends BaseView, perfilCuartoInterface {
         void noPago();
@@ -52,5 +62,11 @@ public interface Interface {
         void actualizarFechaPago(String fecha);
 
         void reloadRoomPhoto();
+
+        void hideAdvance();
+
+        void showAdvance(Double amount);
+
+        void showAllAdvances(TableLayout tl);
     }
 }

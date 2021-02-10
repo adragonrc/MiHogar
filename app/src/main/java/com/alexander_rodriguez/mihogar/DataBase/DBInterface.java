@@ -8,10 +8,12 @@ import androidx.annotation.Nullable;
 
 import com.alexander_rodriguez.mihogar.DataBase.items.ItemRoom;
 import com.alexander_rodriguez.mihogar.DataBase.items.ItemTenant;
+import com.alexander_rodriguez.mihogar.DataBase.models.TAdvance;
 import com.alexander_rodriguez.mihogar.DataBase.models.THouse;
 import com.alexander_rodriguez.mihogar.DataBase.models.TMonthlyPayment;
 import com.alexander_rodriguez.mihogar.DataBase.models.TPayment;
 import com.alexander_rodriguez.mihogar.DataBase.models.TRental;
+import com.alexander_rodriguez.mihogar.R;
 import com.alexander_rodriguez.mihogar.TableCursor;
 import com.alexander_rodriguez.mihogar.modelos.ModelUsuario;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
@@ -50,9 +52,9 @@ public interface DBInterface {
 
     CollectionReference getRentalCR();
 
-    DocumentReference getRentalDR(String rentalId);
-
     CollectionReference getUserCR();
+
+    DocumentReference getRentalDR(String rentalId);
 
     DocumentReference getUserDR(String dni);
 
@@ -64,9 +66,13 @@ public interface DBInterface {
 
     CollectionReference getPaymentCR();
 
+    DocumentReference getPaymentDR(String lastPaymentId);
+
     boolean revertir(String tableName, String columKey, Object key);
 
     Task<DocumentSnapshot> getRoom(String numCuarto);
+
+    Task<DocumentSnapshot> getPayment(String id);
 
     ContentValues getFilaInMensualidadActual(String columnas, Object idAlquiler);
 
@@ -128,6 +134,10 @@ public interface DBInterface {
 
     Task<Void> updateRental(String columna, Object valor, String id);
 
+    Task<Void> updateMonthlyPayment(String rentalID, String mpId, String field, Object data);
+
+    Task<Void> updatePayment(String id, String field, Object data);
+
     void upDateAlquilerUsuario(String columna, Object valor, Object idAl, Object dni);
 
     Task<Void> agregarCuarto(ItemRoom room);
@@ -149,6 +159,8 @@ public interface DBInterface {
     Task<DocumentReference> agregarMensualidad( TMonthlyPayment monthlyPayment );
 
     Task<DocumentReference> addPayment(TPayment payment);
+
+    Task<DocumentReference> addAdvanced(String id, TAdvance advance);
 
     boolean agregarInquilinoExist(String DNI, String numC, double costo, @NonNull String fecha_i, @Nullable String fecha_c, String numTel, String correo);
 
@@ -184,7 +196,11 @@ public interface DBInterface {
 
     DocumentReference getDocument(DocumentReference currentMP);
 
+    Task<QuerySnapshot> getAllAdvance(String id);
+
     Task<QuerySnapshot> getAllRoom();
+
+    Task<QuerySnapshot> getAllTenants();
 
     Task<DocumentSnapshot> getRental(String currentRentalId);
 
@@ -223,4 +239,5 @@ public interface DBInterface {
     Task<Void> updateHouseDetails(THouse house);
 
     void setAuthStateListener(FirebaseAuth.AuthStateListener listener);
+
 }

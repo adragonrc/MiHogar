@@ -4,7 +4,7 @@ import android.widget.ArrayAdapter;
 
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.alexander_rodriguez.mihogar.Adapters.RvAdapterUser;
+import com.alexander_rodriguez.mihogar.adapters.RvAdapterUser;
 import com.alexander_rodriguez.mihogar.Base.BaseView;
 import com.alexander_rodriguez.mihogar.Base.IBasePresenter;
 import com.alexander_rodriguez.mihogar.DataBase.items.ItemTenant;

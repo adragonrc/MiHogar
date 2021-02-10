@@ -1,7 +1,7 @@
 package com.alexander_rodriguez.mihogar.listalquileres;
 
 import com.alexander_rodriguez.mihogar.Base.BaseView;
-import com.alexander_rodriguez.mihogar.Adapters.Models.ModelAlquilerView;
+import com.alexander_rodriguez.mihogar.adapters.Models.ModelAlquilerView;
 
 import java.util.ArrayList;
 

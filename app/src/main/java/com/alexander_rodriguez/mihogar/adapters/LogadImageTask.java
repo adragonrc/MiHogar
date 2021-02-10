@@ -1,8 +1,7 @@
-package com.alexander_rodriguez.mihogar.Adapters;
+package com.alexander_rodriguez.mihogar.adapters;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.media.Image;
 import android.os.AsyncTask;
 import android.widget.ImageView;
 

@@ -27,7 +27,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/elsie_swash_caps"
-                android:textColor="@color/colorPrimary"
+                android:textColor="@color/primaryColor"
                 android:textSize="24sp"
                 android:textStyle="bold" />
 

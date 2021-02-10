@@ -1,7 +1,5 @@
-package com.alexander_rodriguez.mihogar.Adapters;
+package com.alexander_rodriguez.mihogar.adapters;
 
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,20 +8,21 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.alexander_rodriguez.mihogar.R;
-import com.alexander_rodriguez.mihogar.Adapters.Models.ModelCuartoView;
+import com.alexander_rodriguez.mihogar.adapters.Models.ModelRoomView;
 import com.squareup.picasso.Picasso;
 
 import java.io.File;
 import java.util.ArrayList;
 
-public class RvAdapterCuartos extends RecyclerView.Adapter<RvAdapterCuartos.Holder> {
-    private ArrayList<ModelCuartoView> list;
+public class RvAdapterRoom extends RecyclerView.Adapter<RvAdapterRoom.Holder> {
+    private ArrayList<ModelRoomView> list;
     private AdapterInterface mInterface;
     private String valueSelect;
-    public RvAdapterCuartos(AdapterInterface mInterface, ArrayList<ModelCuartoView> list){
+    public RvAdapterRoom(AdapterInterface mInterface, ArrayList<ModelRoomView> list){
         this.mInterface = mInterface;
         this.list = list;
     }
@@ -32,12 +31,12 @@ public class RvAdapterCuartos extends RecyclerView.Adapter<RvAdapterCuartos.Hold
     public Holder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
         LayoutInflater layoutInflater  = LayoutInflater.from(mInterface.getContext());
         View v = layoutInflater.inflate(R.layout.view_cuarto_descripcion, viewGroup,false);
-        return new RvAdapterCuartos.Holder(v);
+        return new RvAdapterRoom.Holder(v);
     }
 
     @Override
     public void onBindViewHolder(@NonNull Holder holder, int i) {
-        ModelCuartoView item = list.get(i);
+        ModelRoomView item = list.get(i);
         holder.tvTitle.setText(item.getRoomNumber());
         holder.tvDetalles.setText(item.getDetails());
         holder.id = item.getRoomNumber();
@@ -47,7 +46,7 @@ public class RvAdapterCuartos extends RecyclerView.Adapter<RvAdapterCuartos.Hold
         if (f.exists())       Picasso.get().load(f).into(holder.ivPhoto);
 
         if (item.isAlert()){
-            holder.ivAlert.setImageDrawable(mInterface.getContext().getResources().getDrawable(R.drawable.ic_add_alert_black_24dp));
+                holder.ivAlert.setImageDrawable(ContextCompat.getDrawable(mInterface.getContext(), R.drawable.ic_add_alert_black_24dp));
         }else{
             holder.ivAlert.setVisibility(View.GONE);
         }

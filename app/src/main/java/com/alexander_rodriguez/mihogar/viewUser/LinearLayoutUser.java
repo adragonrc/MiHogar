@@ -10,7 +10,10 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.activity.ComponentActivity;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentManager;
 
 import com.alexander_rodriguez.mihogar.R;
@@ -105,18 +108,18 @@ public class LinearLayoutUser implements Interfaz.View{
         */
     }
     public void layoutOnClick(){
-        Intent i = new Intent(mContext, DialogConfirmPago.class);
+     /*   Intent i = new Intent(mContext, DialogConfirmPago.class);
         i.putExtra(TUsuario.DNI,Integer.parseInt(tvDni.getText().toString()));
-        mContext.startActivity(i);
+        mContext.startActivity(i);*/
     }
     public void onClickMoreOptions(){
         dialogOptions.showDiaglog(transaction, "option", dop);
     }
     public void doPago(){
-        imEstado.setImageDrawable(view.getResources().getDrawable(R.drawable.ic_mood_black_24dp));
+        imEstado.setImageDrawable(ContextCompat.getDrawable(getContext(), R.drawable.ic_mood_black_24dp));
     }
     public void doNoPago(){
-        imEstado.setImageDrawable(view.getResources().getDrawable(R.drawable.ic_mood_bad_black_24dp));
+        imEstado.setImageDrawable(ContextCompat.getDrawable(getContext(), R.drawable.ic_mood_bad_black_24dp));
     }
     public void setAttributes(String dni, String fecha){
         tvFecha.setText(fecha);

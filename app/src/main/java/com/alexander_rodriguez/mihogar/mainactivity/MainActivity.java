@@ -3,6 +3,7 @@ package com.alexander_rodriguez.mihogar.mainactivity;
 import android.content.Intent;
 import android.util.Log;
 import android.view.View;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.FragmentTransaction;
@@ -37,12 +38,6 @@ public class MainActivity extends BaseActivity<Interface.presenter> implements I
     }
 
     private void updateUI(GoogleSignInAccount account) {
-
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
 
     }
 
@@ -110,7 +105,8 @@ public class MainActivity extends BaseActivity<Interface.presenter> implements I
     }
 
     public void ocForgotPassword(View view){
-        startActivity(new Intent(this, RegistrarCasaActivity.class));
+       // startActivity(new Intent(this, RegistrarCasaActivity.class));
+        Toast.makeText(this, "this method isn't implemented", Toast.LENGTH_SHORT).show();
     }
 
     public void ocSignUp(View view){

@@ -16,10 +16,12 @@ import androidx.appcompat.app.AppCompatDialogFragment;
 import com.alexander_rodriguez.mihogar.R;
 import com.alexander_rodriguez.mihogar.UTILIDADES.TAlquiler;
 
+import org.jetbrains.annotations.NotNull;
+
 public class DialogDetallesAlquiler extends AppCompatDialogFragment {
     public static final String NUM_USUARIOS = "nUsuarios";
     private LayoutInflater inflater;
-    private View vista;
+    private View view;
     private Context mContext;
     private ContentValues datos;
     private Dialog dialog;
@@ -39,32 +41,32 @@ public class DialogDetallesAlquiler extends AppCompatDialogFragment {
         this.datos = datos;
         this.mContext  = context;
         inflater = getLayoutInflater();
-        vista = inflater.inflate(R.layout.alquiler_description, null, false);
+        view = inflater.inflate(R.layout.alquiler_description, null, false);
         iniciarViews();
     }
 
-    @Override
-    public Dialog onCreateDialog(Bundle savedInstanceState) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
-        if (vista != null)
-            if  (vista.getParent() != null)
-                ((ViewGroup)vista.getParent()).removeView(vista);
 
-        builder.setView(vista);
+    public @NotNull Dialog onCreateDialog(Bundle savedInstanceState) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+        if (view != null)
+            if  (view.getParent() != null)
+                ((ViewGroup) view.getParent()).removeView(view);
+
+        builder.setView(view);
         dialog = builder.create();
         return dialog;
     }
 
     private void iniciarViews(){
-        tvIdAlquiler = vista.findViewById(R.id.tvIdAlquiler);
-        tvNumUsuarios = vista.findViewById(R.id.tvTenantsNumber);
-        tvNumCuarto = vista.findViewById(R.id.tvNumCuarto);
-        tvFechaInicio = vista.findViewById(R.id.tvEntryDate);
-        tvFechaFin = vista.findViewById(R.id.tvDepartureDate);
-        tvMotivoDeSalida = vista.findViewById(R.id.tvReason);
+        tvIdAlquiler = view.findViewById(R.id.tvIdAlquiler);
+        tvNumUsuarios = view.findViewById(R.id.tvTenantsNumber);
+        tvNumCuarto = view.findViewById(R.id.tvNumCuarto);
+        tvFechaInicio = view.findViewById(R.id.tvEntryDate);
+        tvFechaFin = view.findViewById(R.id.tvDepartureDate);
+        tvMotivoDeSalida = view.findViewById(R.id.tvReason);
 
-        btVerCuarto = vista.findViewById(R.id.btVerCuarto);
-        btVerPago = vista.findViewById(R.id.btVerPagos);
+        btVerCuarto = view.findViewById(R.id.btVerCuarto);
+        btVerPago = view.findViewById(R.id.btVerPagos);
 
         tvIdAlquiler.setText(datos.getAsString(TAlquiler.ID));
         tvNumCuarto.setText(datos.getAsString(TAlquiler.NUMERO_C));

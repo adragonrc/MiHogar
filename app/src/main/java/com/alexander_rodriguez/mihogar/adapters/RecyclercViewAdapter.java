@@ -1,4 +1,4 @@
-package com.alexander_rodriguez.mihogar.Adapters;
+package com.alexander_rodriguez.mihogar.adapters;
 
 import android.content.Context;
 import android.view.LayoutInflater;

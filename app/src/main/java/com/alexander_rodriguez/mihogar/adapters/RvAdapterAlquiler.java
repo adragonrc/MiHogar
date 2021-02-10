@@ -1,4 +1,4 @@
-package com.alexander_rodriguez.mihogar.Adapters;
+package com.alexander_rodriguez.mihogar.adapters;
 
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
@@ -11,7 +11,7 @@ import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.alexander_rodriguez.mihogar.R;
-import com.alexander_rodriguez.mihogar.Adapters.Models.ModelAlquilerView;
+import com.alexander_rodriguez.mihogar.adapters.Models.ModelAlquilerView;
 
 import java.util.ArrayList;
 
@@ -44,7 +44,7 @@ public class RvAdapterAlquiler extends RecyclerView.Adapter<RvAdapterAlquiler.Ho
         holder.mId  = item.getId();
 
         if (item.isAlert()){
-            holder.cardView.setBackgroundColor(view.getContext().getResources().getColor(R.color.colorPrimaryDark));
+            holder.cardView.setBackgroundColor(view.getContext().getResources().getColor(R.color.primaryColorDark));
         }
     }
     public View getViewSelect() {
@@ -82,9 +82,11 @@ public class RvAdapterAlquiler extends RecyclerView.Adapter<RvAdapterAlquiler.Ho
 
         @Override
         public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
-            view.getMenuInflater().inflate(R.menu.menu_opciones,menu);
-            viewSelect = v;
-            idAlquilerSelect = mId;
+            if(view.getMenuInflater() != null) {
+                view.getMenuInflater().inflate(R.menu.menu_opciones, menu);
+                viewSelect = v;
+                idAlquilerSelect = mId;
+            }
         }
     }
 }

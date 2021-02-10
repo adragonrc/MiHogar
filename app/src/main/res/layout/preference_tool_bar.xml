@@ -6,9 +6,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:minHeight="?attr/actionBarSize"
     app:navigationContentDescription="Ajustes"
-    android:background="@color/colorPrimary"
+    android:background="@color/primaryColor"
     app:navigationIcon="?attr/homeAsUpIndicator"
     app:title="AJUSTES"
-    app:titleTextColor="@color/secondaryTextColor">
+    app:titleTextColor="@color/colorAccent">
 
 </androidx.appcompat.widget.Toolbar>

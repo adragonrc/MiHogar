@@ -4,16 +4,16 @@ import android.content.ContentValues;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.alexander_rodriguez.mihogar.Adapters.RvAdapterAlquiler;
-import com.alexander_rodriguez.mihogar.Base.BasePresenter;
+import com.alexander_rodriguez.mihogar.adapters.RvAdapterAlquiler;
+import com.alexander_rodriguez.mihogar.DataBase.DBInterface;
 import com.alexander_rodriguez.mihogar.DataBase.items.ItemRental;
 import com.alexander_rodriguez.mihogar.UTILIDADES.TAlquiler;
+import com.alexander_rodriguez.mihogar.mi_casa.FragmentInterface;
+import com.alexander_rodriguez.mihogar.mi_casa.MyHouseFragment;
 import com.alexander_rodriguez.mihogar.tableActivity.TableActivity;
 import com.alexander_rodriguez.mihogar.viewUser.DialogDetallesAlquiler;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -21,7 +21,11 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 
-public class UserRentalsPresenter extends BasePresenter<Interface.View> implements Interface.Presenter {
+public class UserRentalsPresenter implements FragmentInterface.presenter {
+    private final FragmentInterface.view view;
+    private final FragmentParent.presenter parent;
+    private final DBInterface db;
+
     private String rentalId;
     private String roomNumber;
 
@@ -37,17 +41,18 @@ public class UserRentalsPresenter extends BasePresenter<Interface.View> implemen
 
     private int cont;
     private int iCont;
-    public UserRentalsPresenter(Interface.View view, Intent intent) {
-        super(view);
-        rentalId = intent.getStringExtra(HistorialCasaActivity.EXTRA_RENTAL_ID);
-        roomNumber = intent.getStringExtra(HistorialCasaActivity.EXTRA_ROOM_NUMBER);
+    public UserRentalsPresenter(FragmentInterface.view view, FragmentParent.presenter parent) {
+        this.view = view;
+        this.parent = parent;
+        this.db = parent.getDB();
+        rentalId = view.getArguments().getString(MyHouseFragment.ARG_RENTAL_ID);
+        roomNumber = view.getArguments().getString(MyHouseFragment.ARG_ROOM_NUMBER);
         list = new ArrayList<>();
         if(roomNumber == null || roomNumber.isEmpty()){
             view.showMessage("lost data");
         }
     }
 
-    @Override
     public void showList() {
         if(list == null ) list = new ArrayList<>();
         if(list.isEmpty())
@@ -72,34 +77,21 @@ public class UserRentalsPresenter extends BasePresenter<Interface.View> implemen
                 list.add(rental);
             }
         }
-        if(!list.isEmpty()){
+        if(list.isEmpty()){
+            view.nothingHere();
+        }else{
             view.showRentalsList(list, new LinearLayoutManager(view.getContext()));
         }
     }
 
     @Override
-    public void crearMenu(MenuInflater menuInflater, Menu menu) {
+    public void onCreate() {
 
     }
 
     @Override
-    public ContentValues getDetails(String id) {
-        return null;
-    }
-
-    @Override
-    public void ordenarPorNombre() {
-
-    }
-
-    @Override
-    public void ordenarPorNumero() {
-
-    }
-
-    @Override
-    public void itemSelected(MenuItem item) {
-
+    public void onResume() {
+        iniciarComandos();
     }
 
     @Override
@@ -128,7 +120,10 @@ public class UserRentalsPresenter extends BasePresenter<Interface.View> implemen
         }
     }
 
-    @Override
+    private ContentValues getDetails(String getmId) {
+        return null;
+    }
+
     public void iniciarComandos() {
         showList();
     }

@@ -1,5 +1,7 @@
 package com.alexander_rodriguez.mihogar.viewregistraralquiler;
 
+import android.net.wifi.aware.Characteristics;
+
 import com.alexander_rodriguez.mihogar.AdminDate;
 import com.alexander_rodriguez.mihogar.Base.BasePresenter;
 import com.alexander_rodriguez.mihogar.DataBase.models.TRental;
@@ -39,7 +41,13 @@ public class ModelAA extends TRental {
     }
 
     public boolean isCorrect() {
-        return  BasePresenter.validarStrings(price, roomNumber);
+        boolean f = BasePresenter.validarStrings(price, roomNumber);
+        try {
+            Double.parseDouble(price);
+            return f;
+        }catch (NumberFormatException e){
+            return false;
+        }
     }
 
     public String getEntryDateAsString() {

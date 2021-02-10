@@ -1,4 +1,4 @@
-package com.alexander_rodriguez.mihogar.Adapters.Models;
+package com.alexander_rodriguez.mihogar.adapters.Models;
 
 import android.content.ContentValues;
 import android.database.Cursor;

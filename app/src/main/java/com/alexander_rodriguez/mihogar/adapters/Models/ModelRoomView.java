@@ -1,4 +1,4 @@
-package com.alexander_rodriguez.mihogar.Adapters.Models;
+package com.alexander_rodriguez.mihogar.adapters.Models;
 
 import com.alexander_rodriguez.mihogar.DataBase.items.ItemRoom;
 import com.alexander_rodriguez.mihogar.DataBase.models.TRoom;
@@ -6,16 +6,16 @@ import com.alexander_rodriguez.mihogar.AdminDate;
 
 import java.util.Date;
 
-public class ModelCuartoView extends ItemRoom {
+public class ModelRoomView extends ItemRoom {
     private String paymentDate;
     private int posList;
     private boolean alert;
 
-    public ModelCuartoView(TRoom room) {
+    public ModelRoomView(TRoom room) {
         super(room);
     }
 
-    public ModelCuartoView(TRoom room, int posList) {
+    public ModelRoomView(TRoom room, int posList) {
         super(room); this.posList = posList;
     }
 

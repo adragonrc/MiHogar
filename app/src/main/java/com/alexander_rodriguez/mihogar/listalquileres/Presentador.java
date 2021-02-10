@@ -1,12 +1,11 @@
 package com.alexander_rodriguez.mihogar.listalquileres;
 
 import android.content.Intent;
-import android.database.Cursor;
 
 import com.alexander_rodriguez.mihogar.Base.BasePresenter;
 import com.alexander_rodriguez.mihogar.UTILIDADES.TAlquiler;
 import com.alexander_rodriguez.mihogar.UTILIDADES.TCuarto;
-import com.alexander_rodriguez.mihogar.Adapters.Models.ModelAlquilerView;
+import com.alexander_rodriguez.mihogar.adapters.Models.ModelAlquilerView;
 
 import java.util.ArrayList;
 
@@ -26,8 +25,9 @@ public class Presentador extends BasePresenter<Interface.Vista>{
         view.mostarListAlquileres(getListAlquileres());
     }
     private ArrayList<ModelAlquilerView> getListAlquileres(){
-        String columnas = "*";
+      /*  String columnas = "*";
         Cursor c = db.getAllAlquileresJoinUserExept(columnas, TCuarto.NUMERO, numeroCuarto, idAlquiler);
-        return ModelAlquilerView.createListModel(c);
+        return ModelAlquilerView.createListModel(c);*/
+        return null;
     }
 }

@@ -1,5 +1,7 @@
 package com.alexander_rodriguez.mihogar.vercuarto;
 
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -11,6 +13,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.TableLayout;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -28,16 +31,15 @@ import com.alexander_rodriguez.mihogar.DataBase.items.ItemRoom;
 import com.alexander_rodriguez.mihogar.DataBase.parse.ParceRental;
 import com.alexander_rodriguez.mihogar.R;
 import com.alexander_rodriguez.mihogar.Save;
-import com.alexander_rodriguez.mihogar.UTILIDADES.Mensualidad;
 import com.alexander_rodriguez.mihogar.UTILIDADES.TAlquiler;
 import com.alexander_rodriguez.mihogar.UTILIDADES.TCuarto;
 import com.alexander_rodriguez.mihogar.UTILIDADES.TUsuario;
 import com.alexander_rodriguez.mihogar.ViewPdfActivity;
 import com.alexander_rodriguez.mihogar.historialcasa.HistorialCasaActivity;
-import com.alexander_rodriguez.mihogar.listalquileres.ListAlquileresActivity;
 import com.alexander_rodriguez.mihogar.add_rental.AddRentalActivity;
 import com.alexander_rodriguez.mihogar.menu_photo.MenuIterator;
 import com.alexander_rodriguez.mihogar.menu_photo.interfazMenu;
+import com.alexander_rodriguez.mihogar.mydialog.DialogAddAdvance;
 import com.alexander_rodriguez.mihogar.mydialog.DialogImput;
 import com.alexander_rodriguez.mihogar.mydialog.DialogInterfaz;
 import com.alexander_rodriguez.mihogar.mydialog.PresenterDialogImput;
@@ -52,8 +54,9 @@ import java.util.Objects;
 
 import butterknife.ButterKnife;
 
-public class ShowRoomActivity extends BaseActivity<Interface.Presenter> implements Interface.view, interfazAC {
-    public static final String TAG_REALIZAR_PAGO = "confirmarPago";
+public class ShowRoomActivity extends BaseActivity<Interface.Presenter> implements Interface.view, interfazAC, DialogAddAdvance.Interface {
+    private static final String TAG_REALIZAR_PAGO = "confirmarPago";
+    private static final String TAG_ADD_ADVANCE = "tag_add_advance";
 
     private PerfilCuarto perfilCuarto;
 
@@ -68,7 +71,8 @@ public class ShowRoomActivity extends BaseActivity<Interface.Presenter> implemen
 
     private DialogInterfaz.DialogImputPresenter dip;
 
-    private DialogConfirmPago dialogConfirmPago;
+    private DialogConfirmPago confirmPago;
+    private DialogAddAdvance addAdvanced;
 
     private View.OnClickListener listener;
     private View.OnClickListener listener2;
@@ -232,6 +236,24 @@ public class ShowRoomActivity extends BaseActivity<Interface.Presenter> implemen
         profileCuarto.setPhotoImage(path);
     }
 
+    @Override
+    public void hideAdvance() {
+        perfilCuarto.hideAdvance();
+    }
+
+    @Override
+    public void showAdvance(Double amount) {
+        perfilCuarto.showAdvance(amount);
+    }
+
+    @Override
+    public void showAllAdvances(TableLayout tl) {
+
+        AlertDialog.Builder b = new AlertDialog.Builder(this);
+        b.setView(tl);
+        b.show();
+    }
+
     public void showCuartolibre(ItemRoom cuarto) {
         perfilCuarto.showCuartolibre();
         iMenu = R.menu.menu_cuarto_no_alquilado;
@@ -343,7 +365,7 @@ public class ShowRoomActivity extends BaseActivity<Interface.Presenter> implemen
         Intent i = new Intent(this, HistorialCasaActivity.class);
         i.putExtra(HistorialCasaActivity.MODE, HistorialCasaActivity.RENTALS_OF_ROOM);
         i.putExtra(HistorialCasaActivity.EXTRA_ROOM_NUMBER, numCuarto);
-        i.putExtra(HistorialCasaActivity.EXTRA_RENTAL_ID, presenter.getRoom().getCurrentRentalId());
+        i.putExtra(HistorialCasaActivity.EXTRA_RENTAL_ID_IGNORE, presenter.getRoom().getCurrentRentalId());
         startActivity(i);
     }
 
@@ -390,6 +412,17 @@ public class ShowRoomActivity extends BaseActivity<Interface.Presenter> implemen
         btPagarAlquiler.setOnClickListener(listener2);
     }
 
+    private DialogAddAdvance createAddAdvanced(){
+        if (addAdvanced == null) addAdvanced =  new DialogAddAdvance(this);
+        return addAdvanced;
+    }
+
+    private DialogConfirmPago createConfirmPago(){
+        if (confirmPago == null) confirmPago = new DialogConfirmPago(this);
+        return confirmPago;
+    }
+
+
     @Override
     protected void iniciarViews() {
         modificarTransicion();
@@ -403,27 +436,32 @@ public class ShowRoomActivity extends BaseActivity<Interface.Presenter> implemen
 
         perfilCuarto = (PerfilCuarto)LayoutInflater.from(this).inflate(R.layout.view_perfil_cuarto, profileCuarto, false);
         profileCuarto.addToCuerpo(perfilCuarto);
+
     }
 
     private void createListener(){
         listener = v -> {
-            Bundle datos = new Bundle();
-            datos.putString(TUsuario.DNI, presenter.getResponsable());
-            datos.putString(TCuarto.NUMERO, numCuarto);
-            datos.putString(TAlquiler.EXTRA_FECHA_PAGO, perfilCuarto.getTvFechaC().getText().toString());
-            datos.putString(Mensualidad.COSTO, perfilCuarto.getTvMensualidad().getText().toString());
+            Bundle data = new Bundle();
+            data.putString(TUsuario.DNI, presenter.getResponsable());
+            data.putString(DialogConfirmPago.ARG_ROOM_NUMBER, numCuarto);
+            data.putString(DialogConfirmPago.ARG_PAYMENT_DATA, presenter.getDatosAlquiler().getPaymentDate());
+            data.putString(DialogConfirmPago.ARG_AMOUNT, String.valueOf(presenter.getAmount()));
 
-            dialogConfirmPago = new DialogConfirmPago(datos, ShowRoomActivity.this);
-
-            dialogConfirmPago.setOnClickListenerAceptar(v12 -> {
+            createConfirmPago();
+            confirmPago.setArguments(data);
+            confirmPago.setOnClickListenerAceptar(v12 -> {
                 presenter.realizarPago();
-                dialogConfirmPago.dismiss();
+                confirmPago.dismiss();
             });
-            dialogConfirmPago.setOnClickListenerCancelar(v1 -> {
-                Toast.makeText(ShowRoomActivity.this, "transaccion canselada", Toast.LENGTH_SHORT).show();
-                dialogConfirmPago.dismiss();
+            confirmPago.setOnClickListenerCancelar(v1 -> {
+                createAddAdvanced();
+                Bundle advancedData = new Bundle();
+                advancedData.putDouble(getString(R.string.mdPaymentAmount), presenter.getRemainingPayment());
+                addAdvanced.setArguments(advancedData);
+                confirmPago.dismiss();
+                addAdvanced.show(getSupportFragmentManager(), TAG_ADD_ADVANCE);
             });
-            dialogConfirmPago.show(getSupportFragmentManager(), TAG_REALIZAR_PAGO);
+            confirmPago.show(getSupportFragmentManager(), TAG_REALIZAR_PAGO);
         };
     }
 
@@ -436,5 +474,25 @@ public class ShowRoomActivity extends BaseActivity<Interface.Presenter> implemen
         DialogImput imput = new DialogImput();
         imput.showDiaglog(getSupportFragmentManager(), "d", dip);
         dip.setHintView("Motivo");
+    }
+
+    @Override
+    public void onAccept(Dialog dialog, Double amount) {
+        presenter.addAdvance(amount);
+        addAdvanced.dismiss();
+    }
+
+    @Override
+    public void onCancel(Dialog dialog) {
+        addAdvanced.dismiss();
+    }
+
+    @Override
+    public void showError(String string) {
+        showMessage(string);
+    }
+
+    public void ocShowDetailsAdvance(View view) {
+        presenter.ocShowDetailsAdvance();
     }
 }

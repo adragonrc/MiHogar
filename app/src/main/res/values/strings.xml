@@ -166,31 +166,17 @@
 
     //Payment document metadata
     <string name="mdPaymentDate">date</string>
-    <string name="mdPaymentAmout">amount</string>
-
-    //PaymentMonthly document metadata
+    <string name="mdPaymentAmount">amount</string>
     <string name="mdPaymentMonthlyPaymentId">monthlyPaymentId</string>
+
+    //MonthlyPayment document metadata
+    <string name="mdmpLastPayment">lastPaymentId</string>
 
     //Tenant document metadata
     <string name="mdTenantName">name</string>
     <string name="mdTenantApellidoPat">apellidoPat</string>
     <string name="mdTenantApellidoMat">apellidoMat</string>
     <string name="mdTenantPath">path</string>
-
-    "status": "success",
-    "country": "United States",
-    "countryCode": "US",
-    "region": "CA",
-    "regionName": "California",
-    "city": "San Francisco",
-    "zip": "94105",
-    "lat": "37.7898",
-    "lon": "-122.3942",
-    "timezone": "America/Los_Angeles",
-    "isp": "Wikimedia Foundation",
-    "org": "Wikimedia Foundation",
-    "as": "AS14907 Wikimedia US network",
-    "query": "208.80.152.201"
     <string name="sPayRent">PAGAR ALQUILER</string>
     <string name="s_room_without_rental">Agregar alquiler</string>
     <string name="sUploadPhotoError">Photo could not be uploaded</string>
@@ -221,8 +207,21 @@
     <string name="sRegistry">Registry</string>
     <string name="sDetails">Datos del usuario</string>
     <string name="name">nombers</string>
+    <string name="s_send_email">Send email</string>
+    <string name="sTitleExample">HI Alexander Rodriguez</string>
+    <string name="sRoom">Cuarto</string>
+    <string name="sTenant">Inquilinos</string>
+    <string name="sError" >Ocurrio un error</string>
+    <string name="cAdvance">advance</string>
+    <string name="sMPError">Mensualidad no valida</string>
+    <string name="smpNotFound">Current Monthly Payment wasn\'t found</string>
+    <string name="s_email_confirm_message_example">Porfavor verifique que su direccion de correo electronico adragonrc@gmail.com sea de usted, en caso de no ferificarse en los proximos x dias, su cuenta sera bloqueada</string>
+    <string name="s_email_confirm_message_start">Porfavor verifique que su direccion de correo electronico </string>
+    <string name="s_email_confirm_message_middle"> sea de usted, en caso de no ferificarse en los proximos</string>
+    <string name="s_email_confirm_message_end"> dias, su cuenta sera bloqueada</string>
+    <string name="mdRoomNumber">roomNumber</string>
 
-    <string-array name="DialingCountryCode" >
+    <string-array name="DialingCountryCode">
         <item>32,BE</item>
         <item>501,BZ</item>
         <item>229,BJ</item>

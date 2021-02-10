@@ -63,7 +63,7 @@
                 android:textColorHint="@color/colorAccent"
                 android:layout_height="wrap_content"
                 app:startIconDrawable="@drawable/ic_baseline_perm_identity_24"
-                app:startIconTint="@color/colorPrimary">
+                app:startIconTint="@color/primaryColor">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/etDNI"
@@ -84,7 +84,7 @@
                 android:textColorHint="@color/colorAccent"
                 android:layout_height="wrap_content"
                 app:startIconDrawable="@drawable/ic_baseline_person_24"
-                app:startIconTint="@color/colorPrimary">
+                app:startIconTint="@color/primaryColor">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/etNombre"
@@ -103,7 +103,7 @@
                 android:layout_height="wrap_content"
                 style="@style/styleMargin"
                 app:startIconDrawable="@drawable/ic_baseline_person_24"
-                app:startIconTint="@color/colorPrimary">
+                app:startIconTint="@color/primaryColor">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/etApellidoPat"
@@ -122,7 +122,7 @@
                 android:textColorHint="@color/colorAccent"
                 style="@style/styleMargin"
                 app:startIconDrawable="@drawable/ic_baseline_person_24"
-                app:startIconTint="@color/colorPrimary">
+                app:startIconTint="@color/primaryColor">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/etApellidoMat"

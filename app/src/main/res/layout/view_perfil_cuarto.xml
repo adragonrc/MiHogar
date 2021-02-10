@@ -28,115 +28,15 @@
         </androidx.cardview.widget.CardView>
 
         <androidx.cardview.widget.CardView
-            android:id="@+id/cvDetallesAlquiler"
             style="@style/styleCardView"
-            android:visibility="visible">
-
+            android:id="@+id/cvMPDetails">
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:divider="?android:dividerVertical"
                 android:orientation="vertical"
                 android:showDividers="middle">
-                <LinearLayout
-                    style="@style/styleLinearLayout"
-                    android:orientation="vertical">
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal">
 
-                        <TextView
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:text="Alquiler"
-                            android:textColor="@color/colorPrimary" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:onClick="onClickVermas"
-                            android:text="Ver mas..."
-
-                            android:textColor="@color/colorPrimaryDark" />
-                    </LinearLayout>
-
-                    <LinearLayout
-                        style="@style/styleLinearLayoutIntern"
-                        android:orientation="horizontal">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Inquilinos" />
-
-                        <TextView
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:id="@+id/tvTenantsNumber"
-                            android:layout_weight="1"
-                            android:gravity="right"
-                            android:text="9" />
-                    </LinearLayout>
-                </LinearLayout>
-                <LinearLayout
-                    style="@style/styleLinearLayout"
-                    android:orientation="vertical"
-                    android:id="@+id/llPagoMensual">
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
-
-                        <TextView
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:text="Fecha de pago."
-                            android:textColor="@color/colorPrimary" />
-
-                        <TextView
-                            android:id="@+id/tvRealizarPago"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Realizar pago..."
-                            android:textColor="@color/colorPrimary" />
-                    </LinearLayout>
-
-                    <LinearLayout
-                        style="@style/styleLinearLayoutIntern"
-                        android:orientation="horizontal">
-
-                        <TextView
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:id="@+id/tvFechaDePago"
-                            android:text="02/09/2019" />
-
-                        <ImageView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:id="@+id/ivAlert"
-                            android:src="@drawable/ic_add_alert_black_24dp" />
-                    </LinearLayout>
-
-                </LinearLayout>
-
-                <LinearLayout
-                    style="@style/styleLinearLayout"
-                    android:orientation="vertical">
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="Fecha de ingreso"
-                        android:textColor="@color/colorPrimary" />
-
-                    <TextView
-                        android:id="@+id/tvEntryDate"
-                        style="@style/styleLinearLayoutIntern"
-                        android:visibility="visible" />
-                </LinearLayout>
                 <LinearLayout
                     style="@style/styleLinearLayout"
                     android:orientation="vertical">
@@ -144,7 +44,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="Mensualidad."
-                        android:textColor="@color/colorPrimary"/>
+                        android:textColor="@color/primaryColor"/>
 
                     <LinearLayout
                         style="@style/styleLinearLayoutIntern"
@@ -194,7 +94,137 @@
                             android:background="@android:color/transparent"
                             android:onClick="onClickConfirMensualidad"
                             android:src="@drawable/ic_check_black_24dp" />
-                     </LinearLayout>
+                    </LinearLayout>
+                </LinearLayout>
+                <LinearLayout
+                    android:id="@+id/llAdvance"
+                    style="@style/styleLinearLayout"
+                    android:orientation="vertical"
+                    android:onClick="ocShowDetailsAdvance"
+                    android:visibility="gone">
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Pago faltante."
+                        android:textColor="@color/primaryColor"/>
+
+                    <TextView
+                        android:id="@+id/tvAdvanceTotal"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="S/. 100.00"
+                        android:layout_margin="6dp"/>
+                </LinearLayout>
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cvDetallesAlquiler"
+            style="@style/styleCardView">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:divider="?android:dividerVertical"
+                android:orientation="vertical"
+                android:showDividers="middle">
+                <LinearLayout
+                    style="@style/styleLinearLayout"
+                    android:orientation="vertical">
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="Alquiler"
+                            android:textColor="@color/primaryColor" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:onClick="onClickVermas"
+                            android:text="Ver mas..."
+
+                            android:textColor="@color/primaryColorDark" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        style="@style/styleLinearLayoutIntern"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Inquilinos" />
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/tvTenantsNumber"
+                            android:layout_weight="1"
+                            android:gravity="right"
+                            android:text="9" />
+                    </LinearLayout>
+                </LinearLayout>
+                <LinearLayout
+                    style="@style/styleLinearLayout"
+                    android:orientation="vertical"
+                    android:id="@+id/llPagoMensual">
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="Fecha de pago."
+                            android:textColor="@color/primaryColor" />
+
+                        <TextView
+                            android:id="@+id/tvRealizarPago"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Realizar pago..."
+                            android:textColor="@color/primaryColor" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        style="@style/styleLinearLayoutIntern"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:id="@+id/tvFechaDePago"
+                            android:text="02/09/2019" />
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/ivAlert"
+                            android:src="@drawable/ic_add_alert_black_24dp" />
+                    </LinearLayout>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    style="@style/styleLinearLayout"
+                    android:orientation="vertical">
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Fecha de ingreso"
+                        android:textColor="@color/primaryColor" />
+
+                    <TextView
+                        android:id="@+id/tvEntryDate"
+                        style="@style/styleLinearLayoutIntern"
+                        android:visibility="visible" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -205,7 +235,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="@string/NumeroTelf"
-                        android:textColor="@color/colorPrimary"/>
+                        android:textColor="@color/primaryColor"/>
 
                     <LinearLayout
                         android:id="@+id/llEditarNumTel"
@@ -261,7 +291,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="@string/sCorreoEl"
-                        android:textColor="@color/colorPrimary" />
+                        android:textColor="@color/primaryColor" />
 
                     <LinearLayout
                         android:id="@+id/llEditarCorreo"
@@ -322,7 +352,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Detalles."
-                    android:textColor="@color/colorPrimary" />
+                    android:textColor="@color/primaryColor" />
 
                 <LinearLayout
                     android:id="@+id/llMostrarDetalles"
@@ -391,13 +421,13 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:text="Otros alquileres"
-                        android:textColor="@color/colorPrimary" />
+                        android:textColor="@color/primaryColor" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Mostrar"
-                        android:textColor="@color/colorPrimary" />
+                        android:textColor="@color/primaryColor" />
                 </LinearLayout>
 
                 <LinearLayout

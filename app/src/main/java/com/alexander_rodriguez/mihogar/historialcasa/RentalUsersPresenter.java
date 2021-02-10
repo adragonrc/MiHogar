@@ -9,22 +9,23 @@ import android.view.MenuItem;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.alexander_rodriguez.mihogar.Adapters.RvAdapterUser;
+import com.alexander_rodriguez.mihogar.adapters.RvAdapterUser;
 import com.alexander_rodriguez.mihogar.AdminDate;
-import com.alexander_rodriguez.mihogar.Base.BasePresenter;
+import com.alexander_rodriguez.mihogar.DataBase.DBInterface;
 import com.alexander_rodriguez.mihogar.DataBase.items.ItemTenant;
 import com.alexander_rodriguez.mihogar.DataBase.models.TRentalTenant;
 import com.alexander_rodriguez.mihogar.DataBase.parse.ParceTenant;
 import com.alexander_rodriguez.mihogar.R;
-import com.alexander_rodriguez.mihogar.UTILIDADES.TAlquiler;
 import com.alexander_rodriguez.mihogar.historialUserPakage.HistorialUsuarioActivity;
+import com.alexander_rodriguez.mihogar.mi_casa.FragmentInterface;
+import com.alexander_rodriguez.mihogar.mi_casa.MyHouseFragment;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 
-public class RentalUsersPresenter extends BasePresenter<Interface.View> implements Interface.Presenter {
+public class RentalUsersPresenter implements FragmentInterface.presenter {
     private AdminDate adminDate;
 
     private String modo;
@@ -38,24 +39,26 @@ public class RentalUsersPresenter extends BasePresenter<Interface.View> implemen
 
     private boolean showMain;
 
+    private final FragmentInterface.view view;
+    private final FragmentParent.presenter parent;
+    private final DBInterface db;
     private ArrayList<ItemTenant> list;
-    private Intent mIntent;
 
     private int cont;
     private int iCont;
 
     private LinearLayoutManager manager;
-    public RentalUsersPresenter(Interface.View view, Intent i) {
-        super(view);
+    public RentalUsersPresenter(FragmentInterface.view view, FragmentParent.presenter parent) {
+        this.view = view;
+        this.parent = parent;
+        this.db = parent.getDB();
         adminDate = new AdminDate();
-        idAlquiler = i.getStringExtra(TAlquiler.ID);
+        idAlquiler = view.getArguments().getString(MyHouseFragment.ARG_RENTAL_ID);
         idItemMenuSelected = -1;
-        mIntent = i;
         manager = new LinearLayoutManager(view.getContext());
         list = new ArrayList<>();
     }
 
-    @Override
     public void showList() {
         if(list.isEmpty()){
             loadUsersAndShow();
@@ -94,42 +97,24 @@ public class RentalUsersPresenter extends BasePresenter<Interface.View> implemen
         }
     }
 
-    @Override
     public void crearMenu(MenuInflater menuInflater, Menu menu) {
         this.menu = menu;
         if (iMenu != 0){
             menuInflater.inflate(this.iMenu, menu);
-            switch (idItemMenuSelected) {
-                case R.id.iVerAlquileres: {
-                    menu.findItem(R.id.item_ordenar_numero).setVisible(true);
-                    menu.findItem(R.id.item_ordenar_nombre).setVisible(false);
-                    break;
-                }
-                default: {
-                    menu.findItem(R.id.item_ordenar_numero).setVisible(false);
-                    menu.findItem(R.id.item_ordenar_nombre).setVisible(true);
-                    break;
-                }
+            if (idItemMenuSelected == R.id.iVerAlquileres) {
+                menu.findItem(R.id.item_ordenar_numero).setVisible(true);
+                menu.findItem(R.id.item_ordenar_nombre).setVisible(false);
+            } else {
+                menu.findItem(R.id.item_ordenar_numero).setVisible(false);
+                menu.findItem(R.id.item_ordenar_nombre).setVisible(true);
             }
         }
     }
 
-    @Override
     public ContentValues getDetails(String id) {
         return null;
     }
 
-    @Override
-    public void ordenarPorNombre() {
-
-    }
-
-    @Override
-    public void ordenarPorNumero() {
-
-    }
-
-    @Override
     public void itemSelected(MenuItem item) {
 
     }
@@ -147,7 +132,13 @@ public class RentalUsersPresenter extends BasePresenter<Interface.View> implemen
     }
 
     @Override
-    public void iniciarComandos() {
+    public void onCreate() {
+
+    }
+
+    @Override
+    public void onResume() {
         showList();
+
     }
 }

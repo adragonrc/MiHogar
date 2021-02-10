@@ -49,15 +49,14 @@ public class ItemRental extends TRental {
         }
     }
 
-    public static @Nullable ItemRental newInstance(@NotNull DocumentSnapshot documentSnapshot) {
+    public static ItemRental newInstance(@NotNull DocumentSnapshot documentSnapshot) {
         TRental r = documentSnapshot.toObject(TRental.class);
-        ItemRental rental = r == null? null:new ItemRental(r);
+        ItemRental rental = r == null? new ItemRental():new ItemRental(r);
         rental.setId(documentSnapshot.getId());
         return rental;
     }
 
-
-    public TRental getCuartoRoot(){
+    public TRental getRentalRoot(){
         return (TRental) this;
     }
 
@@ -94,19 +93,19 @@ public class ItemRental extends TRental {
         return paymentDate;
     }
 
-    private String dateToString(Timestamp date, String cache){
-        if(date == null) return "";
-        if(cache == null || cache.isEmpty()){
-            cache = (new SimpleDateFormat(AdminDate.FORMAT_DATE, Locale.getDefault())).format(date.toDate());
-        }
-        return cache;
-    }
-
     public String getEntryDateAsString() {
-        return dateToString(entryDate, sEntryDate);
+        if(entryDate == null) return "";
+        if(sEntryDate == null || sEntryDate.isEmpty()){
+            sEntryDate = (new SimpleDateFormat(AdminDate.FORMAT_DATE, Locale.getDefault())).format(entryDate.toDate());
+        }
+        return sEntryDate;
     }
 
     public String getDepartureDateAsString() {
-        return dateToString(departureDate, sDepartureDate);
+        if(departureDate == null) return "";
+        if(sDepartureDate == null || sDepartureDate.isEmpty()){
+            sDepartureDate = (new SimpleDateFormat(AdminDate.FORMAT_DATE, Locale.getDefault())).format(departureDate.toDate());
+        }
+        return sDepartureDate;
     }
 }

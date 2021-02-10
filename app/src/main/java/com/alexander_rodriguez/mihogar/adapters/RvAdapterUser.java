@@ -1,4 +1,4 @@
-package com.alexander_rodriguez.mihogar.Adapters;
+package com.alexander_rodriguez.mihogar.adapters;
 
 import android.content.Context;
 import android.view.ContextMenu;
@@ -74,7 +74,7 @@ public class RvAdapterUser extends RecyclerView.Adapter<RvAdapterUser.Holder> {
         if (h != null) {
             hMain = h;
             Context c = mInterface.getContext();
-            h.nombres.setTextColor(c.getResources().getColor(R.color.colorPrimary));
+            h.nombres.setTextColor(c.getResources().getColor(R.color.primaryColor));
             h.DNI.setTextColor(c.getResources().getColor(R.color.colorAccent));
         }
     }

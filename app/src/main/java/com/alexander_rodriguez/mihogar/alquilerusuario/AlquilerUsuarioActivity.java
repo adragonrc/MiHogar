@@ -9,8 +9,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.alexander_rodriguez.mihogar.Base.BaseActivity;
-import com.alexander_rodriguez.mihogar.Adapters.RecyclercViewAdapter;
-import com.alexander_rodriguez.mihogar.Base.BaseActivity;
+import com.alexander_rodriguez.mihogar.adapters.RecyclercViewAdapter;
 import com.alexander_rodriguez.mihogar.R;
 import com.alexander_rodriguez.mihogar.UTILIDADES.TAlquiler;
 import com.alexander_rodriguez.mihogar.tableActivity.TableActivity;

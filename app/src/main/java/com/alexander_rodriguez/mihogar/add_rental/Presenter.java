@@ -5,7 +5,7 @@ import android.widget.ArrayAdapter;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.alexander_rodriguez.mihogar.Adapters.RvAdapterUser;
+import com.alexander_rodriguez.mihogar.adapters.RvAdapterUser;
 import com.alexander_rodriguez.mihogar.Base.BasePresenter;
 import com.alexander_rodriguez.mihogar.DataBase.items.ItemTenant;
 import com.alexander_rodriguez.mihogar.DataBase.models.TMonthlyPayment;
@@ -64,16 +64,13 @@ public class Presenter extends BasePresenter<Interfaz.view> implements Interfaz.
 
     private void getRoomAvailableComplete(QuerySnapshot task){
 
-            Iterator<QueryDocumentSnapshot> iterator = task.iterator();
-            cuartosDisponibles = new ArrayList<>();
-            if(iterator != null)
-                while (iterator.hasNext()){
-                    QueryDocumentSnapshot documentSnapshot = iterator.next();
-                    cuartosDisponibles.add(documentSnapshot.getId());
-                }
-            if(cuartosDisponibles.isEmpty()){
-                view.sinCuartos();
-            }
+        cuartosDisponibles = new ArrayList<>();
+        for (DocumentSnapshot doc: task){
+            cuartosDisponibles.add(doc.getId());
+        }
+        if(cuartosDisponibles.isEmpty()){
+            view.sinCuartos();
+        }
     }
     @Override
     public void iniciarComandos() {
@@ -144,7 +141,7 @@ public class Presenter extends BasePresenter<Interfaz.view> implements Interfaz.
     }
 
     private void addTenantSuccess(Void v){
-        TMonthlyPayment monthlyPayment = new TMonthlyPayment(modelToSave.getPrice(), modelToSave.getEntryDate(), rentalId);
+        TMonthlyPayment monthlyPayment = new TMonthlyPayment(Double.parseDouble(modelToSave.getPrice()), modelToSave.getEntryDate(), rentalId);
         db.agregarMensualidad(monthlyPayment)
                 .addOnSuccessListener(this::addMonthlyPaymentSuccess)
                 .addOnFailureListener(this::addMonthlyPaymentFailure);
@@ -154,7 +151,7 @@ public class Presenter extends BasePresenter<Interfaz.view> implements Interfaz.
     private void addMonthlyPaymentSuccess(DocumentReference document) {
         db.updateCurrentRentMP(rentalId, document);
         if (modelToSave.wasPaid()) {
-            TPayment payment = new TPayment(modelToSave.getEntryDate(), rentalId, modelToSave.getRoomNumber(), document.getId(), modelToSave.getPrice(), modelSelect.getDni());
+            TPayment payment = new TPayment(modelToSave.getEntryDate(), rentalId, modelToSave.getRoomNumber(), document.getId(), Double.parseDouble(modelToSave.getPrice()), modelSelect.getDni(), null);
             db.addPayment(payment)
                     .addOnSuccessListener(this::addPaymentSuccess)
                     .addOnFailureListener(this::addPaymentFailure);
@@ -242,7 +239,7 @@ public class Presenter extends BasePresenter<Interfaz.view> implements Interfaz.
                     .addOnFailureListener(this::addRentalWasFailure);
 
         }else{
-            view.showError("Campos vacios");
+            view.showError("Campos vacios o invalidos");
         }
     }
 
