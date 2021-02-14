@@ -18,7 +18,7 @@ import java.util.Locale;
 
 public class ItemRental extends TRental {
     private String id;
-    private String paymentDate;
+    private Date paymentDate;
     private String sEntryDate;
     private String sDepartureDate;
 
@@ -77,11 +77,11 @@ public class ItemRental extends TRental {
         return false;
     }
 
-    public void setPaymentDate(String paymentDate) {
+    public void setPaymentDate(Date paymentDate) {
         this.paymentDate = paymentDate;
     }
 
-    public String getPaymentDate() {
+    public Date getPaymentDate() {
         return paymentDate;
     }
 
@@ -90,7 +90,7 @@ public class ItemRental extends TRental {
     }
 
     public String getPaymentDateAsString() {
-        return paymentDate;
+        return AdminDate.dateToString(paymentDate);
     }
 
     public String getEntryDateAsString() {

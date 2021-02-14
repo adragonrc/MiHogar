@@ -220,6 +220,12 @@
     <string name="s_email_confirm_message_middle"> sea de usted, en caso de no ferificarse en los proximos</string>
     <string name="s_email_confirm_message_end"> dias, su cuenta sera bloqueada</string>
     <string name="mdRoomNumber">roomNumber</string>
+    <string name="push_pin_description">Fijar cuarto</string>
+    <string name="sDelete">Eliminar</string>
+    <string name="sPushPin">Fijar</string>
+    <string name="mdRoomIsHide">hide</string>
+    <string name="mdRoomNumberOfRentals">numberOfRentals</string>
+    <string name="title_add_rental">Nuevo Alquiler</string>
 
     <string-array name="DialingCountryCode">
         <item>32,BE</item>

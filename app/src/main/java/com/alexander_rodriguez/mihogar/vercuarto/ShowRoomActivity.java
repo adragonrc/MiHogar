@@ -24,8 +24,7 @@ import androidx.core.view.ViewCompat;
 
 import com.alexander_rodriguez.mihogar.ActivityShowImage;
 import com.alexander_rodriguez.mihogar.Base.BaseActivity;
-import com.alexander_rodriguez.mihogar.ButtonsAC.ButtonsAceptarCancelar;
-import com.alexander_rodriguez.mihogar.ButtonsAC.interfazAC;
+import com.alexander_rodriguez.mihogar.view_buttons_ac.ButtonsAC;
 import com.alexander_rodriguez.mihogar.DataBase.items.ItemRental;
 import com.alexander_rodriguez.mihogar.DataBase.items.ItemRoom;
 import com.alexander_rodriguez.mihogar.DataBase.parse.ParceRental;
@@ -54,16 +53,17 @@ import java.util.Objects;
 
 import butterknife.ButterKnife;
 
-public class ShowRoomActivity extends BaseActivity<Interface.Presenter> implements Interface.view, interfazAC, DialogAddAdvance.Interface {
+public class ShowRoomActivity extends BaseActivity<Interface.Presenter> implements Interface.view, ButtonsAC.Listener, DialogAddAdvance.Interface {
     private static final String TAG_REALIZAR_PAGO = "confirmarPago";
     private static final String TAG_ADD_ADVANCE = "tag_add_advance";
+    private static final int REQUEST_CODE_ADD_RENTAL = 2000;
 
     private PerfilCuarto perfilCuarto;
 
     private ProfileView profileCuarto;
 
 
-    private ButtonsAceptarCancelar aceptarCancelar;
+    private ButtonsAC aceptarCancelar;
 
     private ImageView ivPerfil;
 
@@ -77,8 +77,6 @@ public class ShowRoomActivity extends BaseActivity<Interface.Presenter> implemen
     private View.OnClickListener listener;
     private View.OnClickListener listener2;
 
-    private int iMenu;
-
     private String path;
     private String numCuarto;
 
@@ -87,7 +85,6 @@ public class ShowRoomActivity extends BaseActivity<Interface.Presenter> implemen
     private interfazMenu interfazMenu;
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(this.iMenu, menu);
         getMenuInflater().inflate(R.menu.menu_photo_show, menu);
         this.menu = menu;
         return true;
@@ -96,50 +93,43 @@ public class ShowRoomActivity extends BaseActivity<Interface.Presenter> implemen
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-        switch (id) {
-            case R.id.iVerPagos: {
-                String idAlquiler = presenter.getRoom().getCurrentRentalId();
-                Intent i = new Intent(this, TableActivity.class);
-                i.putExtra(TableActivity.RENTAL_ID, idAlquiler);
-                i.putExtra(TableActivity.PHONE_NUM, presenter.getDatosAlquiler().getPhoneNumber());
-                i.putExtra(TableActivity.EMAIL, presenter.getDatosAlquiler().getEmail());
-                i.putExtra(TableActivity.SEND_MT, true);
-                startActivity(i);
-                break;
-            }
-            case R.id.iAgregarInquilino: {
-                Intent i = new Intent(this, AddRentalActivity.class);
-                i.putExtra(TCuarto.NUMERO, numCuarto);
-                startActivity(i);
-                break;
-            }
-            case R.id.app_bar_edit:{
-                interfazMenu.onEdit();
-                break;
-            }
-            case R.id.app_bar_shared:{
-                interfazMenu.onShared(path);
-                break;
-            }
-            case BACK_PRESSED:{
-                onBackPressed();
-                break;
-            }
+        if (id == R.id.iVerPagos) {
+            ParceRental rental = new ParceRental(presenter.getDatosAlquiler());
+            Intent i = new Intent(this, TableActivity.class);
+            i.putExtra(TableActivity.EXTRA_RENTAL, rental);
+            startActivity(i);
+        } else if (id == R.id.iAddRental) {
+            Intent i = new Intent(this, AddRentalActivity.class);
+            i.putExtra(TCuarto.NUMERO, numCuarto);
+            startActivityForResult(i, REQUEST_CODE_ADD_RENTAL);
+        } else if (id == R.id.app_bar_edit) {
+            interfazMenu.onEdit();
+        } else if (id == R.id.app_bar_shared) {
+            interfazMenu.onShared(path);
+        } else if (id == BACK_PRESSED) {
+            onBackPressed();
         }
         return super.onOptionsItemSelected(item);
     }
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE){
-            CropImage.ActivityResult result = CropImage.getActivityResult(data);
-            if(resultCode == RESULT_OK && result != null){
-                resultOk(result);
-            }else{
-                if(resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE){
-                    Exception e = Objects.requireNonNull(result).getError();
-                    e.printStackTrace();
-                    //Toast.makeText(this, "Posible Error es: "+ e, Toast.LENGTH_SHORT).show();
+        switch (requestCode) {
+            case CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE:
+                CropImage.ActivityResult result = CropImage.getActivityResult(data);
+                if (resultCode == RESULT_OK && result != null) {
+                    resultOk(result);
+                } else {
+                    if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
+                        Exception e = Objects.requireNonNull(result).getError();
+                        e.printStackTrace();
+                        //Toast.makeText(this, "Posible Error es: "+ e, Toast.LENGTH_SHORT).show();
+                    }
+                }
+                break;
+            case REQUEST_CODE_ADD_RENTAL:{
+                if (resultCode == RESULT_OK){
+                    presenter.refresh();
                 }
             }
         }
@@ -150,7 +140,7 @@ public class ShowRoomActivity extends BaseActivity<Interface.Presenter> implemen
         Bitmap bm = BitmapFactory.decodeFile(result.getUri().getPath());
         path = s.SaveImage(this, bm, getString(R.string.cRoom), numCuarto);
         presenter.updatePhoto(path);
-        profileCuarto.setPhotoImage(path);
+        profileCuarto.reloadPhoto(path);
     }
 
     @Override
@@ -168,8 +158,6 @@ public class ShowRoomActivity extends BaseActivity<Interface.Presenter> implemen
             @Override
             public void positiveButtonListener(@Nullable String s) {
                 presenter.deshacerContrato(s);
-                removerMenuCuartoSinAlquiler();
-                getMenuInflater().inflate(R.menu.menu_cuarto_no_alquilado, menu);
             }
         };
 
@@ -180,13 +168,12 @@ public class ShowRoomActivity extends BaseActivity<Interface.Presenter> implemen
                 gotoTablePagos();
             }
         };
-        iMenu = R.menu.menu_cuarto_no_alquilado;
     }
 
     private void gotoTablePagos() {
         Intent intent = new Intent(this, TableActivity.class);
         ParceRental rental = new ParceRental(presenter.getDatosAlquiler());
-        intent.putExtra("parce", rental);
+        intent.putExtra(TableActivity.EXTRA_RENTAL, rental);
         startActivity(intent);
     }
 
@@ -207,25 +194,17 @@ public class ShowRoomActivity extends BaseActivity<Interface.Presenter> implemen
         perfilCuarto.showCuartoAlquilado(usuario, mensualidad, presenter.getDatosAlquiler());
 
         aceptarCancelar.setVisibility(View.VISIBLE);
-        iMenu = R.menu.menu_cuarto;
         if (menu != null) {
-            removerMenuCuartoSinAlquiler();
-            getMenuInflater().inflate(iMenu, menu);
+            menu.removeItem(R.id.iAddRental);
+            getMenuInflater().inflate(R.menu.menu_cuarto, menu);
         }
         detallesCuarto2(cuarto);
     }
 
-    private void removerMenuCuartoSinAlquiler(){
-        menu.removeItem(R.id.iVerPagos);
-    }
-
-    private void removerMenuCuartoAlquilado(){
-        menu.removeItem(R.id.iVerPagos);
-    }
 
     private void detallesCuarto2(ItemRoom room){
         path = room.getPathImage();
-        profileCuarto.setPhotoImage(path);
+        profileCuarto.reloadPhoto(path);
         perfilCuarto.setDetallesText(room.getDetails());
         profileCuarto.setTitle(room.getRoomNumber());
         profileCuarto.setSubTitle(room.getDetails());
@@ -233,7 +212,7 @@ public class ShowRoomActivity extends BaseActivity<Interface.Presenter> implemen
 
     @Override
     public void reloadRoomPhoto() {
-        profileCuarto.setPhotoImage(path);
+        profileCuarto.reloadPhoto(Save.createFile(this, getString(R.string.cRoom), numCuarto).getAbsolutePath());
     }
 
     @Override
@@ -256,8 +235,10 @@ public class ShowRoomActivity extends BaseActivity<Interface.Presenter> implemen
 
     public void showCuartolibre(ItemRoom cuarto) {
         perfilCuarto.showCuartolibre();
-        iMenu = R.menu.menu_cuarto_no_alquilado;
-
+        if (menu !=null) {
+            menu.removeItem(R.id.iVerPagos);
+            getMenuInflater().inflate(R.menu.menu_cuarto_no_alquilado, menu);
+        }
         detallesCuarto2(cuarto);
         aceptarCancelar.setVisibility(View.GONE);
     }
@@ -274,7 +255,7 @@ public class ShowRoomActivity extends BaseActivity<Interface.Presenter> implemen
         //startActivity(new Intent(this, HistorialCasaActivity.class));
         Intent i = new Intent(this, HistorialCasaActivity.class);
         i.putExtra(HistorialCasaActivity.MODE, HistorialCasaActivity.USERS_OF_RENTAL);
-        i.putExtra(TAlquiler.ID, presenter.getRoom().getCurrentRentalId());
+        i.putExtra(HistorialCasaActivity.EXTRA_RENTAL_ID, presenter.getRoom().getCurrentRentalId());
         startActivity(i);
     }
 
@@ -432,6 +413,7 @@ public class ShowRoomActivity extends BaseActivity<Interface.Presenter> implemen
         aceptarCancelar.setTextButtons("QUITAR ALQUILER", "PAGAR ALQUILER");
 
         btPagarAlquiler = aceptarCancelar.getButton1();
+        aceptarCancelar.setListener(this);
         ivPerfil = findViewById(R.id.ivPerfil);
 
         perfilCuarto = (PerfilCuarto)LayoutInflater.from(this).inflate(R.layout.view_perfil_cuarto, profileCuarto, false);
@@ -444,7 +426,7 @@ public class ShowRoomActivity extends BaseActivity<Interface.Presenter> implemen
             Bundle data = new Bundle();
             data.putString(TUsuario.DNI, presenter.getResponsable());
             data.putString(DialogConfirmPago.ARG_ROOM_NUMBER, numCuarto);
-            data.putString(DialogConfirmPago.ARG_PAYMENT_DATA, presenter.getDatosAlquiler().getPaymentDate());
+            data.putString(DialogConfirmPago.ARG_PAYMENT_DATA, presenter.getDatosAlquiler().getPaymentDateAsString());
             data.putString(DialogConfirmPago.ARG_AMOUNT, String.valueOf(presenter.getAmount()));
 
             createConfirmPago();
@@ -466,17 +448,6 @@ public class ShowRoomActivity extends BaseActivity<Interface.Presenter> implemen
     }
 
     @Override
-    public void onClickPositive(View v) {
-    }
-
-    @Override
-    public void onClickNegative(View v) {
-        DialogImput imput = new DialogImput();
-        imput.showDiaglog(getSupportFragmentManager(), "d", dip);
-        dip.setHintView("Motivo");
-    }
-
-    @Override
     public void onAccept(Dialog dialog, Double amount) {
         presenter.addAdvance(amount);
         addAdvanced.dismiss();
@@ -494,5 +465,17 @@ public class ShowRoomActivity extends BaseActivity<Interface.Presenter> implemen
 
     public void ocShowDetailsAdvance(View view) {
         presenter.ocShowDetailsAdvance();
+    }
+
+    @Override
+    public void ocPositive(View view) {
+
+    }
+
+    @Override
+    public void ocNegative(View view) {
+        DialogImput imput = new DialogImput();
+        imput.showDiaglog(getSupportFragmentManager(), "d", dip);
+        dip.setHintView("Motivo");
     }
 }

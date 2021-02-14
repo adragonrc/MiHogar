@@ -26,7 +26,7 @@ public class MListener <T extends DocumentSnapshot>  implements OnSuccessListene
                 modelRoomView.setPaymentDate(null);
             }*/
         }else{
-            modelRoomView.setPaymentDate(null);
+            //modelRoomView.setPaymentDate(null);
         }
 
     }

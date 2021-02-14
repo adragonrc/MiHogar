@@ -1,4 +1,4 @@
-package com.alexander_rodriguez.mihogar.agregarcuarto;
+package com.alexander_rodriguez.mihogar.add_room;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -13,15 +13,13 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 
-import  com.alexander_rodriguez.mihogar.AdministradorCamara;
 import com.alexander_rodriguez.mihogar.Base.BaseActivity;
-import com.alexander_rodriguez.mihogar.ButtonsAC.ButtonsAceptarCancelar;
-import com.alexander_rodriguez.mihogar.ButtonsAC.interfazAC;
+import com.alexander_rodriguez.mihogar.view_buttons_ac.ButtonsAC;
 import com.alexander_rodriguez.mihogar.R;
 import com.alexander_rodriguez.mihogar.Save;
 import com.theartofdev.edmodo.cropper.CropImage;
 
-public class AgregarCuarto extends BaseActivity<Interfaz.Presenter> implements Interfaz.view, interfazAC {
+public class AgregarCuarto extends BaseActivity<Interfaz.Presenter> implements Interfaz.view, ButtonsAC.Listener{
     private EditText numeroDeCuarto;
     private EditText precio;
     private EditText detalles;
@@ -29,7 +27,7 @@ public class AgregarCuarto extends BaseActivity<Interfaz.Presenter> implements I
     private String currentPhotoPath;
     private Bitmap bmGuardar;
 
-    private ButtonsAceptarCancelar ac;
+    private ButtonsAC ac;
 
     @Override
     public void salir() {
@@ -42,7 +40,8 @@ public class AgregarCuarto extends BaseActivity<Interfaz.Presenter> implements I
         detalles = findViewById(R.id.etDetalles);
         ivPhoto = findViewById(R.id.ivPhoto);
         ac = findViewById(R.id.llBtns);
-        ac.setTextButtons("CANCELAR", "ACEPTAR");
+        ac.setTextButtons("CANCELAR", "GUARDAR");
+        ac.setListener(this);
     }
 
     @Override
@@ -50,15 +49,16 @@ public class AgregarCuarto extends BaseActivity<Interfaz.Presenter> implements I
         super.onActivityResult(requestCode, resultCode, data);
         if(requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE){
             CropImage.ActivityResult result = CropImage.getActivityResult(data);
-            if(resultCode == RESULT_OK){
-                bmGuardar = BitmapFactory.decodeFile(result.getUri().getPath());
-                ivPhoto.setImageURI(result.getUri());
-            }else{
-                if(resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE){
-                    Exception e = result.getError();
-                    Toast.makeText(this, "Posible Error es: "+ e, Toast.LENGTH_SHORT).show();
+            if (result != null)
+                if(resultCode == RESULT_OK){
+                    bmGuardar = BitmapFactory.decodeFile(result.getUri().getPath());
+                    ivPhoto.setImageURI(result.getUri());
+                }else{
+                    if(resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE){
+                        Exception e = result.getError();
+                        Toast.makeText(this, "Posible Error es: "+ e, Toast.LENGTH_SHORT).show();
+                    }
                 }
-            }
         }
     }
 
@@ -100,8 +100,7 @@ public class AgregarCuarto extends BaseActivity<Interfaz.Presenter> implements I
     }
 
     @Override
-    public void onClickPositive(View v) {
-
+    public void ocPositive(View view) {
         String sNumCuarto = numeroDeCuarto.getText().toString();
         String sPrecio = precio.getText().toString();
         String sDetalles= detalles.getText().toString();
@@ -112,7 +111,7 @@ public class AgregarCuarto extends BaseActivity<Interfaz.Presenter> implements I
     }
 
     @Override
-    public void onClickNegative(View v) {
+    public void ocNegative(View view) {
         salir();
     }
 }

@@ -46,8 +46,10 @@ public class Presenter extends BasePresenter<Interfaz.view> implements Interfaz.
                 view.salir();
             }
         }
+    }
 
-
+    public String getDni() {
+        return dni;
     }
 
     private void solicitarDatos() {

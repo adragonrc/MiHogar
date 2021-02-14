@@ -5,19 +5,20 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatDialogFragment;
 import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import android.view.ContextMenu;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
 
-import com.alexander_rodriguez.mihogar.adapters.AdapterInterface;
-import com.alexander_rodriguez.mihogar.adapters.Models.ModelRoomView;
 import com.alexander_rodriguez.mihogar.adapters.RVARentals;
 import com.alexander_rodriguez.mihogar.adapters.RvAdapterRoom;
 import com.alexander_rodriguez.mihogar.adapters.RvAdapterUser;
@@ -25,7 +26,6 @@ import com.alexander_rodriguez.mihogar.DataBase.items.ItemRental;
 import com.alexander_rodriguez.mihogar.DataBase.items.ItemTenant;
 import com.alexander_rodriguez.mihogar.R;
 import com.alexander_rodriguez.mihogar.historialcasa.FragmentParent;
-import com.alexander_rodriguez.mihogar.viewUser.DialogDetallesAlquiler;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -36,7 +36,7 @@ import java.util.ArrayList;
  * Use the {@link MyHouseFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class MyHouseFragment extends Fragment implements FragmentInterface.view, AdapterInterface {
+public class MyHouseFragment extends Fragment implements FragmentInterface.view {
     public static final String ARG_ROOM_NUMBER = "argRoomNumber";
     public static final String ARG_RENTAL_ID = "argRentalId";
     public static final String ARG_DNI = "argDni";
@@ -46,14 +46,12 @@ public class MyHouseFragment extends Fragment implements FragmentInterface.view,
     private FragmentInterface.presenter presenter;
     private final FragmentParent.view parent;
 
-    private RvAdapterRoom adapterCuartos;
-    private RecyclerView.LayoutManager manager;
     private RecyclerView rv;
     private View nothingToShow;
     private ProgressBar progressBar;
+    private SwipeRefreshLayout swipeRefreshLayout;
 
     private View view;
-    private RvAdapterUser adapterUser;
 
     private boolean isShow;
 
@@ -94,7 +92,12 @@ public class MyHouseFragment extends Fragment implements FragmentInterface.view,
         return new MyHouseFragment(parent);
     }
 
-    public static MyHouseFragment newInstance(@NonNull FragmentParent.view parent, @Nullable String roomNumber,@Nullable String dni,@Nullable String rentalID) {
+    @Override
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    public static MyHouseFragment newInstance(@NonNull FragmentParent.view parent, @Nullable String roomNumber, @Nullable String dni, @Nullable String rentalID) {
         Bundle args = new Bundle();
         args.putString(ARG_ROOM_NUMBER, roomNumber);
         args.putString(ARG_DNI, dni);
@@ -107,30 +110,7 @@ public class MyHouseFragment extends Fragment implements FragmentInterface.view,
 
     @Override
     public boolean onContextItemSelected(@NotNull MenuItem item) {
-        /*if (adapterUsuarios.getViewSelect().equals(item.getActionView())){
-            Toast.makeText(this, "Usar getAction", Toast.LENGTH_SHORT).show();
-        }else{
-            Toast.makeText(this, "No Usar getAction", Toast.LENGTH_SHORT).show();
-        }
-        int id = item.getItemId();
-        switch (id){
-            case R.id.opVerUsuario: {
-                break;
-            }
-            case R.id.opVerPagos: {
-                Intent i = new Intent(getContext(), TableActivity.class);
-                i.putExtra(TAlquiler.ID, adapterUsuarios.getDniSelect());
-                getContext().startActivity(i);
-                break;
-            }
-            case R.id.opTerminarA: {
-                showDialogImput(adapterUsuarios.getDniSelect());
-                break;
-            }
-            default:
-                Toast.makeText(this, "Caso no encontrado", Toast.LENGTH_SHORT).show();
-        }
-        */
+        presenter.onContextItemSelected(item);
         return super.onContextItemSelected(item);
     }
 
@@ -148,11 +128,13 @@ public class MyHouseFragment extends Fragment implements FragmentInterface.view,
         rv = view.findViewById(R.id.recyclerView);
         nothingToShow = view.findViewById(R.id.nothingToShow);
         progressBar = view.findViewById(R.id.progressBar);
+        swipeRefreshLayout = view.findViewById(R.id.swipeLayout);
+        swipeRefreshLayout.setOnRefreshListener(presenter::refresh);
+        registerForContextMenu(rv);
 
-        manager = new LinearLayoutManager(getContext());
         setProgressBarVisibility(View.GONE);
-        rv.setLayoutManager(manager);
     }
+
 
     public void setProgressBarVisibility(int visibility) {
         if(progressBar == null) return;
@@ -160,20 +142,10 @@ public class MyHouseFragment extends Fragment implements FragmentInterface.view,
         progressBar.setVisibility(visibility);
     }
 
-    @Override
-    public void showRoomsList(ArrayList<ModelRoomView> list) {
-        adapterCuartos = new RvAdapterRoom(this, list);
-        showList(adapterCuartos);
-/*
-        setProgressBarVisibility(View.GONE);
-        nothingToShow.setVisibility(View.GONE);
-        rv.setVisibility(View.VISIBLE);
-        rv.setAdapter(adapterCuartos);*/
-    }
 
     @Override
     public void showUsersList(ArrayList<ItemTenant> list, RecyclerView.LayoutManager manager, boolean showMain) {
-        adapterUser = new RvAdapterUser(this, list, showMain);
+        RvAdapterUser adapterUser = new RvAdapterUser(this, list, showMain);
 
         setProgressBarVisibility(View.GONE);
         nothingToShow.setVisibility(View.GONE);
@@ -183,7 +155,8 @@ public class MyHouseFragment extends Fragment implements FragmentInterface.view,
     }
 
     @Override
-    public void showList(RecyclerView.Adapter adapter){
+    public void showList(RecyclerView.Adapter adapter, RecyclerView.LayoutManager manager){
+        swipeRefreshLayout.setRefreshing(false);
         setProgressBarVisibility(View.GONE);
         nothingToShow.setVisibility(View.GONE);
         rv.setVisibility(View.VISIBLE);
@@ -206,10 +179,6 @@ public class MyHouseFragment extends Fragment implements FragmentInterface.view,
         nothingToShow.setVisibility(View.VISIBLE);
     }
 
-    @Override
-    public void notifyChangedOn(int posList) {
-        adapterCuartos.notifyItemChanged(posList);
-    }
 
     @Override
     public void goTo(Intent intent) {
@@ -223,6 +192,7 @@ public class MyHouseFragment extends Fragment implements FragmentInterface.view,
 
 
     @Override
+    @Nullable
     public MenuInflater getMenuInflater() {
         return getActivity() == null ? null : getActivity().getMenuInflater();
     }
@@ -233,9 +203,20 @@ public class MyHouseFragment extends Fragment implements FragmentInterface.view,
     }
 
     @Override
-    public void showDialog(DialogDetallesAlquiler dialogDetallesAlquiler) {
+    public void onLongClick(RecyclerView.ViewHolder holder) {
+
+    }
+
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo, RecyclerView.ViewHolder holder) {
+        if(getMenuInflater() == null) return;
+        getMenuInflater().inflate(R.menu.menu_room_options,menu);
+    }
+
+    @Override
+    public void showDialog(AppCompatDialogFragment dialog) {
         if(getActivity() != null)
-            dialogDetallesAlquiler.show(getActivity().getSupportFragmentManager(), TAG_MOSTRAR_PAGOS);
+            dialog.show(getActivity().getSupportFragmentManager(), TAG_MOSTRAR_PAGOS);
 
     }
 }

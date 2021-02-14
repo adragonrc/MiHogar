@@ -19,20 +19,15 @@ import androidx.appcompat.app.ActionBar;
 import androidx.core.app.ActivityOptionsCompat;
 import androidx.core.view.ViewCompat;
 
-import com.alexander_rodriguez.mihogar.ActivityShowImage;
 import com.alexander_rodriguez.mihogar.Base.BaseActivity;
-import com.alexander_rodriguez.mihogar.ButtonsAC.ButtonsAceptarCancelar;
+import com.alexander_rodriguez.mihogar.view_buttons_ac.ButtonsAC;
 import com.alexander_rodriguez.mihogar.DataBase.items.ItemTenant;
 import com.alexander_rodriguez.mihogar.R;
 import com.alexander_rodriguez.mihogar.Save;
-import com.alexander_rodriguez.mihogar.UTILIDADES.TUsuario;
-import com.alexander_rodriguez.mihogar.historialcasa.HistorialCasaActivity;
 import com.alexander_rodriguez.mihogar.menu_photo.MenuIterator;
 import com.alexander_rodriguez.mihogar.menu_photo.interfazMenu;
 import com.alexander_rodriguez.mihogar.vercuarto.view_perfil_cuarto.ProfileView;
 import com.theartofdev.edmodo.cropper.CropImage;
-
-import java.util.Objects;
 
 
 public class HistorialUsuarioActivity extends BaseActivity<Interfaz.presenter> implements Interfaz.view {
@@ -64,7 +59,7 @@ public class HistorialUsuarioActivity extends BaseActivity<Interfaz.presenter> i
 
     private interfazMenu interfazMenu;
 
-    private ButtonsAceptarCancelar ac;
+    private ButtonsAC ac;
 
     @Override
     protected void iniciarComandos() {
@@ -124,7 +119,7 @@ public class HistorialUsuarioActivity extends BaseActivity<Interfaz.presenter> i
         Bitmap bm = BitmapFactory.decodeFile(result.getUri().getPath());
         path = s.SaveImage(this, bm, getString(R.string.cTenant),  tenant.getDni());
         presenter.updatePhoto(path);
-        profileView.setPhotoImage(path);
+        profileView.reloadPhoto(path);
     }
 
     @Override
@@ -141,6 +136,7 @@ public class HistorialUsuarioActivity extends BaseActivity<Interfaz.presenter> i
     }
     @Override
     public void mostrarDatosUsuario(ItemTenant datos, String i) {
+        tenant = datos;
         profileView.setSubTitle(datos.getDni());
         profileView.setTitle(datos.getName());
         tvNombres.setText(datos.getName());
@@ -151,9 +147,8 @@ public class HistorialUsuarioActivity extends BaseActivity<Interfaz.presenter> i
 
         path = datos.getPath();
 
-        profileView.setPhotoImage(path);
+        profileView.reloadPhoto(path);
         tvNumAlquiler.setText(i);
-        tenant = datos;
     }
 
     @Override
@@ -264,7 +259,7 @@ public class HistorialUsuarioActivity extends BaseActivity<Interfaz.presenter> i
 
     @Override
     public void reloadRoomPhoto() {
-            profileView.setPhotoImage(path);
+        profileView.reloadPhoto(Save.createFile(this, getString(R.string.cTenant), presenter.getDni()).getAbsolutePath());
     }
 
     @Override
@@ -305,12 +300,12 @@ public class HistorialUsuarioActivity extends BaseActivity<Interfaz.presenter> i
     }
 
     @Override
-    public void onClickPositive(View v) {
-        presenter.onClickPositive(v);
+    public void ocPositive(View view) {
+        presenter.onClickPositive(view);
     }
 
     @Override
-    public void onClickNegative(View v) {
+    public void ocNegative(View view) {
         salir();
     }
 }

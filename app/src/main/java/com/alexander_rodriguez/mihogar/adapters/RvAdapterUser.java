@@ -9,10 +9,12 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.alexander_rodriguez.mihogar.DataBase.items.ItemTenant;
 import com.alexander_rodriguez.mihogar.R;
+import com.alexander_rodriguez.mihogar.Save;
 import com.squareup.picasso.Picasso;
 
 import java.io.File;
@@ -21,10 +23,11 @@ import java.util.ArrayList;
 public class RvAdapterUser extends RecyclerView.Adapter<RvAdapterUser.Holder> {
     private final ArrayList<ItemTenant> list;
     private final AdapterInterface mInterface;
-    private View viewSelect;
-    private String dniSelect;
+    private Holder contextHolderSelect;
+    private Holder longHolderSelect;
     private Holder hMain;
     private final boolean showMain;
+
     public RvAdapterUser(AdapterInterface mInterface, ArrayList<ItemTenant> list, boolean showMain){
         this.mInterface = mInterface;
         this.list = list;
@@ -41,20 +44,7 @@ public class RvAdapterUser extends RecyclerView.Adapter<RvAdapterUser.Holder> {
     @Override
     public void onBindViewHolder(@NonNull Holder holder, int i) {
         final ItemTenant item = list.get(i);
-        holder.DNI.setText(item.getDni());
-        holder.nombres.setText(item.getAllName());
-        String path = item.getPath();
-
-        File f = new File(path);
-        if (f.exists()) Picasso.get().load(f).into(holder.ivPhoto);
-
-        if(item.isAlerted())
-            holder.ivAlert.setImageDrawable(mInterface.getContext().getResources().getDrawable(R.drawable.ic_add_alert_black_24dp));
-        else holder.ivAlert.setVisibility(View.GONE);
-
-        if (showMain && item.isMain()){
-            isMain(holder);
-        }
+        holder.onBind(item);
     }
 
     public void isMain(Holder h){
@@ -88,12 +78,12 @@ public class RvAdapterUser extends RecyclerView.Adapter<RvAdapterUser.Holder> {
         }
     }
 
-    public View getViewSelect() {
-        return viewSelect;
+    public Holder getLongHolderSelect() {
+        return longHolderSelect;
     }
 
-    public String getDniSelect() {
-        return dniSelect;
+    public Holder getContextHolderSelect() {
+        return contextHolderSelect;
     }
 
     @Override
@@ -101,29 +91,79 @@ public class RvAdapterUser extends RecyclerView.Adapter<RvAdapterUser.Holder> {
         return list.size();
     }
 
+    public void setSelection(boolean f) {
+        if (longHolderSelect != null) {
+            longHolderSelect.setSelect(f);
+            if (!f) longHolderSelect = null;
+        }
+    }
+
     public class Holder extends RecyclerView.ViewHolder implements View.OnCreateContextMenuListener{
-        private TextView DNI;
-        private TextView nombres;
-        private ImageView ivPhoto;
-        private ImageView ivAlert;
+        private final TextView DNI;
+        private final TextView nombres;
+        private final ImageView ivPhoto;
+        private final ImageView ivAlert;
+        private final ImageView ivCheck;
+        private ItemTenant model;
+
         public Holder(@NonNull View itemView) {
             super(itemView);
             DNI = itemView.findViewById(R.id.vuTvDNI);
             nombres = itemView.findViewById(R.id.vuTvNombres);
             ivPhoto = itemView.findViewById(R.id.ivPhoto);
             ivAlert = itemView.findViewById(R.id.ivAlert);
+            ivCheck = itemView.findViewById(R.id.ivCheck);
             itemView.setOnCreateContextMenuListener(this);
             itemView.setOnClickListener(v -> mInterface.onClickHolder(Holder.this));
-        }
-        @Override
-        public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
-            mInterface.getMenuInflater().inflate(R.menu.menu_opciones,menu);
-            viewSelect = v;
-            dniSelect = DNI.getText().toString();
+            itemView.setOnLongClickListener(v->{
+                if (longHolderSelect != null){
+                    RvAdapterUser.this.setSelection(false);
+                }else{
+
+                }
+                longHolderSelect = this;
+                mInterface.onLongClick(this);
+                return true;
+            });
         }
 
-        public TextView getDNI() {
-            return DNI;
+        public void onBind(ItemTenant item){
+            model = item;
+            DNI.setText(item.getDni());
+            nombres.setText(item.getFullName());
+            File file;
+            if (item.getPath() == null || item.getPath().isEmpty()) {
+                 file = Save.createFile(mInterface.getContext(), mInterface.getContext().getString(R.string.cTenant), item.getDni());
+            }else{
+                file = new File(item.getPath());
+            }
+            if (file.exists()) Picasso.get().load(file).into(ivPhoto);
+            if(item.isAlerted())
+                ivAlert.setImageDrawable(ContextCompat.getDrawable(mInterface.getContext(), R.drawable.ic_add_alert_black_24dp));
+            else ivAlert.setVisibility(View.GONE);
+
+            if (showMain && item.isMain()){
+                isMain(this);
+            }
+        }
+        public void setSelect(boolean f){
+            if (f){
+                itemView.setBackgroundColor(mInterface.getContext().getResources().getColor(R.color.whiteOpacity));
+                ivCheck.setVisibility(View.VISIBLE);
+            }else{
+                itemView.setBackgroundColor(mInterface.getContext().getResources().getColor(android.R.color.transparent));
+                ivCheck.setVisibility(View.GONE);
+            }
+        }
+
+        public ItemTenant getModel() {
+            return model;
+        }
+
+        @Override
+        public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+            contextHolderSelect = this;
+          mInterface.onCreateContextMenu(menu, v, menuInfo, this);
         }
     }
 }

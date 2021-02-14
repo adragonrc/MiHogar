@@ -2,7 +2,6 @@ package com.alexander_rodriguez.mihogar.registrarcasa;
 
 import com.alexander_rodriguez.mihogar.Base.BaseView;
 import com.alexander_rodriguez.mihogar.Base.IBasePresenter;
-import com.alexander_rodriguez.mihogar.ButtonsAC.ButtonsAceptarCancelar;
 import com.alexander_rodriguez.mihogar.registrarcasa.details.DetailsView;
 import com.alexander_rodriguez.mihogar.registrarcasa.register.RegisterView;
 

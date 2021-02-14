@@ -27,8 +27,9 @@ public class HistorialCasaActivity extends BaseActivity<Interface.Presenter> imp
 
     public static final String MODE = "mode";
 
-    public static final String TAG_MOSTRAR_PAGOS = "tag_table_pagos";
-    public static final String EXTRA_ROOM_NUMBER = "extraRoomNumber";
+    public static final String EXTRA_ROOM_NUMBER = "extra_room_number";
+    public static final String EXTRA_RENTAL_ID = "extra_rental_id";
+
     public static final String EXTRA_RENTAL_ID_IGNORE = "extraRentalIdToIgnore";
     public static final String EXTRA_DNI = "dni";
 

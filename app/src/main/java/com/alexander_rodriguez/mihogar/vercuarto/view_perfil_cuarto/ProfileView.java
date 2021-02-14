@@ -82,7 +82,7 @@ public class ProfileView extends CoordinatorLayout implements AppBarLayout.OnOff
         floatHeaderView.setLastSeenText(subTitle);
     }
 
-    public void setPhotoImage(String path){
+    public void reloadPhoto(String path){
         if (path != null && !path.equals("")) {
             File f = new File(path);
             if(f.exists()) {

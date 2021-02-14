@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
 
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -59,17 +60,16 @@ public class RentalUsersPresenter implements FragmentInterface.presenter {
         list = new ArrayList<>();
     }
 
+    private void showData(){
+
+    }
     public void showList() {
         if(list.isEmpty()){
-            loadUsersAndShow();
+            refresh();
         }else
             view.showUsersList(list, manager, true);
     }
 
-    private void loadUsersAndShow(){
-        db.getRentalTenant(view.getContext().getString(R.string.mdRTRentalId), idAlquiler)
-                .addOnSuccessListener(this::getRentalTenantSuccess);
-    }
 
     private void getRentalTenantSuccess(QuerySnapshot queryDocumentSnapshots) {
         cont = queryDocumentSnapshots.size();
@@ -111,14 +111,6 @@ public class RentalUsersPresenter implements FragmentInterface.presenter {
         }
     }
 
-    public ContentValues getDetails(String id) {
-        return null;
-    }
-
-    public void itemSelected(MenuItem item) {
-
-    }
-
     @Override
     public void onClickHolder(RecyclerView.ViewHolder holder) {
         if(holder instanceof RvAdapterUser.Holder){
@@ -132,6 +124,11 @@ public class RentalUsersPresenter implements FragmentInterface.presenter {
     }
 
     @Override
+    public void onContextItemSelected(MenuItem item) {
+
+    }
+
+    @Override
     public void onCreate() {
 
     }
@@ -140,5 +137,14 @@ public class RentalUsersPresenter implements FragmentInterface.presenter {
     public void onResume() {
         showList();
 
+    }
+
+    @Override
+    public void refresh() {
+        if(!list.isEmpty()) list.clear();
+        view.setProgressBarVisibility(View.VISIBLE);
+        if (idAlquiler!= null && !idAlquiler.isEmpty())
+            db.getRentalTenant(view.getContext().getString(R.string.mdRTRentalId), idAlquiler)
+                    .addOnSuccessListener(this::getRentalTenantSuccess);
     }
 }

@@ -36,16 +36,8 @@ public class RvAdapterAlquiler extends RecyclerView.Adapter<RvAdapterAlquiler.Ho
 
     @Override
     public void onBindViewHolder(@NonNull Holder holder, int i) {
-        ModelAlquilerView item = list.get(i);
+        holder.onBind(list.get(i));
 
-       // holder.dni.setText(item.getDni());
-        holder.fecha.setText(item.getFecha());
-        holder.numCuarto.setText(item.getNumCuarto());
-        holder.mId  = item.getId();
-
-        if (item.isAlert()){
-            holder.cardView.setBackgroundColor(view.getContext().getResources().getColor(R.color.primaryColorDark));
-        }
     }
     public View getViewSelect() {
         return viewSelect;
@@ -65,6 +57,7 @@ public class RvAdapterAlquiler extends RecyclerView.Adapter<RvAdapterAlquiler.Ho
         private final TextView numCuarto;
         private String mId;
         private final CardView cardView;
+        private ModelAlquilerView model;
 
         public Holder(@NonNull View itemView) {
             super(itemView);
@@ -80,10 +73,25 @@ public class RvAdapterAlquiler extends RecyclerView.Adapter<RvAdapterAlquiler.Ho
             return mId;
         }
 
+        public void onBind(ModelAlquilerView item){
+            model = item;
+            fecha.setText(item.getFecha());
+            numCuarto.setText(item.getNumCuarto());
+            mId  = item.getId();
+
+            if (item.isAlert()){
+                cardView.setBackgroundColor(view.getContext().getResources().getColor(R.color.primaryColorDark));
+            }
+        }
+
+        public ModelAlquilerView getModel() {
+            return model;
+        }
+
         @Override
         public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
             if(view.getMenuInflater() != null) {
-                view.getMenuInflater().inflate(R.menu.menu_opciones, menu);
+                view.getMenuInflater().inflate(R.menu.menu_room_options, menu);
                 viewSelect = v;
                 idAlquilerSelect = mId;
             }

@@ -19,7 +19,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.Task;
 
-public class MainActivity extends BaseActivity<Interface.presenter> implements Interface.view {
+public class MainActivity extends BaseActivity<Interface.presenter> implements Interface.view, LoginFragment.Interface {
     private static final int RC_SIGN_IN = 1;
     private static final String TAG = "errorLoginWithGoogle";
     private GoogleSignInClient mGoogleSignInClient;
@@ -35,10 +35,6 @@ public class MainActivity extends BaseActivity<Interface.presenter> implements I
 /*
         GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(this);
         updateUI(account);*/
-    }
-
-    private void updateUI(GoogleSignInAccount account) {
-
     }
 
     @Override
@@ -57,19 +53,13 @@ public class MainActivity extends BaseActivity<Interface.presenter> implements I
     private void handleSignInResult(Task<GoogleSignInAccount> completedTask) {
         try {
             GoogleSignInAccount account = completedTask.getResult(ApiException.class);
-            firebaseAuthWithGoogle(account);
+            presenter.signInWithGoogle(account);
             // Signed in successfully, show authenticated UI.
-            updateUI(account);
         } catch (ApiException e) {
             // The ApiException status code indicates the detailed failure reason.
             // Please refer to the GoogleSignInStatusCodes class reference for more information.
             Log.w(TAG, "signInResult:failed code=" + e.getStatusCode());
-            updateUI(null);
         }
-    }
-
-    private void firebaseAuthWithGoogle(GoogleSignInAccount account) {
-        presenter.signInWithGoogle(account);
     }
 
     @Override
@@ -92,15 +82,17 @@ public class MainActivity extends BaseActivity<Interface.presenter> implements I
         findViewById(R.id.progressBar).setVisibility(View.GONE);
         FragmentTransaction fragmentTransaction = getSupportFragmentManager()
                 .beginTransaction();
-        loginFragment = LoginFragment.newInstance(this::LoginInflateSuccess);//the fragment you want to show
+        loginFragment = LoginFragment.newInstance(this);//the fragment you want to show
 
         fragmentTransaction
                 .replace(R.id.layout, loginFragment);//R.id.content_frame is the layout you want to replace
         //fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();
     }
-    public void LoginInflateSuccess(View v){
-        loginFragment.setEtUserText(presenter.getUser());
+
+    @Override
+    public void onCreate(View v) {
+        //loginFragment.setEtUserText(presenter.getUser());
         loginFragment.getBtSignIn().setOnClickListener(this::signInWithGoogle);
     }
 
@@ -154,6 +146,7 @@ public class MainActivity extends BaseActivity<Interface.presenter> implements I
         Intent signInIntent = mGoogleSignInClient.getSignInIntent();
         startActivityForResult(signInIntent, RC_SIGN_IN);
     }
+
 }
 
 /*

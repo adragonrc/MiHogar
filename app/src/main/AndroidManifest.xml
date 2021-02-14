@@ -43,7 +43,7 @@
             android:theme="@style/AppTheme.StatusBarTransparent"/>
 
         <activity
-            android:name=".agregarcuarto.AgregarCuarto"
+            android:name=".add_room.AgregarCuarto"
             android:windowSoftInputMode="stateAlwaysVisible" />
 
         <activity android:name=".verInquilinos.VerInquilinos" />

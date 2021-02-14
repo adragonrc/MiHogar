@@ -47,8 +47,7 @@ public class LoginFragment extends Fragment {
      */
     // TODO: Rename and change types and number of parameters
     public static LoginFragment newInstance(Interface mInterface) {
-        LoginFragment fragment = new LoginFragment(mInterface);
-        return fragment;
+        return new LoginFragment(mInterface);
     }
 
     @Override

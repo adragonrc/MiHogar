@@ -22,11 +22,7 @@ import com.alexander_rodriguez.mihogar.viewForTable.ViewFilaOfPagos;
 
 
 public class TableActivity extends BaseActivity<Interfaz.Presenter> implements Interfaz.view {
-    public static final String RENTAL_ID = "rentalID";
-    public static final String ROOM_NUMBER = "room_number";
-    public static final String PHONE_NUM = "phone_num";
-    public static final String EMAIL = "email";
-    public static final String SEND_MT = "send_md";
+    public static final String EXTRA_RENTAL = "rental";
 
     private LinearLayout llPagos;
 
@@ -100,6 +96,11 @@ public class TableActivity extends BaseActivity<Interfaz.Presenter> implements I
 
     public void ocListo(View view){
         onBackPressed();
+    }
+
+    @Override
+    public void close() {
+        finish();
     }
 }
 

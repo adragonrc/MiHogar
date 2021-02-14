@@ -1,5 +1,7 @@
 package com.alexander_rodriguez.mihogar.adapters.Models;
 
+import androidx.annotation.NonNull;
+
 import com.alexander_rodriguez.mihogar.DataBase.items.ItemRoom;
 import com.alexander_rodriguez.mihogar.DataBase.models.TRoom;
 import com.alexander_rodriguez.mihogar.AdminDate;
@@ -7,24 +9,26 @@ import com.alexander_rodriguez.mihogar.AdminDate;
 import java.util.Date;
 
 public class ModelRoomView extends ItemRoom {
-    private String paymentDate;
+    private Date paymentDate;
+    private String sPaymentDate;
     private int posList;
     private boolean alert;
 
     public ModelRoomView(TRoom room) {
         super(room);
+        this.alert = false;
     }
 
     public ModelRoomView(TRoom room, int posList) {
-        super(room); this.posList = posList;
+        super(room);
+        this.posList = posList;
+        this.alert = false;
     }
 
-    public void setPaymentDate(String paymentDate) {
+    public void setPaymentDate(@NonNull Date paymentDate) {
         this.paymentDate = paymentDate;
-        AdminDate date = new AdminDate();
-        this.alert = false;
-        if (paymentDate != null)
-            this.alert = date.stringToDate(paymentDate).before(new Date());
+        this.sPaymentDate = null;
+        this.alert = paymentDate.before(new Date());
     }
 
     public void setPosList(int posList) {
@@ -39,8 +43,11 @@ public class ModelRoomView extends ItemRoom {
         return alert;
     }
 
-    public String getPaymentDate() {
-        return paymentDate;
+    public String getPaymentDateAsString() {
+        if (sPaymentDate == null || sPaymentDate.isEmpty()){
+            sPaymentDate = AdminDate.dateToString(paymentDate);
+        }
+        return sPaymentDate;
     }
 
 

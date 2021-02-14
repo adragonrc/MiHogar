@@ -4,7 +4,6 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioGroup;
 import android.widget.ScrollView;
@@ -13,6 +12,7 @@ import android.widget.Spinner;
 import androidx.annotation.Nullable;
 
 import com.alexander_rodriguez.mihogar.AdminDate;
+import com.alexander_rodriguez.mihogar.view_buttons_ac.ButtonsAC;
 import com.alexander_rodriguez.mihogar.R;
 import com.google.firebase.Timestamp;
 
@@ -21,7 +21,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
-public class AgregarAlquilerView extends ScrollView {
+public class AddRentalView extends ScrollView {
 
     private EditText etPrecio;
     private EditText etCorreo;
@@ -35,22 +35,23 @@ public class AgregarAlquilerView extends ScrollView {
 
     private RadioGroup radioGroup;
 
-    private Button positive;
+    private ButtonsAC buttonsAC;
 
-    private Button negative;
-    public AgregarAlquilerView(Context context) {
+    private AddRentalInterface parent;
+
+    public AddRentalView(Context context) {
         super(context);
     }
 
-    public AgregarAlquilerView(Context context, @Nullable AttributeSet attrs) {
+    public AddRentalView(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
     }
 
-    public AgregarAlquilerView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
+    public AddRentalView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
     }
 
-    public AgregarAlquilerView(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
+    public AddRentalView(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
     }
 
@@ -58,6 +59,10 @@ public class AgregarAlquilerView extends ScrollView {
     protected void onFinishInflate() {
         super.onFinishInflate();
         iniciarViews();
+    }
+
+    public void setParent(AddRentalInterface parent) {
+        this.parent = parent;
     }
 
     protected void iniciarViews() {
@@ -73,10 +78,19 @@ public class AgregarAlquilerView extends ScrollView {
         spPlazo = findViewById(R.id.spPlazo);
 
         radioGroup = findViewById(R.id.radioGrup);
-
-        positive = findViewById(R.id.positiveButton);
-        negative = findViewById(R.id.negativeButton);
+        buttonsAC = findViewById(R.id.llBtns);
         makeNotFocusable(etCorreo, etNumeroTelef, etPrecio);
+        buttonsAC.setListener(new ButtonsAC.Listener() {
+            @Override
+            public void ocPositive(View view) {
+                parent.saveRental(getData());
+            }
+
+            @Override
+            public void ocNegative(View view) {
+                parent.cancelAddRental();
+            }
+        });
     }
     private void makeFocusable(View...view){
         for (View v: view){
@@ -121,13 +135,6 @@ public class AgregarAlquilerView extends ScrollView {
     public void onCollapsed(){
     }
 
-    public Button getPositive() {
-        return positive;
-    }
-
-    public Button getNegative() {
-        return negative;
-    }
 
     public void prepararSpinenr(ArrayAdapter<String> adapterCuartos, String cuartoSelected) {
         Date date = new Date();

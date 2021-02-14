@@ -419,7 +419,6 @@ public class FDAdministrator implements DBInterface{
 
     @Override
     public Task<Void> agregarCuarto(ItemRoom room) {
-
         return getCuartoDR(room.getRoomNumber()).set(room.getCuartoRoot());
     }
 

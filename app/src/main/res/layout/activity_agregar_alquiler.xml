@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.alexander_rodriguez.mihogar.viewregistraralquiler.AgregarAlquilerView xmlns:android="http://schemas.android.com/apk/res/android"
+<com.alexander_rodriguez.mihogar.viewregistraralquiler.AddRentalView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -226,4 +226,4 @@
             layout="@layout/buttons_aceptar_cancelar"/>
     </LinearLayout>
 
-</com.alexander_rodriguez.mihogar.viewregistraralquiler.AgregarAlquilerView>
+</com.alexander_rodriguez.mihogar.viewregistraralquiler.AddRentalView>

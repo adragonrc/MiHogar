@@ -24,8 +24,6 @@ public interface Interface{
         void showDialogOptions(String idAlquiler);
         void showDialogImput(String idAlquiler);
 
-        void notifyChangedOn(int posList);
-
         void nothingHere();
 
         void showRooms();

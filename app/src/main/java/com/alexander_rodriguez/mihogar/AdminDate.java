@@ -53,12 +53,12 @@ public class AdminDate {
         calendar.add(Calendar.MONTH, pagos);
         return dateFormat.format(calendar.getTime());
     }
-    public static String adelantarPorMeses(Date date, int pagos) throws ParseException {
-        DateFormat dateFormat = new SimpleDateFormat(FORMAT_DATE_TIME, Locale.getDefault());
+    public static Date adelantarPorMeses(Date date, int pagos) {
+        //DateFormat dateFormat = new SimpleDateFormat(FORMAT_DATE_TIME, Locale.getDefault());
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(date);
         calendar.add(Calendar.MONTH, pagos);
-        return dateFormat.format(calendar.getTime());
+        return calendar.getTime();
     }
 
     public void setFormat(String format){
@@ -139,15 +139,7 @@ public class AdminDate {
     }
 
     public static String dateToString(Date date){
+        if (date == null) date = new Date(0);
         return (new SimpleDateFormat(FORMAT_DATE, Locale.getDefault())).format(date);
     }
-    public static String dateToString(Date date, String cache){
-        if(cache == null || cache.isEmpty()){
-            cache = dateToString(date);
-        }
-        return cache;
-    }
-
-
-
 }

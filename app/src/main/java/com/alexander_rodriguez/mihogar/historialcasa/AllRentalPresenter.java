@@ -28,7 +28,17 @@ public class AllRentalPresenter implements FragmentInterface.presenter {
     }
 
     @Override
+    public void refresh() {
+
+    }
+
+    @Override
     public void onClickHolder(RecyclerView.ViewHolder holder) {
+
+    }
+
+    @Override
+    public void onContextItemSelected(MenuItem item) {
 
     }
 }

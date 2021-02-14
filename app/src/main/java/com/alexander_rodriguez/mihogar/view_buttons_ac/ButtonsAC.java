@@ -1,4 +1,4 @@
-package com.alexander_rodriguez.mihogar.ButtonsAC;
+package com.alexander_rodriguez.mihogar.view_buttons_ac;
 
 import android.content.Context;
 import android.util.AttributeSet;
@@ -10,23 +10,23 @@ import androidx.annotation.Nullable;
 
 import com.alexander_rodriguez.mihogar.R;
 
-public class ButtonsAceptarCancelar extends LinearLayout {
+public class ButtonsAC extends LinearLayout {
     private Button button0;
     private Button button1;
 
-    public ButtonsAceptarCancelar(Context context) {
+    public ButtonsAC(Context context) {
         super(context);
     }
 
-    public ButtonsAceptarCancelar(Context context, @Nullable AttributeSet attrs) {
+    public ButtonsAC(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
     }
 
-    public ButtonsAceptarCancelar(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
+    public ButtonsAC(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
     }
 
-    public ButtonsAceptarCancelar(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
+    public ButtonsAC(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
     }
 

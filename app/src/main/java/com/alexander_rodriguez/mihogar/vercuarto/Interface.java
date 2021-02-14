@@ -1,5 +1,7 @@
 package com.alexander_rodriguez.mihogar.vercuarto;
 
+import android.view.LayoutInflater;
+import android.view.Menu;
 import android.widget.TableLayout;
 
 import com.alexander_rodriguez.mihogar.Base.BaseView;
@@ -43,6 +45,9 @@ public interface Interface {
         double getRemainingPayment();
 
         void ocShowDetailsAdvance();
+
+        void refresh();
+
     }
     interface view extends BaseView, perfilCuartoInterface {
         void noPago();

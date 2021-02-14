@@ -3,6 +3,7 @@ package com.alexander_rodriguez.mihogar.historialcasa;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -54,14 +55,16 @@ public class AllUsersPresenter  implements FragmentInterface.presenter{
         manager = new LinearLayoutManager(view.getContext());
     }
 
-    public void showList() {
+    public void showData() {
         if(list.isEmpty())
-            loadUsersAndShow();
-        else
-            view.showUsersList(list, manager, false);
+            refresh();
+        else {
+            showTenants(list);
+        }
     }
 
-    private void loadUsersAndShow(){
+    public void refresh(){
+        if(!list.isEmpty()) list.clear();
         view.setProgressBarVisibility(View.VISIBLE);
         db.getUserCR().get().addOnSuccessListener(this::getUsersSuccess).addOnFailureListener(this::getUsersFailure);
     }
@@ -83,8 +86,10 @@ public class AllUsersPresenter  implements FragmentInterface.presenter{
     private void showTenants(ArrayList<ItemTenant> list) {
         if(list.isEmpty())
             view.nothingHere();
-        else
-            view.showUsersList(list, manager, false);
+        else {
+            RvAdapterUser adapterUser = new RvAdapterUser(view, list, false);
+            view.showList(adapterUser, manager);
+        }
     }
 
     public ContentValues getDetails(String id) {
@@ -114,7 +119,12 @@ public class AllUsersPresenter  implements FragmentInterface.presenter{
         }
     }
 
+    @Override
+    public void onContextItemSelected(MenuItem item) {
+
+    }
+
     public void iniciarComandos() {
-        showList();
+        showData();
     }
 }

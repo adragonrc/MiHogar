@@ -62,7 +62,15 @@ public class ItemTenant extends TUser {
         return dni;
     }
 
-    public String getAllName() {
+    public String getFullName() {
         return name.concat(", ").concat(apellidoPat).concat(" ").concat(apellidoMat);
+    }
+
+    public void setData(ItemTenant datos) {
+        dni = datos.getDni();
+        name = datos.getName();
+        apellidoPat = datos.getApellidoPat();
+        apellidoMat = datos.getApellidoMat();
+        path = datos.getPath();
     }
 }

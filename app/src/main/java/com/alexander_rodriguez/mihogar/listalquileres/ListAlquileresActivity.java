@@ -1,6 +1,8 @@
 package com.alexander_rodriguez.mihogar.listalquileres;
 
 import android.content.Intent;
+import android.view.ContextMenu;
+import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.GridLayoutManager;
@@ -14,6 +16,7 @@ import com.alexander_rodriguez.mihogar.Base.IBasePresenter;
 import com.alexander_rodriguez.mihogar.R;
 import com.alexander_rodriguez.mihogar.UTILIDADES.TAlquiler;
 import com.alexander_rodriguez.mihogar.adapters.Models.ModelAlquilerView;
+import com.alexander_rodriguez.mihogar.adapters.RvAdapterRoom;
 import com.alexander_rodriguez.mihogar.tableActivity.TableActivity;
 
 import java.util.ArrayList;
@@ -61,5 +64,15 @@ public class ListAlquileresActivity extends BaseActivity<IBasePresenter> impleme
             intent.putExtra(TAlquiler.ID, mHolder.getmId());
             startActivity(intent);
         }
+    }
+
+    @Override
+    public void onLongClick(RecyclerView.ViewHolder holder) {
+
+    }
+
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo, RecyclerView.ViewHolder holder) {
+
     }
 }

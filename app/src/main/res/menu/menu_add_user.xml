@@ -6,6 +6,6 @@
         android:id="@+id/item_add_user"
         android:icon="@drawable/ic_add_black_24dp"
         android:orderInCategory="100"
-        android:title="add_user"
+        android:title="add user"
         app:showAsAction="ifRoom" />
 </menu>

@@ -129,11 +129,6 @@ public class MiCasaActivity extends BaseActivity<Interface.Presenter> implements
     }
 
     @Override
-    public void notifyChangedOn(int posList) {
-        active.notifyChangedOn(posList);
-    }
-
-    @Override
     public void nothingHere() {
     }
 

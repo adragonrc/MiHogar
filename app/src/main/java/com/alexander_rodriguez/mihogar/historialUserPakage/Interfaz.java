@@ -5,7 +5,7 @@ import android.view.View;
 
 import com.alexander_rodriguez.mihogar.Base.BaseView;
 import com.alexander_rodriguez.mihogar.Base.IBasePresenter;
-import com.alexander_rodriguez.mihogar.ButtonsAC.interfazAC;
+import com.alexander_rodriguez.mihogar.view_buttons_ac.ButtonsAC;
 import com.alexander_rodriguez.mihogar.DataBase.items.ItemTenant;
 
 public interface Interfaz {
@@ -20,9 +20,10 @@ public interface Interfaz {
         void onClickPositive(View v);
 
         void onClickPhoto(View view);
-        
+
+        String getDni();
     }
-    interface view extends BaseView, interfazAC {
+    interface view extends BaseView, ButtonsAC.Listener {
 
         void mostrarAlerta();
         void noMostrarAlerta();

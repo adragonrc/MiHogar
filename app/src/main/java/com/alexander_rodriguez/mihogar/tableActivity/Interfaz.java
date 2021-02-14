@@ -25,5 +25,6 @@ public interface Interfaz {
 
         void showDialog(String mensaje);
 
+        void close();
     }
 }

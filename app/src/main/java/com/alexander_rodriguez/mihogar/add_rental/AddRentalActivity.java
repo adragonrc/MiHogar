@@ -4,85 +4,74 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
-import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.ActionBar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.alexander_rodriguez.mihogar.adapters.AdapterInterface;
-import com.alexander_rodriguez.mihogar.adapters.RvAdapterUser;
 import com.alexander_rodriguez.mihogar.Base.BaseActivity;
 import com.alexander_rodriguez.mihogar.DataBase.items.ItemTenant;
 import com.alexander_rodriguez.mihogar.R;
-import com.alexander_rodriguez.mihogar.viewregistraralquiler.AgregarAlquilerView;
+import com.alexander_rodriguez.mihogar.adapters.RvAdapterUser;
+import com.alexander_rodriguez.mihogar.viewregistraralquiler.AddRentalView;
 import com.alexander_rodriguez.mihogar.UTILIDADES.TCuarto;
 import com.alexander_rodriguez.mihogar.UTILIDADES.TUsuario;
-import com.alexander_rodriguez.mihogar.view_registrar_usuario.RegistroUsuarioView;
-import com.alexander_rodriguez.mihogar.agregarcuarto.AgregarCuarto;
+import com.alexander_rodriguez.mihogar.view_registrar_usuario.AddUserView;
+import com.alexander_rodriguez.mihogar.add_room.AgregarCuarto;
 import com.alexander_rodriguez.mihogar.historialUserPakage.HistorialUsuarioActivity;
+import com.alexander_rodriguez.mihogar.viewregistraralquiler.ModelAA;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 import com.theartofdev.edmodo.cropper.CropImage;
 
-import java.util.ArrayList;
+public class AddRentalActivity extends BaseActivity<Interfaz.presenter> implements Interfaz.view{
 
-public class AddRentalActivity extends BaseActivity<Interfaz.presenter> implements Interfaz.view, AdapterInterface {
-    static final int CODE_0 = 0;
-
-    private RvAdapterUser adapterUser;
 
     private RecyclerView recyclerView;
 
-    private ArrayList<ItemTenant> rvAdapter;
-
     private boolean cancelDialog;
 
-    private RegistroUsuarioView ruv;
+    private AddUserView addUserView;
 
-    private AgregarAlquilerView agregarAlquilerView;
+    private AddRentalView addRentalView;
 
     private SlidingUpPanelLayout sliding;
 
     private TextView tvAviso;
 
-    private ImageButton btAddTenant;
-
-    private DialogInterface.OnClickListener positivo = new DialogInterface.OnClickListener() {
+    private Menu mMenu;
+    private final DialogInterface.OnClickListener positivo = new DialogInterface.OnClickListener() {
         @Override
         public void onClick(DialogInterface dialog, int which) {
             Intent i = new Intent(getContext(), HistorialUsuarioActivity.class);
-            i.putExtra(TUsuario.DNI, ruv.getDniText());
+            i.putExtra(TUsuario.DNI, addUserView.getDniText());
             getContext().startActivity(i);
         }
     };
-    private DialogInterface.OnClickListener negativo = (dialog, which) -> {
-        presenter.confirmar();
-
-    };
+    private final DialogInterface.OnClickListener negativo = (dialog, which) -> presenter.confirmar();
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        ocultarTeclado(ruv.getEtDNI());
+        ocultarTeclado(addUserView.getEtDNI());
     }
+
+
 
     @Override
     protected void iniciarComandos() {
-        rvAdapter = new ArrayList<>();
-        adapterUser = new RvAdapterUser(this, rvAdapter, true);
-
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setHasFixedSize(true);
-        recyclerView.setAdapter(adapterUser);
-        ocultarTeclado(ruv.getEtDNI());
+        ocultarTeclado(addUserView.getEtDNI());
 
     }
 
@@ -99,18 +88,18 @@ public class AddRentalActivity extends BaseActivity<Interfaz.presenter> implemen
 
     @Override
     protected void iniciarViews() {
+        ActionBar ab = getSupportActionBar();
+        if (ab != null) ab.setTitle(getString(R.string.title_add_rental));
         recyclerView = findViewById(R.id.recyclerView);
-        ruv = findViewById(R.id.regCuarto);
-        agregarAlquilerView = findViewById(R.id.agregarAlquiler);
-
+        addUserView = findViewById(R.id.regCuarto);
+        addRentalView = findViewById(R.id.agregarAlquiler);
         tvAviso = findViewById(R.id.tvVacio);
-
         sliding = findViewById(R.id.slide);
         //sliding.setAnchorPoint(0.5f);
 
-        btAddTenant = findViewById(R.id.btAddTenant);
-
-        agregarAlquilerView.setOnClickListener(v -> { });
+        addRentalView.setParent(this);
+        addUserView.setParent(this);
+        addRentalView.setOnClickListener(v -> { });
 
         sliding.addPanelSlideListener(new SlidingUpPanelLayout.PanelSlideListener() {
 
@@ -123,15 +112,15 @@ public class AddRentalActivity extends BaseActivity<Interfaz.presenter> implemen
             public void onPanelStateChanged(View panel, SlidingUpPanelLayout.PanelState previousState, SlidingUpPanelLayout.PanelState newState) {
                 switch (newState){
                     case EXPANDED:{
-                        if(ruv.getVisibility() == View.VISIBLE)
-                            ruv.onExpanded();
-                         else agregarAlquilerView.onExpanded();
+                        if(addUserView.getVisibility() == View.VISIBLE)
+                            addUserView.onExpanded();
+                         else addRentalView.onExpanded();
                         break;
                     }
                     case COLLAPSED:{
-                        if(ruv.getVisibility() == View.VISIBLE)
-                            ruv.onCollapsed();
-                        else agregarAlquilerView.onCollapsed();
+                        if(addUserView.getVisibility() == View.VISIBLE)
+                            addUserView.onCollapsed();
+                        else addRentalView.onCollapsed();
                             AddRentalActivity.this.ocultarTeclado();
                         break;
                     }
@@ -140,25 +129,24 @@ public class AddRentalActivity extends BaseActivity<Interfaz.presenter> implemen
         });
     }
 
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_add_user, menu);
+        this.mMenu  = menu;
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int option = item.getItemId();
-        switch (option){
-            case R.id.item_add_user:{
-                presenter.onClickAddUser();
-                break;
-            }
-            case BACK_PRESSED:{
-                onBackPressed();
-                break;
-            }
+        if (option == R.id.item_add_user) {
+            presenter.onClickAddUser();
+        } else if (option == BACK_PRESSED) {
+            onBackPressed();
         }
+
+        presenter.onOptionItemSelected(option);
         return super.onOptionsItemSelected(item);
     }
 
@@ -166,31 +154,9 @@ public class AddRentalActivity extends BaseActivity<Interfaz.presenter> implemen
 
     }
 
-    private void exit(){
-        super.onBackPressed();
-    }
     @Override
     public void onBackPressed() {
-        SlidingUpPanelLayout.PanelState mSlideState = sliding.getPanelState();
-        if (mSlideState != SlidingUpPanelLayout.PanelState.EXPANDED && mSlideState != SlidingUpPanelLayout.PanelState.ANCHORED && mSlideState != SlidingUpPanelLayout.PanelState.DRAGGING) {
-            if(presenter.saveChanges())
-                super.onBackPressed();
-            else{
-                AlertDialog.Builder builder = new AlertDialog.Builder(this);
-                builder.setTitle("¿Deseas salir?").
-                        setMessage("Es posible que los cambios que implementaste no se puedan guardar.").
-                        setPositiveButton("Aceptar", (dialogInterface, i) -> exit()).
-                        setNegativeButton("Cancelar", (dialogInterface, i) -> {});
-                builder.create().show();
-            }
-        } else {
-            sliding.setPanelState(SlidingUpPanelLayout.PanelState.EXPANDED);
-            sliding.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
-        }
-        if (mSlideState != SlidingUpPanelLayout.PanelState.EXPANDED && mSlideState != SlidingUpPanelLayout.PanelState.ANCHORED && mSlideState != SlidingUpPanelLayout.PanelState.DRAGGING){
-            sliding.setPanelState(SlidingUpPanelLayout.PanelState.EXPANDED);
-            sliding.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
-        }
+        presenter.onBackPressed();
     }
 
     @Override
@@ -198,12 +164,14 @@ public class AddRentalActivity extends BaseActivity<Interfaz.presenter> implemen
         super.onActivityResult(requestCode, resultCode, data);
         if(requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE){
             CropImage.ActivityResult result = CropImage.getActivityResult(data);
-            if(resultCode == RESULT_OK){
-                ruv.setPhoto(result.getUri().getPath());
-            }else{
-                if(resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE){
-                    Exception e = result.getError();
-                    Toast.makeText(this, "Posible Error es: "+ e, Toast.LENGTH_SHORT).show();
+            if (result != null) {
+                if (resultCode == RESULT_OK) {
+                    addUserView.setPhoto(result.getUri().getPath());
+                } else {
+                    if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
+                        Exception e = result.getError();
+                        Toast.makeText(this, "Posible Error es: " + e, Toast.LENGTH_SHORT).show();
+                    }
                 }
             }
         }
@@ -221,6 +189,30 @@ public class AddRentalActivity extends BaseActivity<Interfaz.presenter> implemen
     }
 
     @Override
+    public void ocPositiveAddUser(View view) {
+        /*if (view == agregarAlquilerView.getPositive()) {
+
+        }else*/
+        presenter.agregarUsuario(addUserView.getDatos());
+    }
+
+    @Override
+    public void ocNegativeAdd(View view) {
+        onBackPressed();
+    }
+
+    @Override
+    public void ocPositiveEdit(View view) {
+        presenter.saveUserChanges(addUserView.getModelEdit());
+    }
+
+    @Override
+    public void ocNegativeEdit(View view) {
+        editUserComplete();
+        onBackPressed();
+    }
+
+    @Override
     public void showError(String error) {
         Toast.makeText(this, "Campo vacio: "+ error, Toast.LENGTH_SHORT).show();
     }
@@ -235,22 +227,13 @@ public class AddRentalActivity extends BaseActivity<Interfaz.presenter> implemen
         builder.create().show();
     }
 
-
     public void sinCuartos() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Mensaje").setMessage("No hay cuartos disponibles")
-                .setPositiveButton("Agregar nuevo", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        cancelDialog = false;
-                        startActivity(new Intent(AddRentalActivity.this, AgregarCuarto.class));
-                    }
-                }).setNegativeButton("Salir", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                onBackPressed();
-            }
-        });
+                .setPositiveButton("Agregar nuevo", (dialog, which) -> {
+                    cancelDialog = false;
+                    startActivity(new Intent(AddRentalActivity.this, AgregarCuarto.class));
+                }).setNegativeButton("Salir", (dialog, which) -> onBackPressed());
         AlertDialog a =builder.create();
         a.setOnDismissListener(dialog -> {
             if (cancelDialog) {
@@ -262,59 +245,110 @@ public class AddRentalActivity extends BaseActivity<Interfaz.presenter> implemen
     }
 
     @Override
-    public void close() {
+    public void close(int result_code) {
+        setResult(result_code);
         finish();
     }
 
-
-    @Override
-    public void onClickPositive(View v) {
-        if (v == agregarAlquilerView.getPositive()) {
-            presenter.agregarAlquilerNuevo(agregarAlquilerView.getData());
-        }else{
-            presenter.agregarUsuario(ruv.getDatos());
-        }
-    }
-
-    @Override
-    public void onClickNegative(View v) {
-        onBackPressed();
-    }
-
-    public void mostrarNuevoUsuario(ItemTenant m){
+    public void addUserComplete(){
         if (tvAviso.getVisibility() == View.VISIBLE){
             tvAviso.setVisibility(View.GONE);
             recyclerView.setVisibility(View.VISIBLE);
         }
-        adapterUser.addItem(m);
-        ruv.clear();
+        addUserView.clear();
         sliding.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
     }
 
-    public void doPrincipal(RvAdapterUser.Holder holder){
-        adapterUser.isMain(holder);
+    @Override
+    public void editUserComplete() {
+        addUserView.clear();
+        sliding.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
+        addUserView.finishEdit();
+    }
+
+    @Override
+    public void addMenu(int menu_add_user_options) {
+        getMenuInflater().inflate(menu_add_user_options, mMenu);
+    }
+
+    @Override
+    public void removeMenuItem(int item) {
+        mMenu.removeItem(item);
     }
 
     public void onClickAddUser(View v){
-        agregarAlquilerView.setVisibility(View.GONE);
-        ruv.setVisibility(View.VISIBLE);
+        addRentalView.setVisibility(View.GONE);
+        addUserView.setVisibility(View.VISIBLE);
         sliding.setPanelState(SlidingUpPanelLayout.PanelState.EXPANDED);
     }
     public void onClickAvanzar(View v){
 
         String numCuarto = getIntent().getStringExtra(TCuarto.NUMERO);
         ArrayAdapter<String > adapter = presenter.getAdapterCuartos();
-        agregarAlquilerView.prepararSpinenr(adapter, numCuarto);
-        ruv.setVisibility(View.GONE);
-        agregarAlquilerView.setVisibility(View.VISIBLE);
+        addRentalView.prepararSpinenr(adapter, numCuarto);
+        addUserView.setVisibility(View.GONE);
+        addRentalView.setVisibility(View.VISIBLE);
 
         sliding.setPanelState(SlidingUpPanelLayout.PanelState.EXPANDED);
         presenter.avanzar();
     }
 
+
+
     @Override
     public void onClickHolder(RecyclerView.ViewHolder holder) {
+        presenter.ocHolder(holder);
+    }
 
-        presenter.setMain(holder);
+    @Override
+    public void onLongClick(RecyclerView.ViewHolder holder) {
+        presenter.onLongClick(holder);
+    }
+
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo, RecyclerView.ViewHolder holder) {
+
+    }
+
+    @Override
+    public SlidingUpPanelLayout.PanelState getPanelState() {
+        return  sliding.getPanelState();
+    }
+
+    @Override
+    public void panelCollapsed() {
+        sliding.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
+    }
+
+    @Override
+    public void setTitle(String title, boolean f) {
+        ActionBar ab = getSupportActionBar();
+        if (ab != null) {
+            ab.setTitle(title);
+            ab.setDisplayHomeAsUpEnabled(f);
+        }
+    }
+
+    @Override
+    public void editUser(ItemTenant model) {
+        addUserView.onUpdateUser(model);
+        addRentalView.setVisibility(View.GONE);
+        addUserView.setVisibility(View.VISIBLE);
+        sliding.setPanelState(SlidingUpPanelLayout.PanelState.EXPANDED);
+    }
+
+    @Override
+    public void setAdapter(RvAdapterUser adapterUser) {
+        recyclerView.setAdapter(adapterUser);
+    }
+
+    @Override
+    public void saveRental(ModelAA model) {
+        presenter.agregarAlquilerNuevo(model);
+    }
+
+    @Override
+    public void cancelAddRental() {
+        onBackPressed();
     }
 }

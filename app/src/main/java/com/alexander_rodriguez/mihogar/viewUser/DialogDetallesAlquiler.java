@@ -13,8 +13,10 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatDialogFragment;
 
+import com.alexander_rodriguez.mihogar.DataBase.items.ItemRental;
 import com.alexander_rodriguez.mihogar.R;
 import com.alexander_rodriguez.mihogar.UTILIDADES.TAlquiler;
+import com.alexander_rodriguez.mihogar.adapters.Models.ModelAlquilerView;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -23,7 +25,7 @@ public class DialogDetallesAlquiler extends AppCompatDialogFragment {
     private LayoutInflater inflater;
     private View view;
     private Context mContext;
-    private ContentValues datos;
+    private ItemRental datos;
     private Dialog dialog;
 
     private TextView tvIdAlquiler;
@@ -36,7 +38,7 @@ public class DialogDetallesAlquiler extends AppCompatDialogFragment {
     private Button btVerCuarto;
     private Button btVerPago;
 
-    public DialogDetallesAlquiler(Context context, ContentValues datos){
+    public DialogDetallesAlquiler(Context context, ItemRental datos){
         super();
         this.datos = datos;
         this.mContext  = context;
@@ -68,12 +70,13 @@ public class DialogDetallesAlquiler extends AppCompatDialogFragment {
         btVerCuarto = view.findViewById(R.id.btVerCuarto);
         btVerPago = view.findViewById(R.id.btVerPagos);
 
-        tvIdAlquiler.setText(datos.getAsString(TAlquiler.ID));
-        tvNumCuarto.setText(datos.getAsString(TAlquiler.NUMERO_C));
-        tvNumUsuarios.setText(datos.getAsString(NUM_USUARIOS));
-        tvFechaInicio.setText(datos.getAsString(TAlquiler.FECHA_INICIO));
-        tvFechaFin.setText(datos.getAsString(TAlquiler.FECHA_SALIDA));
-        tvMotivoDeSalida.setText(datos.getAsString(TAlquiler.MOTIVO));
+
+        tvIdAlquiler.setText(datos.getId());
+        tvNumCuarto.setText(datos.getRoomNumber());
+        tvNumUsuarios.setText(String.valueOf(datos.getTenantsNumber()));
+        tvFechaInicio.setText(datos.getPaymentDateAsString());
+        tvFechaFin.setText(datos.getDepartureDateAsString());
+        tvMotivoDeSalida.setText(datos.getReasonExit());
     }
 
     public void setOnClickListenerVerCuarto(View.OnClickListener listener){

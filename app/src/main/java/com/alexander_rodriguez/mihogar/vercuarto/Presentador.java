@@ -5,6 +5,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.View;
 import android.widget.TableLayout;
 
@@ -34,7 +35,6 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.text.ParseException;
 import java.util.Date;
 
 public class Presentador extends BasePresenter<Interface.view> implements Interface.Presenter {
@@ -110,8 +110,8 @@ public class Presentador extends BasePresenter<Interface.view> implements Interf
                     }
                 }else{
                     f = Save.createFile(mContext, mContext.getString(R.string.cRoom), room.getRoomNumber());
+                    room.setPathImage(f.getAbsolutePath());
                 }
-
                 if(room.getPahtImageStorage() != null && !room.getPahtImageStorage().isEmpty()){
                     db.downloadRoomPhoto(room.getRoomNumber(), f)
                             .addOnSuccessListener(this::downloadRoomPhotoSuccess)
@@ -164,7 +164,6 @@ public class Presentador extends BasePresenter<Interface.view> implements Interf
             view.showCuartoAlquilado(room, rental.getTenantsNumber(), "00.00");
             return;
         }
-        int num = rental.getTenantsNumber();
 
         monthlyPayment = ItemMonthlyPayment.newInstance(documentSnapshot);
 
@@ -172,8 +171,8 @@ public class Presentador extends BasePresenter<Interface.view> implements Interf
             db.getPayment(monthlyPayment.getLastPaymentId()).addOnSuccessListener(this::getLastPaymentSuccess);
         else {
             showUserPaymentStatus();
+            view.showCuartoAlquilado(room, rental.getTenantsNumber(), String.valueOf(monthlyPayment.getAmount()));
         }
-        view.showCuartoAlquilado(room, num, String.valueOf(monthlyPayment.getAmount()));
     }
 
 
@@ -182,6 +181,7 @@ public class Presentador extends BasePresenter<Interface.view> implements Interf
             lastPayment = ItemPayment.getInstance(documentSnapshot);
         }
         showUserPaymentStatus();
+        view.showCuartoAlquilado(room, rental.getTenantsNumber(), String.valueOf(monthlyPayment.getAmount()));
     }
     private void showStatus(boolean f){
         if (f){
@@ -197,17 +197,13 @@ public class Presentador extends BasePresenter<Interface.view> implements Interf
         if (lastPayment==null) lastPayment = new ItemPayment();
         int paymentsNumber = rental.getPaymentsNumber();
         Date entryDate = rental.getEntryDate().toDate();
-        try {
-            String paymentDate = AdminDate.adelantarPorMeses(entryDate, paymentsNumber);
-            rental.setPaymentDate(paymentDate);
-            boolean itsOnTime = (myDate.stringToDate(paymentDate)).after(new Date());
-            boolean fullPayment = lastPayment.getAmount() >= monthlyPayment.getAmount();
-            showStatus(itsOnTime&&fullPayment);
-        } catch (ParseException e) {
-            e.printStackTrace();
-            showStatus(false);
-            view.showMessage("Error al actualizar la fecha de pago");
-        }
+        Date paymentDate = AdminDate.adelantarPorMeses(entryDate, paymentsNumber);
+
+        rental.setPaymentDate(paymentDate);
+        boolean itsOnTime = paymentDate.after(new Date());
+        boolean fullPayment = lastPayment.getAmount() >= monthlyPayment.getAmount();
+        showStatus(itsOnTime&&fullPayment);
+
     }
 
     @Override
@@ -254,35 +250,45 @@ public class Presentador extends BasePresenter<Interface.view> implements Interf
     @Override
     public void addAdvance(Double amount) {
         double remaining =getRemainingPayment();
-        if (amount > remaining)amount = remaining;
-
-        if (monthlyPayment.getLastPaymentId() == null || monthlyPayment.getLastPaymentId().isEmpty() || getRemainingPayment() == 0) {
-            Double finalAmount = amount;
-            auxPayment = new ItemPayment(Timestamp.now(), rental.getId(), room.getRoomNumber(), monthlyPayment.getId(), amount, rental.getMainTenant(), lastPayment.getId());
-            db.addPayment(auxPayment.getRoot()).addOnSuccessListener(this::addPaymentSuccess).continueWith(
-                    task -> {
-                        if (task.isSuccessful()){
-                            if (task.getResult() != null){
-                                TAdvance advance = new TAdvance(finalAmount, Timestamp.now());
-                                db.addAdvanced(task.getResult().getId(), advance).addOnCompleteListener(doc -> {
-                                    createPdfModel(advance.getAmount());
-                                    crearPDF();
-                                    //view.addAvanceSuccess();
-                                });
+        if (amount >= remaining) {
+            realizarPago();
+        }
+        else {
+            if (monthlyPayment.getLastPaymentId() == null || monthlyPayment.getLastPaymentId().isEmpty() || getRemainingPayment() == 0) {
+                Double finalAmount = amount;
+                auxPayment = new ItemPayment(Timestamp.now(), rental.getId(), room.getRoomNumber(), monthlyPayment.getId(), amount, rental.getMainTenant(), lastPayment.getId());
+                db.addPayment(auxPayment.getRoot()).addOnSuccessListener(this::addPaymentSuccess).continueWith(
+                        task -> {
+                            if (task.isSuccessful()) {
+                                if (task.getResult() != null) {
+                                    TAdvance advance = new TAdvance(finalAmount, Timestamp.now());
+                                    db.addAdvanced(task.getResult().getId(), advance).addOnCompleteListener(doc -> {
+                                        createPdfModel(advance.getAmount());
+                                        crearPDF();
+                                        //view.addAvanceSuccess();
+                                    });
+                                }
                             }
-                        }
-                        return null;
-                    });
-        }else{
-            TAdvance advance = new TAdvance(amount, Timestamp.now());
-            db.addAdvanced(lastPayment.getId(), advance).addOnSuccessListener(doc -> {
-                Double sum = lastPayment.getAmount() + advance.getAmount();
-                db.updatePayment(lastPayment.getId(), mContext.getString(R.string.mdPaymentAmount), sum);
-                lastPayment.setAmount(sum);
-                createPdfModel(advance.getAmount());
-                crearPDF();
-                //view.addAvanceSuccess();
-            });
+                            return null;
+                        });
+            } else {
+                TAdvance advance = new TAdvance(amount, Timestamp.now());
+                db.addAdvanced(lastPayment.getId(), advance).addOnSuccessListener(doc -> {
+                    int paymentsNumber = (rental.getPaymentsNumber() + 1);
+
+                    Double sum = lastPayment.getAmount() + advance.getAmount();
+                    db.updatePayment(lastPayment.getId(), mContext.getString(R.string.mdPaymentAmount), sum);
+
+                    db.updateRental(mContext.getString(R.string.mdRentalPaymentsNumber), paymentsNumber, rental.getId())
+                            .addOnFailureListener(Throwable::printStackTrace);
+
+                    rental.setPaymentsNumber(paymentsNumber);
+                    lastPayment.setAmount(sum);
+                    createPdfModel(advance.getAmount());
+                    crearPDF();
+                    //view.addAvanceSuccess();
+                });
+            }
         }
     }
 
@@ -305,8 +311,19 @@ public class Presentador extends BasePresenter<Interface.view> implements Interf
             TAdvance advance = new TAdvance(remaining, Timestamp.now());
             db.addAdvanced(lastPayment.getId(), advance).addOnSuccessListener(doc -> {
                 Double sum = lastPayment.getAmount() + advance.getAmount();
+                int paymentsNumber = (rental.getPaymentsNumber() + 1);
                 db.updatePayment(lastPayment.getId(), mContext.getString(R.string.mdPaymentAmount), sum);
+                db.updateRental(mContext.getString(R.string.mdRentalPaymentsNumber), paymentsNumber, rental.getId())
+                        .addOnFailureListener(Throwable::printStackTrace);
+
                 lastPayment.setAmount(sum);
+                rental.setPaymentsNumber(paymentsNumber);
+                Date nextPaymentDate = AdminDate.adelantarPorMeses(rental.getEntryDate().toDate(), rental.getPaymentsNumber());
+                rental.setPaymentDate(nextPaymentDate);
+
+                view.pago();
+                view.actualizarFechaPago(AdminDate.dateToString(nextPaymentDate));
+
                 createPdfModel(advance.getAmount());
                 crearPDF();
                 //view.addAvanceSuccess();
@@ -321,35 +338,28 @@ public class Presentador extends BasePresenter<Interface.view> implements Interf
     private void addPaymentSuccess(DocumentReference documentReference) {
         lastPayment = auxPayment;
         lastPayment.setId(documentReference.getId());
-        int pagosRealizados = (rental.getPaymentsNumber() + 1);
-        db.updateRental(mContext.getString(R.string.mdRentalPaymentsNumber), pagosRealizados, rental.getId())
-                .addOnFailureListener(Throwable::printStackTrace);
         db.updateMonthlyPayment(monthlyPayment.getRentalId(), monthlyPayment.getId(), mContext.getString(R.string.mdmpLastPayment), lastPayment.getId())
                 .addOnFailureListener(Throwable::printStackTrace);
 
-        rental.setPaymentsNumber(pagosRealizados);
         monthlyPayment.setLastPaymentId(documentReference.getId());
 
         view.showMessage("pago agregado");
 
-        if (monthlyPayment.getAmount() > lastPayment.getAmount()) {
+        if (lastPayment.getAmount().equals(monthlyPayment.getAmount())) {
+            int paymentsNumber = (rental.getPaymentsNumber() + 1);
+            db.updateRental(mContext.getString(R.string.mdRentalPaymentsNumber), paymentsNumber, rental.getId())
+                    .addOnFailureListener(Throwable::printStackTrace);
+            rental.setPaymentsNumber(paymentsNumber);
             view.pago();
-            try {
-                String nextPaymentDate = AdminDate.adelantarPorMeses(rental.getEntryDate().toDate(), rental.getPaymentsNumber());
-                rental.setPaymentDate(nextPaymentDate);
-                view.actualizarFechaPago(nextPaymentDate);
-            } catch (ParseException e) {
-                e.printStackTrace();
-                view.showMessage("Error al actualizar la fecha de pago");
-            }
+            Date nextPaymentDate = AdminDate.adelantarPorMeses(rental.getEntryDate().toDate(), rental.getPaymentsNumber());
+            rental.setPaymentDate(nextPaymentDate);
+            view.actualizarFechaPago(AdminDate.dateToString(nextPaymentDate));
+            createPdfModel(lastPayment.getAmount());
+            crearPDF();
         }else {
             view.noPago();
         }
 
-        if (lastPayment.getAmount().equals(monthlyPayment.getAmount())) {
-            createPdfModel(lastPayment.getAmount());
-            crearPDF();
-        }
     }
 
     @Override
@@ -417,6 +427,18 @@ public class Presentador extends BasePresenter<Interface.view> implements Interf
     public void ocShowDetailsAdvance() {
         db.getAllAdvance(lastPayment.getId()).addOnSuccessListener(this::getAllAdvanceSuccess);
     }
+
+    @Override
+    public void refresh() {
+        room = null;
+        rental = null;
+        monthlyPayment = null;
+        monthlyPaymentAux = null;
+        auxPayment = null;
+        lastPayment = null;
+        iniciarComandos();
+    }
+
 
     private void getAllAdvanceSuccess(QuerySnapshot queryDocumentSnapshots) {
         TableLayout tl = (TableLayout) LayoutInflater.from(view.getContext()).inflate(R.layout.view_table_layout, null, false);

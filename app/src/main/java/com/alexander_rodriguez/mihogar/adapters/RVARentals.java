@@ -32,11 +32,8 @@ public class RVARentals extends RecyclerView.Adapter<RVARentals.Holder> {
 
     @Override
     public void onBindViewHolder(@NonNull Holder holder, int position) {
-        ItemRental rental = list.get(position);
-        holder.tvDepartureDate.setText(rental.getDepartureDateAsString());
-        holder.tvEntryDate.setText(rental.getEntryDateAsString());
-        holder.tvTenantsNumber.setText(String.valueOf(rental.getTenantsNumber()));
-        holder.tvReason.setText(rental.getReasonExit());
+        holder.onBind(list.get(position));
+
     }
 
     @Override
@@ -49,6 +46,7 @@ public class RVARentals extends RecyclerView.Adapter<RVARentals.Holder> {
         private final TextView tvEntryDate;
         private final TextView tvDepartureDate;
         private final TextView tvReason;
+        private ItemRental model;
         public Holder(@NonNull View itemView) {
             super(itemView);
             tvTenantsNumber = itemView.findViewById(R.id.tvTenantsNumber);
@@ -56,6 +54,18 @@ public class RVARentals extends RecyclerView.Adapter<RVARentals.Holder> {
             tvDepartureDate = itemView.findViewById(R.id.tvDepartureDate);
             tvReason = itemView.findViewById(R.id.tvReason);
             itemView.setOnClickListener(view1 -> {view.onClickHolder(Holder.this);});
+        }
+
+        public void onBind(ItemRental rental){
+            this.model = rental;
+            tvDepartureDate.setText(rental.getDepartureDateAsString());
+            tvEntryDate.setText(rental.getEntryDateAsString());
+            tvTenantsNumber.setText(String.valueOf(rental.getTenantsNumber()));
+            tvReason.setText(rental.getReasonExit());
+        }
+
+        public ItemRental getModel() {
+            return model;
         }
     }
 }

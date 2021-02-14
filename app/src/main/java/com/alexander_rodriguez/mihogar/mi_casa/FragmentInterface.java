@@ -3,9 +3,12 @@ package com.alexander_rodriguez.mihogar.mi_casa;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.MenuItem;
 
+import androidx.appcompat.app.AppCompatDialogFragment;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.alexander_rodriguez.mihogar.adapters.AdapterInterface;
 import com.alexander_rodriguez.mihogar.adapters.Models.ModelRoomView;
 import com.alexander_rodriguez.mihogar.DataBase.items.ItemRental;
 import com.alexander_rodriguez.mihogar.DataBase.items.ItemTenant;
@@ -20,16 +23,18 @@ public interface FragmentInterface {
 
         void onResume();
 
+        void refresh();
+
         void onClickHolder(RecyclerView.ViewHolder holder);
+
+        void onContextItemSelected(MenuItem item);
     }
-    interface view {
+    interface view extends AdapterInterface {
         Context getContext();
 
         Bundle getArguments();
 
-        void showList(RecyclerView.Adapter adapter);
-
-        void showRoomsList(ArrayList<ModelRoomView> list);
+        void showList(RecyclerView.Adapter adapter, RecyclerView.LayoutManager manager);
 
         void showUsersList(ArrayList<ItemTenant> list, RecyclerView.LayoutManager layout, boolean showMain);
 
@@ -37,13 +42,11 @@ public interface FragmentInterface {
 
         void nothingHere();
 
-        void notifyChangedOn(int posList);
-
         void goTo(Intent intent);
 
         void showMessage(String get_tenants_failure);
 
-        void showDialog(DialogDetallesAlquiler dialogDetallesAlquiler);
+        void showDialog(AppCompatDialogFragment dialogDetallesAlquiler);
 
         void setProgressBarVisibility(int gone);
     }

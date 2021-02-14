@@ -1,4 +1,4 @@
-package com.alexander_rodriguez.mihogar.agregarcuarto;
+package com.alexander_rodriguez.mihogar.add_room;
 
 import com.alexander_rodriguez.mihogar.Base.BasePresenter;
 import com.alexander_rodriguez.mihogar.DataBase.items.ItemRoom;

@@ -51,10 +51,16 @@ public class ModelAA extends TRental {
     }
 
     public String getEntryDateAsString() {
-        return AdminDate.dateToString(entryDate.toDate(), sEntryDate);
+        if(sEntryDate == null || sEntryDate.isEmpty()){
+            sEntryDate = AdminDate.dateToString(entryDate.toDate());
+        }
+        return sEntryDate;
     }
 
     public String getDepartureDateAsString() {
-        return AdminDate.dateToString(departureDate.toDate(), sDepartureDate);
+        if(sDepartureDate == null || sDepartureDate.isEmpty()){
+            sDepartureDate = AdminDate.dateToString(departureDate.toDate());
+        }
+        return sDepartureDate;
     }
 }

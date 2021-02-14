@@ -2,12 +2,14 @@ package com.alexander_rodriguez.mihogar.historialcasa;
 
 import android.content.ContentValues;
 import android.content.Intent;
+import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.alexander_rodriguez.mihogar.Base.BaseActivity;
 import com.alexander_rodriguez.mihogar.Base.BasePresenter;
 import com.alexander_rodriguez.mihogar.DataBase.DBInterface;
 import com.alexander_rodriguez.mihogar.DataBase.items.ItemTenant;
@@ -23,7 +25,7 @@ public class Presenter extends BasePresenter<Interface.View> implements Interfac
     private AdminDate adminDate;
 
     private String modo;
-    private String rentalID;
+    private String rentalIdIgnore;
     private String dni;
     private String roomNumber;
 
@@ -45,7 +47,7 @@ public class Presenter extends BasePresenter<Interface.View> implements Interfac
         super(view);
         adminDate = new AdminDate();
         this.modo  = i.getStringExtra(HistorialCasaActivity.MODE);
-        rentalID = i.getStringExtra(HistorialCasaActivity.EXTRA_RENTAL_ID_IGNORE);
+        rentalIdIgnore = i.getStringExtra(HistorialCasaActivity.EXTRA_RENTAL_ID_IGNORE);
         dni = i.getStringExtra(HistorialCasaActivity.EXTRA_DNI);
         roomNumber = i.getStringExtra(HistorialCasaActivity.EXTRA_ROOM_NUMBER);
         idItemMenuSelected = -1;
@@ -69,13 +71,16 @@ public class Presenter extends BasePresenter<Interface.View> implements Interfac
                 break;
             }
             case HistorialCasaActivity.USERS_OF_RENTAL:{
-                fragment = MyHouseFragment.newInstance(view);
+                Bundle args = new Bundle();
+                args.putString(MyHouseFragment.ARG_RENTAL_ID, mIntent.getStringExtra(HistorialCasaActivity.EXTRA_RENTAL_ID));
+                fragment = new MyHouseFragment(view);
+                fragment.setArguments(args);
                 fragment.setPresenter(new RentalUsersPresenter(fragment, this));
                 break;
             }
             case HistorialCasaActivity.RENTALS_OF_USER:
             case HistorialCasaActivity.RENTALS_OF_ROOM:{
-                fragment = MyHouseFragment.newInstance(view, roomNumber, rentalID);
+                fragment = MyHouseFragment.newInstance(view, roomNumber, rentalIdIgnore);
                 fragment.setPresenter(new UserRentalsPresenter(fragment, this));
                 break;
 
@@ -143,6 +148,9 @@ public class Presenter extends BasePresenter<Interface.View> implements Interfac
 
     @Override
     public void itemSelected(MenuItem item) {
+        if (item.getItemId() == BaseActivity.BACK_PRESSED){
+            view.salir();
+        }
         /*int id =  item.getItemId();
         switch (id){
             case R.id.iVerAlquileres:{

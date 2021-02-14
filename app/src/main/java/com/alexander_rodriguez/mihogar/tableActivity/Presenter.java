@@ -32,7 +32,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 
 public class Presenter extends BasePresenter<Interfaz.view> implements Interfaz.Presenter{
-    private ParceRental rental;
+    private final ParceRental rental;
 
     private  String idAlquiler;
     private boolean tablaFueCreada;
@@ -44,25 +44,26 @@ public class Presenter extends BasePresenter<Interfaz.view> implements Interfaz.
     public Presenter(Interfaz.view view, Intent intent) {
         super(view);
         mContext = view.getContext();
-
 /*
         this.idAlquiler = intent.getStringExtra(TableActivity.RENTAL_ID);
         this.email = intent.getStringExtra(TableActivity.EMAIL);
         this.phoneNumber = intent.getStringExtra(TableActivity.PHONE_NUM);
         this.existMD = intent.getBooleanExtra(TableActivity.SEND_MT, false);
 */
-        rental = (ParceRental) intent.getParcelableExtra("parce");
-        if(rental == null){
-            this.idAlquiler = intent.getStringExtra(TableActivity.RENTAL_ID);
+        rental = intent.getParcelableExtra(TableActivity.EXTRA_RENTAL);
+        if (rental == null){
+            view.showMessage("Data missing");
+            view.close();
         }
         tablaFueCreada = false;
         Intent i;
     }
 
     public void crearTabla(){
-        db.getMonthlyPaymentCR(idAlquiler).get()
+        db.getMonthlyPaymentCR(rental.getId()).get()
                 .addOnSuccessListener(this::getMonthlyPaymentsSuccess)
                 .addOnFailureListener(this::getPaymentsFailure);
+
     }
 
     private void getMonthlyPaymentsSuccess(QuerySnapshot queryDocumentSnapshots) {

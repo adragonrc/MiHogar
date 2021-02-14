@@ -55,6 +55,14 @@ public class ParceRental extends TRental implements Parcelable {
         dest.writeString(email);
     }
 
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
     @SuppressWarnings("unused")
     public static final Parcelable.Creator<ParceRental> CREATOR = new Parcelable.Creator<ParceRental>() {
         @Override

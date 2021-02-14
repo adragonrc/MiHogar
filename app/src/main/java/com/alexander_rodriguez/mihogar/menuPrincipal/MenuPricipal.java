@@ -13,7 +13,7 @@ import com.alexander_rodriguez.mihogar.Base.BaseActivity;
 import com.alexander_rodriguez.mihogar.Base.IBasePresenter;
 import com.alexander_rodriguez.mihogar.Preferencias;
 import com.alexander_rodriguez.mihogar.R;
-import com.alexander_rodriguez.mihogar.agregarcuarto.AgregarCuarto;
+import com.alexander_rodriguez.mihogar.add_room.AgregarCuarto;
 import com.alexander_rodriguez.mihogar.historialcasa.HistorialCasaActivity;
 import com.alexander_rodriguez.mihogar.add_rental.AddRentalActivity;
 import com.alexander_rodriguez.mihogar.mi_casa.MiCasaActivity;

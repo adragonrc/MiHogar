@@ -4,14 +4,19 @@ import android.content.ContentValues;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
+import android.view.MenuItem;
 
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.alexander_rodriguez.mihogar.DataBase.parse.ParceRental;
+import com.alexander_rodriguez.mihogar.adapters.Models.ModelAlquilerView;
+import com.alexander_rodriguez.mihogar.adapters.RVARentals;
 import com.alexander_rodriguez.mihogar.adapters.RvAdapterAlquiler;
 import com.alexander_rodriguez.mihogar.DataBase.DBInterface;
 import com.alexander_rodriguez.mihogar.DataBase.items.ItemRental;
 import com.alexander_rodriguez.mihogar.UTILIDADES.TAlquiler;
+import com.alexander_rodriguez.mihogar.adapters.RvAdapterRoom;
 import com.alexander_rodriguez.mihogar.mi_casa.FragmentInterface;
 import com.alexander_rodriguez.mihogar.mi_casa.MyHouseFragment;
 import com.alexander_rodriguez.mihogar.tableActivity.TableActivity;
@@ -38,6 +43,7 @@ public class UserRentalsPresenter implements FragmentInterface.presenter {
 
     private ArrayList<ItemRental> list;
     private Intent mIntent;
+    private RVARentals adapter;
 
     private int cont;
     private int iCont;
@@ -53,15 +59,20 @@ public class UserRentalsPresenter implements FragmentInterface.presenter {
         }
     }
 
+    private void showData(){
+        if(list.isEmpty()) refresh();
+        else {
+            showList();
+        }
+    }
+
     public void showList() {
-        if(list == null ) list = new ArrayList<>();
         if(list.isEmpty())
-            if(roomNumber != null && !roomNumber.isEmpty()) {
-                db.getRentalsOfRoom(roomNumber).addOnSuccessListener(this::getRentalsSuccess)
-                        .addOnFailureListener(this::getRentalsFailure);
-            }
-        else
-            view.showRentalsList(list, new LinearLayoutManager(view.getContext()));
+            view.nothingHere();
+        else {
+            adapter = new RVARentals(view, list);
+            view.showList(adapter, new LinearLayoutManager(view.getContext()));
+        }
     }
 
     private void getRentalsFailure(Exception e) {
@@ -77,11 +88,7 @@ public class UserRentalsPresenter implements FragmentInterface.presenter {
                 list.add(rental);
             }
         }
-        if(list.isEmpty()){
-            view.nothingHere();
-        }else{
-            view.showRentalsList(list, new LinearLayoutManager(view.getContext()));
-        }
+        showList();
     }
 
     @Override
@@ -95,36 +102,47 @@ public class UserRentalsPresenter implements FragmentInterface.presenter {
     }
 
     @Override
+    public void refresh() {
+        if(roomNumber != null && !roomNumber.isEmpty()) {
+            db.getRentalsOfRoom(roomNumber).addOnSuccessListener(this::getRentalsSuccess)
+                    .addOnFailureListener(this::getRentalsFailure);
+        }
+    }
+
+    @Override
     public void onClickHolder(RecyclerView.ViewHolder holder) {
-        if(holder instanceof RvAdapterAlquiler.Holder){
-            RvAdapterAlquiler.Holder mHolder = (RvAdapterAlquiler.Holder) holder;
+        if(holder instanceof RVARentals.Holder){
+            RVARentals.Holder mHolder = (RVARentals.Holder) holder;
+            ItemRental model = mHolder.getModel();
 
-            Bundle bundle = new Bundle();
-            ContentValues alquiler = getDetails(mHolder.getmId());
-
-            DialogDetallesAlquiler dialogDetallesAlquiler = new DialogDetallesAlquiler(view.getContext(), alquiler);
+            DialogDetallesAlquiler dialogDetallesAlquiler = new DialogDetallesAlquiler(view.getContext(), model);
             dialogDetallesAlquiler.setOnClickListenerVerCuarto(v -> {
                 Intent i = new Intent(view.getContext(), HistorialCasaActivity.class);
-                i.putExtra(HistorialCasaActivity.MODE, HistorialCasaActivity.ALL_USERS);
-                i.putExtra(TAlquiler.ID, mHolder.getmId());
+                i.putExtra(HistorialCasaActivity.MODE, HistorialCasaActivity.USERS_OF_RENTAL);
+                i.putExtra(HistorialCasaActivity.EXTRA_RENTAL_ID, model.getId());
                 view.goTo(i);
             });
             dialogDetallesAlquiler.setOnClickListenerVerPagos(v -> {
+                ParceRental parceRental = new ParceRental(model);
                 Intent intent = new Intent(view.getContext(), TableActivity.class);
-                intent.putExtra(TAlquiler.ID, mHolder.getmId());
+                intent.putExtra(TableActivity.EXTRA_RENTAL, parceRental);
                 view.goTo(intent);
             });
-
             view.showDialog(dialogDetallesAlquiler);
-
         }
     }
+
+    @Override
+    public void onContextItemSelected(MenuItem item) {
+
+    }
+
 
     private ContentValues getDetails(String getmId) {
         return null;
     }
 
     public void iniciarComandos() {
-        showList();
+        showData();
     }
 }

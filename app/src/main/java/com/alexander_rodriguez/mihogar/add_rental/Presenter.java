@@ -1,10 +1,12 @@
 package com.alexander_rodriguez.mihogar.add_rental;
 
+import android.app.Activity;
+import android.app.AlertDialog;
 import android.widget.ArrayAdapter;
 
-import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.alexander_rodriguez.mihogar.DataBase.items.ItemRoom;
 import com.alexander_rodriguez.mihogar.adapters.RvAdapterUser;
 import com.alexander_rodriguez.mihogar.Base.BasePresenter;
 import com.alexander_rodriguez.mihogar.DataBase.items.ItemTenant;
@@ -17,18 +19,13 @@ import com.alexander_rodriguez.mihogar.Save;
 import com.alexander_rodriguez.mihogar.UTILIDADES.TAlquiler;
 import com.alexander_rodriguez.mihogar.UTILIDADES.TAlquilerUsuario;
 import com.alexander_rodriguez.mihogar.UTILIDADES.TUsuario;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
-
-import org.jetbrains.annotations.NotNull;
+import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 
 public class Presenter extends BasePresenter<Interfaz.view> implements Interfaz.presenter {
     static final String SIN_REGISTROS = "-1";
@@ -36,6 +33,7 @@ public class Presenter extends BasePresenter<Interfaz.view> implements Interfaz.
     private Boolean confirmacion;
     private AdminDate adminDate;
     private ArrayList<String> cuartosDisponibles;
+    private ArrayList<ItemRoom> rooms;
 
     private ArrayList<ItemTenant> list;
 
@@ -45,12 +43,17 @@ public class Presenter extends BasePresenter<Interfaz.view> implements Interfaz.
 
     private String rentalId;
 
+    private boolean onLongMenu;
+    private RvAdapterUser adapterUser;
+
     public Presenter(Interfaz.view view) {
         super(view);
         adminDate = new AdminDate();
         adminDate.setFormat(AdminDate.FORMAT_DATE_TIME);
         list = new ArrayList<>();
+        adapterUser = new RvAdapterUser(view, list, true);
         confirmacion = false;
+        onLongMenu = false;
     }
 
     private boolean isNuevo(String dni){
@@ -62,11 +65,56 @@ public class Presenter extends BasePresenter<Interfaz.view> implements Interfaz.
         return true;
     }
 
+    @Override
+    public void onBackPressed() {
+        SlidingUpPanelLayout.PanelState mSlideState = view.getPanelState();
+
+        if (mSlideState != SlidingUpPanelLayout.PanelState.EXPANDED && mSlideState != SlidingUpPanelLayout.PanelState.ANCHORED && mSlideState != SlidingUpPanelLayout.PanelState.DRAGGING) {
+            if (onLongMenu) {
+                removeSelect();
+                view.editUserComplete();
+            }else{
+                if (saveChanges()) {
+                    view.close(Activity.RESULT_CANCELED);
+                } else {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(view.getContext());
+                    builder.setTitle("¿Deseas salir?").
+                            setMessage("Es posible que los cambios que implementaste no se puedan guardar.").
+                            setPositiveButton("Aceptar", (dialogInterface, i) -> view.close(Activity.RESULT_CANCELED)).
+                            setNegativeButton("Cancelar", (dialogInterface, i) -> {
+                            });
+                    builder.create().show();
+                }
+            }
+        } else {
+            view.panelCollapsed();
+        }
+        /*if (mSlideState != SlidingUpPanelLayout.PanelState.EXPANDED && mSlideState != SlidingUpPanelLayout.PanelState.ANCHORED && mSlideState != SlidingUpPanelLayout.PanelState.DRAGGING){
+            sliding.setPanelState(SlidingUpPanelLayout.PanelState.EXPANDED);
+            sliding.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
+        }*/
+    }
+    @Override
+    public void onOptionItemSelected(int option) {
+        if (option == R.id.opDelete){
+            int pos = list.indexOf(adapterUser.getLongHolderSelect().getModel());
+            if (pos!=-1) {
+                list.remove(pos);
+                adapterUser.notifyItemRemoved(pos);
+            }
+        }else if(option == R.id.opEdit){
+            ItemTenant model = adapterUser.getLongHolderSelect().getModel();
+            view.editUser(model);
+        }
+    }
+
     private void getRoomAvailableComplete(QuerySnapshot task){
 
         cuartosDisponibles = new ArrayList<>();
+        rooms = new ArrayList<>();
         for (DocumentSnapshot doc: task){
             cuartosDisponibles.add(doc.getId());
+            rooms.add(ItemRoom.newInstance(doc));
         }
         if(cuartosDisponibles.isEmpty()){
             view.sinCuartos();
@@ -75,6 +123,7 @@ public class Presenter extends BasePresenter<Interfaz.view> implements Interfaz.
     @Override
     public void iniciarComandos() {
         /*cuartosDisponibles ;*/
+        view.setAdapter(adapterUser);
         db.consultarNumerosDeCuartoDisponibles().addOnSuccessListener(this::getRoomAvailableComplete)
         .addOnFailureListener(this::getRoomAvailableFailure);
 
@@ -97,19 +146,22 @@ public class Presenter extends BasePresenter<Interfaz.view> implements Interfaz.
     public void onClickAddUser() {
         view.startRegistroUsuario();
     }
-
-    @Override
-    public void agregarUsuario(ItemTenant m) {
+    private boolean checkError(ItemTenant m){
         int err = m.getErrorIfExist();
         if (err != -1) {
             view.showMessage("Campo vacio en el campo: " + ItemTenant.getLabelName(err));
-            return;
+            return true;
         }
         if (!isNuevo(m.getDni())){
             view.showError("Usuario ya esta en lista: DNI");
-            return;
+            return true;
         }
-        guardarModel(m);
+        return false;
+    }
+    @Override
+    public void agregarUsuario(ItemTenant m) {
+        if (!checkError(m))
+            guardarModel(m);
 /*
         db.getTenantHistory(m.getDni())
                 .addOnSuccessListener(this::getTenantHistorySuccess)
@@ -148,6 +200,11 @@ public class Presenter extends BasePresenter<Interfaz.view> implements Interfaz.
 
     }
 
+    private ItemRoom getRoomForAddRental(){
+        int i = cuartosDisponibles.indexOf(modelToSave.getRoomNumber());
+        return rooms.get(i);
+    }
+
     private void addMonthlyPaymentSuccess(DocumentReference document) {
         db.updateCurrentRentMP(rentalId, document);
         if (modelToSave.wasPaid()) {
@@ -157,14 +214,15 @@ public class Presenter extends BasePresenter<Interfaz.view> implements Interfaz.
                     .addOnFailureListener(this::addPaymentFailure);
         } else {
             finish();
-            view.close();
         }
     }
 
     private void finish(){
         db.updateCurrentRoomRent(modelToSave.getRoomNumber(), rentalId);
+        ItemRoom room = getRoomForAddRental();
+        db.updateRoom(view.getContext().getString(R.string.mdRoomNumberOfRentals), room.getNumberOfRentals() + 1, modelToSave.getRoomNumber());
         view.showMessage("OK");
-        view.close();
+        view.close(Activity.RESULT_OK);
     }
 
     private void addMonthlyPaymentFailure(Exception e) {
@@ -176,6 +234,7 @@ public class Presenter extends BasePresenter<Interfaz.view> implements Interfaz.
     }
     private void addPaymentFailure(Exception e) {
         view.showError("No se pudo agregar el pago");
+        finish();
         e.printStackTrace();
     }
 
@@ -244,15 +303,20 @@ public class Presenter extends BasePresenter<Interfaz.view> implements Interfaz.
     }
 
     @Override
-    public void setMain(RecyclerView.ViewHolder holder) {
-        if(holder instanceof RvAdapterUser.Holder){
-            RvAdapterUser.Holder mHolder = (RvAdapterUser.Holder) holder;
-            if(modelSelect != null){
-                modelSelect.setMain(false);
+    public void ocHolder(RecyclerView.ViewHolder holder) {
+        if (onLongMenu){
+            removeSelect();
+            view.editUserComplete();
+        }else {
+            if (holder instanceof RvAdapterUser.Holder) {
+                RvAdapterUser.Holder mHolder = (RvAdapterUser.Holder) holder;
+                if (modelSelect != null) {
+                    modelSelect.setMain(false);
+                }
+                modelSelect = list.get(mHolder.getAdapterPosition());
+                adapterUser.isMain(mHolder);
+                modelSelect.setMain(true);
             }
-            modelSelect = list.get(mHolder.getAdapterPosition());
-            view.doPrincipal(mHolder);
-            modelSelect.setMain(true);
         }
     }
 
@@ -262,34 +326,46 @@ public class Presenter extends BasePresenter<Interfaz.view> implements Interfaz.
     }
 
     private void guardarModel(ItemTenant m){
-        if(list.isEmpty()) {
+
+        if (list.isEmpty()) {
             m.setMain(true);
             modelSelect = m;
         }
-        list.add(m);
-        view.mostrarNuevoUsuario(m);
+        view.addUserComplete();
+        adapterUser.addItem(m);
+
+    }
+    @Override
+    public void saveUserChanges(ItemTenant data) {
+        int err = data.getErrorIfExist();
+        if (err != -1) {
+            view.showMessage("Campo vacio en el campo: " + ItemTenant.getLabelName(err));
+            return;
+        }
+        if (list.contains(data)) {
+            adapterUser.notifyItemChanged(list.indexOf(data));
+            view.editUserComplete();
+            removeSelect();
+        }
     }
 
-    class SaveUser implements OnSuccessListener<DocumentSnapshot>, OnFailureListener{
-        public SaveUser(){
-
+    @Override
+    public void onLongClick(RecyclerView.ViewHolder holder) {
+        if (!onLongMenu){
+            view.addMenu(R.menu.menu_add_user_options);
+            view.removeMenuItem(R.id.item_add_user);
+            view.setTitle("", true);
         }
+        onLongMenu = true;
+        adapterUser.setSelection(true);
+    }
 
-        @Override
-        public void onFailure(@NonNull Exception e) {
-
-        }
-
-        @Override
-        public void onSuccess(@NotNull DocumentSnapshot documentSnapshot) {
-
-        }
-
-        private void userNotExists(Exception e) {
-        }
-
-        private void userExists(Task<DocumentSnapshot> task) {
-
-        }
+    private void removeSelect(){
+        onLongMenu = false;
+        adapterUser.setSelection(false);
+        view.removeMenuItem(R.id.opDelete);
+        view.removeMenuItem(R.id.opEdit);
+        view.addMenu(R.menu.menu_add_user);
+        view.setTitle(view.getContext().getString(R.string.title_add_rental), false);
     }
 }
