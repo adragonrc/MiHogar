@@ -142,11 +142,11 @@
     <string name="cMonthlyPayment">monthlyPayment</string>
 
     //room document metadata
-    <string name="mdRoomDescription">description</string>
+    <string name="mdRoomDetails">details</string>
     <string name="mdRoomPrice">price_e</string>
     <string name="mdRoomPathImage">pathImage</string>
     <string name="mdRoomCurrentRentalId">currentRentalId</string>
-    <string name="mdRoomPathImageStorage">pahtImageStorage</string>
+    <string name="mdRoomPathImageStorage">pathImageStorage</string>
 
     //rental document metadata
     <string name="mdRentalCurrentMP">currentMP</string>
@@ -211,7 +211,7 @@
     <string name="sTitleExample">HI Alexander Rodriguez</string>
     <string name="sRoom">Cuarto</string>
     <string name="sTenant">Inquilinos</string>
-    <string name="sError" >Ocurrio un error</string>
+    <string name="sError">Ocurrio un error</string>
     <string name="cAdvance">advance</string>
     <string name="sMPError">Mensualidad no valida</string>
     <string name="smpNotFound">Current Monthly Payment wasn\'t found</string>

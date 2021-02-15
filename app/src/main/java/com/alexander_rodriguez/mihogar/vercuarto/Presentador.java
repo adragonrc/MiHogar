@@ -5,7 +5,6 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.view.LayoutInflater;
-import android.view.Menu;
 import android.view.View;
 import android.widget.TableLayout;
 
@@ -22,7 +21,7 @@ import com.alexander_rodriguez.mihogar.AdminDate;
 import com.alexander_rodriguez.mihogar.PDF;
 import com.alexander_rodriguez.mihogar.R;
 import com.alexander_rodriguez.mihogar.Save;
-import com.alexander_rodriguez.mihogar.tableActivity.TableRowView;
+import com.alexander_rodriguez.mihogar.table_activity.TableRowView;
 import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -102,17 +101,10 @@ public class Presentador extends BasePresenter<Interface.view> implements Interf
             if(tRoom != null) {
                 room = new ItemRoom(tRoom);
                 room.setRoomNumber(documentSnapshot.getId());
-                File f;
-                if(room.getPathImage() != null && !room.getPathImage().isEmpty()) {
-                    f = new File(room.getPathImage());
-                    if(!f.getParentFile().exists()){
-                        f.getParentFile().mkdirs();
-                    }
-                }else{
-                    f = Save.createFile(mContext, mContext.getString(R.string.cRoom), room.getRoomNumber());
-                    room.setPathImage(f.getAbsolutePath());
-                }
-                if(room.getPahtImageStorage() != null && !room.getPahtImageStorage().isEmpty()){
+                File f = Save.createFile(mContext, mContext.getString(R.string.cRoom), room.getRoomNumber());
+                room.setPathImage(f.getAbsolutePath());
+
+                if(room.getPathImageStorage() != null && !room.getPathImageStorage().isEmpty()){
                     db.downloadRoomPhoto(room.getRoomNumber(), f)
                             .addOnSuccessListener(this::downloadRoomPhotoSuccess)
                             .addOnFailureListener(this::downloadRoomPhotoFailure);
@@ -242,7 +234,7 @@ public class Presentador extends BasePresenter<Interface.view> implements Interf
 
     @Override
     public void actualizarDetalles(String detalles) {
-        db.updateRoom(view.getContext().getString(R.string.mdRoomDescription), detalles, numeroCuarto);
+        db.updateRoom(view.getContext().getString(R.string.mdRoomDetails), detalles, numeroCuarto);
         room.setDetails(detalles);
         view.actualizarDetalles(detalles);
     }
@@ -255,17 +247,14 @@ public class Presentador extends BasePresenter<Interface.view> implements Interf
         }
         else {
             if (monthlyPayment.getLastPaymentId() == null || monthlyPayment.getLastPaymentId().isEmpty() || getRemainingPayment() == 0) {
-                Double finalAmount = amount;
                 auxPayment = new ItemPayment(Timestamp.now(), rental.getId(), room.getRoomNumber(), monthlyPayment.getId(), amount, rental.getMainTenant(), lastPayment.getId());
                 db.addPayment(auxPayment.getRoot()).addOnSuccessListener(this::addPaymentSuccess).continueWith(
                         task -> {
                             if (task.isSuccessful()) {
                                 if (task.getResult() != null) {
-                                    TAdvance advance = new TAdvance(finalAmount, Timestamp.now());
-                                    db.addAdvanced(task.getResult().getId(), advance).addOnCompleteListener(doc -> {
-                                        createPdfModel(advance.getAmount());
-                                        crearPDF();
-                                        //view.addAvanceSuccess();
+                                    TAdvance advance = new TAdvance(amount, Timestamp.now());
+                                    db.addAdvanced(task.getResult().getId(), advance).addOnSuccessListener(doc -> {
+                                        addAdvanceFinish(advance, doc.getId());
                                     });
                                 }
                             }
@@ -274,24 +263,29 @@ public class Presentador extends BasePresenter<Interface.view> implements Interf
             } else {
                 TAdvance advance = new TAdvance(amount, Timestamp.now());
                 db.addAdvanced(lastPayment.getId(), advance).addOnSuccessListener(doc -> {
-                    int paymentsNumber = (rental.getPaymentsNumber() + 1);
-
-                    Double sum = lastPayment.getAmount() + advance.getAmount();
-                    db.updatePayment(lastPayment.getId(), mContext.getString(R.string.mdPaymentAmount), sum);
-
-                    db.updateRental(mContext.getString(R.string.mdRentalPaymentsNumber), paymentsNumber, rental.getId())
-                            .addOnFailureListener(Throwable::printStackTrace);
-
-                    rental.setPaymentsNumber(paymentsNumber);
-                    lastPayment.setAmount(sum);
-                    createPdfModel(advance.getAmount());
-                    crearPDF();
-                    //view.addAvanceSuccess();
+                    updatePaymentAmount(advance.getAmount());
+                    addAdvanceFinish(advance, doc.getId());
                 });
             }
         }
     }
 
+    private void updatePaymentAmount(double amount){
+        Double sum = lastPayment.getAmount() + amount;
+        db.updatePayment(lastPayment.getId(), mContext.getString(R.string.mdPaymentAmount), sum);
+        lastPayment.setAmount(sum);
+    }
+    private void updatePaymentNumber(){
+        int paymentsNumber = (rental.getPaymentsNumber() + 1);
+        db.updateRental(mContext.getString(R.string.mdRentalPaymentsNumber), paymentsNumber, rental.getId())
+                .addOnFailureListener(Throwable::printStackTrace);
+        rental.setPaymentsNumber(paymentsNumber);
+    }
+    private void addAdvanceFinish(TAdvance advance, String id){
+        String direccion = sp.getString(view.getContext().getString(R.string.direccion), "---");
+        model = new PDF.Model(numeroCuarto, lastPayment.getDni(), id, String.valueOf(advance.getAmount()), direccion, AdminDate.dateToString(advance.getDate().toDate()));
+        crearPDF();
+    }
 
     @Override
     public void realizarPago() {
@@ -310,25 +304,19 @@ public class Presentador extends BasePresenter<Interface.view> implements Interf
         }else{
             TAdvance advance = new TAdvance(remaining, Timestamp.now());
             db.addAdvanced(lastPayment.getId(), advance).addOnSuccessListener(doc -> {
-                Double sum = lastPayment.getAmount() + advance.getAmount();
-                int paymentsNumber = (rental.getPaymentsNumber() + 1);
-                db.updatePayment(lastPayment.getId(), mContext.getString(R.string.mdPaymentAmount), sum);
-                db.updateRental(mContext.getString(R.string.mdRentalPaymentsNumber), paymentsNumber, rental.getId())
-                        .addOnFailureListener(Throwable::printStackTrace);
-
-                lastPayment.setAmount(sum);
-                rental.setPaymentsNumber(paymentsNumber);
-                Date nextPaymentDate = AdminDate.adelantarPorMeses(rental.getEntryDate().toDate(), rental.getPaymentsNumber());
-                rental.setPaymentDate(nextPaymentDate);
-
-                view.pago();
-                view.actualizarFechaPago(AdminDate.dateToString(nextPaymentDate));
-
-                createPdfModel(advance.getAmount());
-                crearPDF();
+                updatePaymentAmount(advance.getAmount());
+                updatePaymentNumber();
+                paymentFinished();
+                addAdvanceFinish(advance, doc.getId());
                 //view.addAvanceSuccess();
             });
         }
+    }
+    private void paymentFinished(){
+        Date nextPaymentDate = AdminDate.adelantarPorMeses(rental.getEntryDate().toDate(), rental.getPaymentsNumber());
+        rental.setPaymentDate(nextPaymentDate);
+        view.pago();
+        view.actualizarFechaPago(AdminDate.dateToString(nextPaymentDate));
     }
 
     private void addPaymentFailure(Exception e) {
@@ -350,10 +338,7 @@ public class Presentador extends BasePresenter<Interface.view> implements Interf
             db.updateRental(mContext.getString(R.string.mdRentalPaymentsNumber), paymentsNumber, rental.getId())
                     .addOnFailureListener(Throwable::printStackTrace);
             rental.setPaymentsNumber(paymentsNumber);
-            view.pago();
-            Date nextPaymentDate = AdminDate.adelantarPorMeses(rental.getEntryDate().toDate(), rental.getPaymentsNumber());
-            rental.setPaymentDate(nextPaymentDate);
-            view.actualizarFechaPago(AdminDate.dateToString(nextPaymentDate));
+            paymentFinished();
             createPdfModel(lastPayment.getAmount());
             crearPDF();
         }else {

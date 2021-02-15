@@ -10,7 +10,7 @@ import androidx.fragment.app.FragmentTransaction;
 
 import com.alexander_rodriguez.mihogar.Base.BaseActivity;
 import com.alexander_rodriguez.mihogar.R;
-import com.alexander_rodriguez.mihogar.menuPrincipal.MenuPricipal;
+import com.alexander_rodriguez.mihogar.menu_main.MenuPricipal;
 import com.alexander_rodriguez.mihogar.registrarcasa.RegistrarCasaActivity;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;

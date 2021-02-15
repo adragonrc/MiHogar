@@ -4,7 +4,7 @@ import android.view.MenuItem;
 
 import com.alexander_rodriguez.mihogar.Base.BaseView;
 import com.alexander_rodriguez.mihogar.Base.IBasePresenter;
-import com.alexander_rodriguez.mihogar.historialcasa.FragmentParent;
+import com.alexander_rodriguez.mihogar.historial_casa.FragmentParent;
 
 public interface Interface{
     interface Presenter extends IBasePresenter, FragmentParent.presenter {

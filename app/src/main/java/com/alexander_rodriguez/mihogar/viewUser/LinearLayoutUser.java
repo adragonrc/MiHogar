@@ -10,20 +10,17 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.activity.ComponentActivity;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentManager;
 
 import com.alexander_rodriguez.mihogar.R;
 import com.alexander_rodriguez.mihogar.UTILIDADES.TAlquiler;
-import com.alexander_rodriguez.mihogar.UTILIDADES.TUsuario;
 import com.alexander_rodriguez.mihogar.mydialog.DialogImput;
 import com.alexander_rodriguez.mihogar.mydialog.DialogInterfaz;
 import com.alexander_rodriguez.mihogar.mydialog.DialogOptions;
 import com.alexander_rodriguez.mihogar.mydialog.PresenterDialogImput;
-import com.alexander_rodriguez.mihogar.tableActivity.TableActivity;
+import com.alexander_rodriguez.mihogar.table_activity.TableActivity;
 
 public class LinearLayoutUser implements Interfaz.View{
     private LayoutInflater inflater;

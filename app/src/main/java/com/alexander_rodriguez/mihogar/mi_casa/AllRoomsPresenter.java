@@ -14,7 +14,7 @@ import com.alexander_rodriguez.mihogar.AdminDate;
 import com.alexander_rodriguez.mihogar.DataBase.models.TRental;
 import com.alexander_rodriguez.mihogar.DataBase.models.TRoom;
 import com.alexander_rodriguez.mihogar.UTILIDADES.TCuarto;
-import com.alexander_rodriguez.mihogar.historialcasa.FragmentParent;
+import com.alexander_rodriguez.mihogar.historial_casa.FragmentParent;
 import com.alexander_rodriguez.mihogar.vercuarto.ShowRoomActivity;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.DocumentSnapshot;

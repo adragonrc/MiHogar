@@ -32,9 +32,8 @@ import com.alexander_rodriguez.mihogar.R;
 import com.alexander_rodriguez.mihogar.Save;
 import com.alexander_rodriguez.mihogar.UTILIDADES.TAlquiler;
 import com.alexander_rodriguez.mihogar.UTILIDADES.TCuarto;
-import com.alexander_rodriguez.mihogar.UTILIDADES.TUsuario;
 import com.alexander_rodriguez.mihogar.ViewPdfActivity;
-import com.alexander_rodriguez.mihogar.historialcasa.HistorialCasaActivity;
+import com.alexander_rodriguez.mihogar.historial_casa.HistorialCasaActivity;
 import com.alexander_rodriguez.mihogar.add_rental.AddRentalActivity;
 import com.alexander_rodriguez.mihogar.menu_photo.MenuIterator;
 import com.alexander_rodriguez.mihogar.menu_photo.interfazMenu;
@@ -42,7 +41,7 @@ import com.alexander_rodriguez.mihogar.mydialog.DialogAddAdvance;
 import com.alexander_rodriguez.mihogar.mydialog.DialogImput;
 import com.alexander_rodriguez.mihogar.mydialog.DialogInterfaz;
 import com.alexander_rodriguez.mihogar.mydialog.PresenterDialogImput;
-import com.alexander_rodriguez.mihogar.tableActivity.TableActivity;
+import com.alexander_rodriguez.mihogar.table_activity.TableActivity;
 import com.alexander_rodriguez.mihogar.vercuarto.view_perfil_cuarto.PerfilCuarto;
 import com.alexander_rodriguez.mihogar.vercuarto.view_perfil_cuarto.ProfileView;
 import com.alexander_rodriguez.mihogar.viewUser.DialogConfirmPago;
@@ -196,6 +195,7 @@ public class ShowRoomActivity extends BaseActivity<Interface.Presenter> implemen
         aceptarCancelar.setVisibility(View.VISIBLE);
         if (menu != null) {
             menu.removeItem(R.id.iAddRental);
+            menu.removeItem(R.id.iVerPagos);
             getMenuInflater().inflate(R.menu.menu_cuarto, menu);
         }
         detallesCuarto2(cuarto);
@@ -237,6 +237,7 @@ public class ShowRoomActivity extends BaseActivity<Interface.Presenter> implemen
         perfilCuarto.showCuartolibre();
         if (menu !=null) {
             menu.removeItem(R.id.iVerPagos);
+            menu.removeItem(R.menu.menu_cuarto_no_alquilado);
             getMenuInflater().inflate(R.menu.menu_cuarto_no_alquilado, menu);
         }
         detallesCuarto2(cuarto);
@@ -252,7 +253,6 @@ public class ShowRoomActivity extends BaseActivity<Interface.Presenter> implemen
 
     @Override
     public void onClickVermas(View view) {
-        //startActivity(new Intent(this, HistorialCasaActivity.class));
         Intent i = new Intent(this, HistorialCasaActivity.class);
         i.putExtra(HistorialCasaActivity.MODE, HistorialCasaActivity.USERS_OF_RENTAL);
         i.putExtra(HistorialCasaActivity.EXTRA_RENTAL_ID, presenter.getRoom().getCurrentRentalId());
@@ -424,7 +424,7 @@ public class ShowRoomActivity extends BaseActivity<Interface.Presenter> implemen
     private void createListener(){
         listener = v -> {
             Bundle data = new Bundle();
-            data.putString(TUsuario.DNI, presenter.getResponsable());
+            data.putString(DialogConfirmPago.ARG_DNI, presenter.getResponsable());
             data.putString(DialogConfirmPago.ARG_ROOM_NUMBER, numCuarto);
             data.putString(DialogConfirmPago.ARG_PAYMENT_DATA, presenter.getDatosAlquiler().getPaymentDateAsString());
             data.putString(DialogConfirmPago.ARG_AMOUNT, String.valueOf(presenter.getAmount()));

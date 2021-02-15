@@ -27,7 +27,7 @@ import com.alexander_rodriguez.mihogar.UTILIDADES.TCuarto;
 import com.alexander_rodriguez.mihogar.UTILIDADES.TUsuario;
 import com.alexander_rodriguez.mihogar.view_registrar_usuario.AddUserView;
 import com.alexander_rodriguez.mihogar.add_room.AgregarCuarto;
-import com.alexander_rodriguez.mihogar.historialUserPakage.HistorialUsuarioActivity;
+import com.alexander_rodriguez.mihogar.history_user.HistorialUsuarioActivity;
 import com.alexander_rodriguez.mihogar.viewregistraralquiler.ModelAA;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 import com.theartofdev.edmodo.cropper.CropImage;

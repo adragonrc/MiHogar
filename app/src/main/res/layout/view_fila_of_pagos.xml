@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.alexander_rodriguez.mihogar.tableActivity.TableRowView
+<com.alexander_rodriguez.mihogar.table_activity.TableRowView
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
@@ -30,4 +30,4 @@
         android:text="TextView"
         android:contentDescription="Cantidad pagada"
         android:gravity="center"/>
-</com.alexander_rodriguez.mihogar.tableActivity.TableRowView>
+</com.alexander_rodriguez.mihogar.table_activity.TableRowView>

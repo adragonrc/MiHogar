@@ -22,6 +22,7 @@ import com.alexander_rodriguez.mihogar.UTILIDADES.TCuarto;
 import org.jetbrains.annotations.NotNull;
 
 public class DialogConfirmPago extends AppCompatDialogFragment {
+    public static final String ARG_DNI = "dni";
     public static final String ARG_ROOM_NUMBER = "roomNumber";
     public static final String ARG_PAYMENT_DATA = "paymentData";
     public static final String ARG_AMOUNT = "amount";
@@ -65,6 +66,7 @@ public class DialogConfirmPago extends AppCompatDialogFragment {
         dialog = builder.create();
         this.datos = getArguments();
         if (datos!= null) {
+            tvDni.setText(datos.getString(ARG_DNI));
             tvCuarto.setText(datos.getString(ARG_ROOM_NUMBER));
             tvFechaDePago.setText(datos.getString(ARG_PAYMENT_DATA));
             tvMonto.setText(datos.getString(ARG_AMOUNT));

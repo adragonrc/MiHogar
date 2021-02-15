@@ -19,13 +19,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
 
-import com.alexander_rodriguez.mihogar.adapters.RVARentals;
-import com.alexander_rodriguez.mihogar.adapters.RvAdapterRoom;
 import com.alexander_rodriguez.mihogar.adapters.RvAdapterUser;
-import com.alexander_rodriguez.mihogar.DataBase.items.ItemRental;
 import com.alexander_rodriguez.mihogar.DataBase.items.ItemTenant;
 import com.alexander_rodriguez.mihogar.R;
-import com.alexander_rodriguez.mihogar.historialcasa.FragmentParent;
+import com.alexander_rodriguez.mihogar.historial_casa.FragmentParent;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -129,7 +126,10 @@ public class MyHouseFragment extends Fragment implements FragmentInterface.view 
         nothingToShow = view.findViewById(R.id.nothingToShow);
         progressBar = view.findViewById(R.id.progressBar);
         swipeRefreshLayout = view.findViewById(R.id.swipeLayout);
-        swipeRefreshLayout.setOnRefreshListener(presenter::refresh);
+        swipeRefreshLayout.setOnRefreshListener(() ->{
+            presenter.refresh();
+            swipeRefreshLayout.setRefreshing(false);
+        });
         registerForContextMenu(rv);
 
         setProgressBarVisibility(View.GONE);
@@ -158,23 +158,16 @@ public class MyHouseFragment extends Fragment implements FragmentInterface.view 
     public void showList(RecyclerView.Adapter adapter, RecyclerView.LayoutManager manager){
         swipeRefreshLayout.setRefreshing(false);
         setProgressBarVisibility(View.GONE);
-        nothingToShow.setVisibility(View.GONE);
+         nothingToShow.setVisibility(View.GONE);
         rv.setVisibility(View.VISIBLE);
         rv.setLayoutManager(manager);
         rv.setAdapter(adapter);
     }
 
-    @Override
-    public void showRentalsList(ArrayList<ItemRental> list, RecyclerView.LayoutManager manager) {
-        rv.setVisibility(View.VISIBLE);
-        nothingToShow.setVisibility(View.GONE);
-        RVARentals adapter = new RVARentals(this, list);
-        rv.setLayoutManager(manager);
-        rv.setAdapter(adapter);
-    }
 
     @Override
     public void nothingHere() {
+        swipeRefreshLayout.setRefreshing(false);
         setProgressBarVisibility(View.GONE);
         nothingToShow.setVisibility(View.VISIBLE);
     }

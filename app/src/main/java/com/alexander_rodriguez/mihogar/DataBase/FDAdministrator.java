@@ -419,6 +419,9 @@ public class FDAdministrator implements DBInterface{
 
     @Override
     public Task<Void> agregarCuarto(ItemRoom room) {
+        if (room.getPathImage() != null && !room.getPathImage().isEmpty()){
+            saveRoomPhoto(room.getRoomNumber(), room.getPathImage());
+        }
         return getCuartoDR(room.getRoomNumber()).set(room.getCuartoRoot());
     }
 

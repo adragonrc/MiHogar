@@ -7,7 +7,7 @@ public class TRoom {
     protected String currentRentalId;
     protected String price_e;
     protected String pathImage;
-    protected String pahtImageStorage;
+    protected String pathImageStorage;
     protected int numberOfRentals;
     protected boolean hide;
 
@@ -18,16 +18,16 @@ public class TRoom {
         this.currentRentalId = room.getCurrentRentalId();
         this.price_e = room.getPrice_e();
         this.pathImage = room.getPathImage();
-        this.pahtImageStorage = room.getPahtImageStorage();
+        this.pathImageStorage = room.getPathImageStorage();
         numberOfRentals = room.getNumberOfRentals();
         hide = room.isHide();
     }
-    public TRoom(String currentRentalId, String details, String pathImage, String price_e, String pahtImageStorage) {
+    public TRoom(String currentRentalId, String details, String pathImage, String price_e, String pathImageStorage) {
         this.details = details;
         this.currentRentalId = currentRentalId;
         this.price_e = price_e;
         this.pathImage = pathImage;
-        this.pahtImageStorage = pahtImageStorage;
+        this.pathImageStorage = pathImageStorage;
         numberOfRentals = 0;
         hide = false;
     }
@@ -80,11 +80,11 @@ public class TRoom {
         this.pathImage = pathImage;
     }
 
-    public String getPahtImageStorage() {
-        return pahtImageStorage;
+    public String getPathImageStorage() {
+        return pathImageStorage;
     }
 
-    public void setPahtImageStorage(String pahtImageStorage) {
-        this.pahtImageStorage = pahtImageStorage;
+    public void setPathImageStorage(String pathImageStorage) {
+        this.pathImageStorage = pathImageStorage;
     }
 }

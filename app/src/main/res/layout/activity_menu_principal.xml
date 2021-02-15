@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".menuPrincipal.MenuPricipal">
+    tools:context=".menu_main.MenuPricipal">
 
     <TableLayout
         android:layout_width="match_parent"

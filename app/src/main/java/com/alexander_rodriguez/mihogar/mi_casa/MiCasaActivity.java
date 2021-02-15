@@ -13,12 +13,12 @@ import androidx.lifecycle.Lifecycle;
 import com.alexander_rodriguez.mihogar.Base.BaseActivity;
 import com.alexander_rodriguez.mihogar.R;
 import com.alexander_rodriguez.mihogar.UTILIDADES.TAlquiler;
-import com.alexander_rodriguez.mihogar.historialcasa.AllUsersPresenter;
+import com.alexander_rodriguez.mihogar.historial_casa.AllUsersPresenter;
 import com.alexander_rodriguez.mihogar.mydialog.DialogImput;
 import com.alexander_rodriguez.mihogar.mydialog.DialogInterfaz;
 import com.alexander_rodriguez.mihogar.mydialog.DialogOptions;
 import com.alexander_rodriguez.mihogar.mydialog.PresenterDialogImput;
-import com.alexander_rodriguez.mihogar.tableActivity.TableActivity;
+import com.alexander_rodriguez.mihogar.table_activity.TableActivity;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class MiCasaActivity extends BaseActivity<Interface.Presenter> implements Interface.View {

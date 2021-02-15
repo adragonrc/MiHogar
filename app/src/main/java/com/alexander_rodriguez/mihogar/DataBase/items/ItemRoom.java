@@ -15,7 +15,7 @@ public class ItemRoom extends TRoom{
 
     }
     public ItemRoom(TRoom room) {
-        super(room.getCurrentRentalId(), room.getDetails(), room.getPathImage(), room.getPrice_e(), room.getPahtImageStorage());
+        super(room.getCurrentRentalId(), room.getDetails(), room.getPathImage(), room.getPrice_e(), room.getPathImageStorage());
         super.setHide(room.isHide());
         super.setNumberOfRentals(room.getNumberOfRentals());
     }

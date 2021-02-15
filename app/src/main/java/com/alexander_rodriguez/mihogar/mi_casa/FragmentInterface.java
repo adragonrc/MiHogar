@@ -38,8 +38,6 @@ public interface FragmentInterface {
 
         void showUsersList(ArrayList<ItemTenant> list, RecyclerView.LayoutManager layout, boolean showMain);
 
-        void showRentalsList(ArrayList<ItemRental> list, RecyclerView.LayoutManager layout);
-
         void nothingHere();
 
         void goTo(Intent intent);
