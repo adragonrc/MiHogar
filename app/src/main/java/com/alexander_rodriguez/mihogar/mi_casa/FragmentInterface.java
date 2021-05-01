@@ -12,6 +12,7 @@ import com.alexander_rodriguez.mihogar.adapters.AdapterInterface;
 import com.alexander_rodriguez.mihogar.adapters.Models.ModelRoomView;
 import com.alexander_rodriguez.mihogar.DataBase.items.ItemRental;
 import com.alexander_rodriguez.mihogar.DataBase.items.ItemTenant;
+import com.alexander_rodriguez.mihogar.historial_casa.FragmentParent;
 import com.alexander_rodriguez.mihogar.viewUser.DialogDetallesAlquiler;
 
 import java.util.ArrayList;
@@ -29,8 +30,7 @@ public interface FragmentInterface {
 
         void onContextItemSelected(MenuItem item);
     }
-    interface view extends AdapterInterface {
-        Context getContext();
+    interface view extends AdapterInterface, FragmentParent.view {
 
         Bundle getArguments();
 
@@ -39,10 +39,6 @@ public interface FragmentInterface {
         void showUsersList(ArrayList<ItemTenant> list, RecyclerView.LayoutManager layout, boolean showMain);
 
         void nothingHere();
-
-        void goTo(Intent intent);
-
-        void showMessage(String get_tenants_failure);
 
         void showDialog(AppCompatDialogFragment dialogDetallesAlquiler);
 

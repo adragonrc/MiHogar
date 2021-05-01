@@ -1,4 +1,4 @@
-package com.alexander_rodriguez.mihogar.mydialog;
+package com.alexander_rodriguez.mihogar.dialogs;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -8,10 +8,12 @@ import android.os.Bundle;
 import androidx.appcompat.app.AppCompatDialogFragment;
 import androidx.fragment.app.FragmentManager;
 
+import org.jetbrains.annotations.NotNull;
+
 public  class DialogConfirm extends AppCompatDialogFragment {
     DialogInterfaz.DialogConfirmPresenter dcp;
     @Override
-    public Dialog onCreateDialog(Bundle savedInstanceState) {
+    public @NotNull Dialog onCreateDialog(Bundle savedInstanceState) {
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
         builder.setTitle("AALERTA")

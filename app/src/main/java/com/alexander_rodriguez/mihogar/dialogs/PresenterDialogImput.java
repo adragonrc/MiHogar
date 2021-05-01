@@ -1,4 +1,4 @@
-package com.alexander_rodriguez.mihogar.mydialog;
+package com.alexander_rodriguez.mihogar.dialogs;
 
 import android.content.Context;
 import android.view.LayoutInflater;

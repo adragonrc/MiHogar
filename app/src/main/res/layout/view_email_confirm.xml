@@ -15,22 +15,23 @@
             android:id="@+id/tvTitle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/sTitleExample"
+            android:text="@string/s_email_confirm_title_example"
             android:textSize="18dp"
             android:textStyle="bold"
             android:gravity="center"
             android:textColor="@color/primaryColor"
             android:layout_marginTop="8dp"/>
         <TextView
-            android:id="@+id/tvBody"
+            android:id="@+id/tvMessage"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="@color/colorAccent"
+            android:textColor="#000000"
             android:text="@string/s_email_confirm_message_example"
             android:layout_marginTop="4dp"
             android:gravity="center"/>
 
         <Button
+            android:id="@+id/btSendEmail"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"

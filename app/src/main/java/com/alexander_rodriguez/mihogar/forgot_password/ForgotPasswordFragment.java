@@ -1,21 +1,25 @@
 package com.alexander_rodriguez.mihogar.forgot_password;
 
+import android.content.Intent;
 import android.os.Bundle;
 
+import androidx.annotation.Nullable;
+import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
 
 import com.alexander_rodriguez.mihogar.R;
-
 /**
  * A simple {@link Fragment} subclass.
  * Use the {@link ForgotPasswordFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class ForgotPasswordFragment extends Fragment {
+public class ForgotPasswordFragment extends Fragment implements FragmentInterface.view {
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -26,8 +30,12 @@ public class ForgotPasswordFragment extends Fragment {
     private String mParam1;
     private String mParam2;
 
+    private FragmentInterface.presenter presenter;
+    private View mView;
+
     public ForgotPasswordFragment() {
         // Required empty public constructor
+        this.presenter = new Presenter( this);
     }
 
     /**
@@ -61,6 +69,47 @@ public class ForgotPasswordFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_forgot_password, container, false);
+        mView = inflater.inflate(R.layout.fragment_forgot_password, container, false);
+
+        return mView;
+    }
+
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        Button btNext = mView.findViewById(R.id.btNext);
+        btNext.setOnClickListener(v-> {
+            String emailAddress = ((EditText)mView.findViewById(R.id.etEmail)).getText().toString();
+            presenter.ocNext(emailAddress);
+        });
+
+        Toolbar tb = mView.findViewById(R.id.tool_bar);
+
+        tb.getNavigationIcon().setTint(getContext().getResources().getColor(R.color.white));
+
+        tb.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getActivity().onBackPressed();
+            }
+        });
+
+
+    }
+
+    @Override
+    public void salir() {
+        getActivity().onBackPressed();
+    }
+
+    @Override
+    public void goTo(Intent intent) {
+
+    }
+
+    @Override
+    public void showMessage(String message) {
+
     }
 }

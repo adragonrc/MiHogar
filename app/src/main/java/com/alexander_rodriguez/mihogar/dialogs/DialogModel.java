@@ -1,4 +1,4 @@
-package com.alexander_rodriguez.mihogar.mydialog;
+package com.alexander_rodriguez.mihogar.dialogs;
 
 public class DialogModel {
     private String title;

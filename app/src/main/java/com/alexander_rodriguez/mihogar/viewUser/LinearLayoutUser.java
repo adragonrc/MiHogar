@@ -16,10 +16,10 @@ import androidx.fragment.app.FragmentManager;
 
 import com.alexander_rodriguez.mihogar.R;
 import com.alexander_rodriguez.mihogar.UTILIDADES.TAlquiler;
-import com.alexander_rodriguez.mihogar.mydialog.DialogImput;
-import com.alexander_rodriguez.mihogar.mydialog.DialogInterfaz;
-import com.alexander_rodriguez.mihogar.mydialog.DialogOptions;
-import com.alexander_rodriguez.mihogar.mydialog.PresenterDialogImput;
+import com.alexander_rodriguez.mihogar.dialogs.DialogImput;
+import com.alexander_rodriguez.mihogar.dialogs.DialogInterfaz;
+import com.alexander_rodriguez.mihogar.dialogs.DialogOptions;
+import com.alexander_rodriguez.mihogar.dialogs.PresenterDialogImput;
 import com.alexander_rodriguez.mihogar.table_activity.TableActivity;
 
 public class LinearLayoutUser implements Interfaz.View{

@@ -2,12 +2,21 @@ package com.alexander_rodriguez.mihogar.mainactivity;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Bundle;
+
+import androidx.annotation.NonNull;
 
 import com.alexander_rodriguez.mihogar.Base.BasePresenter;
+import com.alexander_rodriguez.mihogar.DataBase.DBInterface;
 import com.alexander_rodriguez.mihogar.R;
+import com.alexander_rodriguez.mihogar.dialogs.ConfirmEmailDialog;
+import com.alexander_rodriguez.mihogar.forgot_password.ForgotPasswordFragment;
 import com.alexander_rodriguez.mihogar.registrarcasa.RegistrarCasaActivity;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
 
 public class Presenter extends BasePresenter<Interface.view> implements Interface.presenter {
@@ -19,6 +28,7 @@ public class Presenter extends BasePresenter<Interface.view> implements Interfac
 
     @Override
     public void iniciarComandos(){
+
     }
 
     @Override
@@ -74,6 +84,12 @@ public class Presenter extends BasePresenter<Interface.view> implements Interfac
         db.sigInWithGoogle(account).addOnSuccessListener(this::signInWithGoogleSuccess).addOnFailureListener(this::signInWithGoogleFailure);
     }
 
+    @Override
+    public void ocForgotPassword() {
+        ForgotPasswordFragment forgotPass = new ForgotPasswordFragment();
+        view.showFragment(forgotPass, "ForgotPass");
+    }
+
     private void signInWithGoogleFailure(Exception e) {
         // If sign in fails, display a message to the user.
         e.printStackTrace();
@@ -91,5 +107,4 @@ public class Presenter extends BasePresenter<Interface.view> implements Interfac
     private void signInSuccess(AuthResult authResult) {
         view.ingresar();
     }
-
 }

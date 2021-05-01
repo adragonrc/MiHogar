@@ -8,6 +8,7 @@ import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatDialogFragment;
 
 import com.alexander_rodriguez.mihogar.Base.BaseActivity;
 import com.alexander_rodriguez.mihogar.Base.IBasePresenter;
@@ -74,6 +75,11 @@ public class MenuPricipal extends BaseActivity<IBasePresenter> implements Interf
     @Override
     public void showRegistrarCasa() {
         startActivity(new Intent(this, RegistrarCasaActivity.class));
+    }
+
+    @Override
+    public void showDialog(AppCompatDialogFragment dialog, String tag) {
+        dialog.show(getSupportFragmentManager(), tag);
     }
 
     public void onClickMasCuartos(View view) {

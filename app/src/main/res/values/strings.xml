@@ -182,7 +182,7 @@
     <string name="sUploadPhotoError">Photo could not be uploaded</string>
     <string name="sTitle">Mi Hogar</string>
     <string name="sSubTitle">seguro</string>
-    <string name="sEmail">Correo electronico*</string>
+    <string name="sEmailRequired">Correo electronico*</string>
     <string name="sEmailExample">alexrod@gmail.com</string>
     <string name="sPassword">Contraseña*</string>
     <string name="sPasswordExample">hola12</string>
@@ -207,8 +207,9 @@
     <string name="sRegistry">Registry</string>
     <string name="sDetails">Datos del usuario</string>
     <string name="name">nombers</string>
-    <string name="s_send_email">Send email</string>
-    <string name="sTitleExample">HI Alexander Rodriguez</string>
+    <string name="s_send_email">Enviar correo</string>
+    <string name="s_email_confirm_title">Hola</string>
+    <string name="s_email_confirm_title_example">Hola Alexander Rodriguez</string>
     <string name="sRoom">Cuarto</string>
     <string name="sTenant">Inquilinos</string>
     <string name="sError">Ocurrio un error</string>
@@ -217,8 +218,8 @@
     <string name="smpNotFound">Current Monthly Payment wasn\'t found</string>
     <string name="s_email_confirm_message_example">Porfavor verifique que su direccion de correo electronico adragonrc@gmail.com sea de usted, en caso de no ferificarse en los proximos x dias, su cuenta sera bloqueada</string>
     <string name="s_email_confirm_message_start">Porfavor verifique que su direccion de correo electronico </string>
-    <string name="s_email_confirm_message_middle"> sea de usted, en caso de no ferificarse en los proximos</string>
-    <string name="s_email_confirm_message_end"> dias, su cuenta sera bloqueada</string>
+    <!-- <string name="s_email_confirm_message_middle"> </string> -->
+    <string name="s_email_confirm_message_end"> sea de usted, y asi evitar futuros problemas.</string>
     <string name="mdRoomNumber">roomNumber</string>
     <string name="push_pin_description">Fijar cuarto</string>
     <string name="sDelete">Eliminar</string>
@@ -226,6 +227,12 @@
     <string name="mdRoomIsHide">hide</string>
     <string name="mdRoomNumberOfRentals">numberOfRentals</string>
     <string name="title_add_rental">Nuevo Alquiler</string>
+    <string name="s_email">Correo electronico</string>
+    <string name="sImage">image</string>
+    <string name="s_forgot_password_subtitle">Proporcione el correo electrónico de la cuenta que desea restablecer la contraseña</string>
+    <string name="s_forgot_password">CONTRASEÑA OLVIDADA</string>
+    <string name="s_continue">Continuar</string>
+    <string name="s_error_performing_action">Ocurrio un error al realizar esta accion</string>
 
     <string-array name="DialingCountryCode">
         <item>32,BE</item>

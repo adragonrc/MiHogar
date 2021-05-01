@@ -10,6 +10,7 @@
     <color name="secondaryDarkColor">#004ba0</color>
     <color name="primaryTextColor">#000000</color>
     <color name="secondaryTextColor">#000000</color>
+    <color name="primaryTextColorLigth">#202020</color>
     <color name="white">#F0F4FA</color>
     <color name="whiteOpacity">#C2F0F4FA</color>
 </resources>

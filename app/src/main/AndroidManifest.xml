@@ -17,7 +17,7 @@
         android:theme="@style/AppTheme"
         android:configChanges="orientation" >
         <activity android:name=".registrarcasa.RegistrarCasaActivity"
-            android:theme="@style/AppThemeMaterial"/>
+            android:theme="@style/AppThemeMaterial.NoActionBar"/>
 
         <activity android:name=".ViewPdfActivity" />
         <activity

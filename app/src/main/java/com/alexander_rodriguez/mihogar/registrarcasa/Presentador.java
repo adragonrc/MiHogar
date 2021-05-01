@@ -3,7 +3,6 @@ package com.alexander_rodriguez.mihogar.registrarcasa;
 import android.content.Intent;
 
 import com.alexander_rodriguez.mihogar.Base.BasePresenter;
-import com.alexander_rodriguez.mihogar.listalquileres.Interface;
 import com.alexander_rodriguez.mihogar.registrarcasa.details.DetailsView;
 import com.alexander_rodriguez.mihogar.registrarcasa.register.RegisterView;
 import com.google.firebase.auth.AuthResult;

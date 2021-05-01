@@ -10,6 +10,7 @@ import androidx.fragment.app.FragmentTransaction;
 
 import com.alexander_rodriguez.mihogar.Base.BaseActivity;
 import com.alexander_rodriguez.mihogar.R;
+import com.alexander_rodriguez.mihogar.forgot_password.ForgotPasswordFragment;
 import com.alexander_rodriguez.mihogar.menu_main.MenuPricipal;
 import com.alexander_rodriguez.mihogar.registrarcasa.RegistrarCasaActivity;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
@@ -97,8 +98,7 @@ public class MainActivity extends BaseActivity<Interface.presenter> implements I
     }
 
     public void ocForgotPassword(View view){
-       // startActivity(new Intent(this, RegistrarCasaActivity.class));
-        Toast.makeText(this, "this method isn't implemented", Toast.LENGTH_SHORT).show();
+        presenter.ocForgotPassword();
     }
 
     public void ocSignUp(View view){
@@ -135,6 +135,12 @@ public class MainActivity extends BaseActivity<Interface.presenter> implements I
         Intent i = new Intent(this, RegistrarCasaActivity.class);
         i.putExtra(RegistrarCasaActivity.EXTRA_MODE, mode);
         startActivity(i);
+    }
+
+    @Override
+    public void showFragment(ForgotPasswordFragment forgotPass, String name) {
+        getSupportFragmentManager().beginTransaction().replace(R.id.layout, forgotPass).addToBackStack("").commit();
+
     }
 
     public void signIn(View view){
