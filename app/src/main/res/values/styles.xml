@@ -3,18 +3,49 @@
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
         <!-- Customize your theme here. -->
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorPrimary">@color/primaryColor</item>
+        <item name="colorPrimaryDark">@color/primaryColorDark</item>
         <item name="colorAccent">@color/colorAccent</item>
         <item name="colorSecondary">@color/secondaryColor</item>
-
         <item name="android:textColorPrimary">@color/primaryTextColor</item>
         <item name="android:textColorSecondary">@color/secondaryTextColor</item>
         <item name="android:windowActivityTransitions">true</item>
+        <item name="android:fontFamily">@font/roboto</item>
+    </style>
+
+    <style name="AppThemeMaterial.NoActionBar" parent="AppThemeMaterial">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+        <item name="colorPrimary">@color/primaryColor</item>
+        <item name="colorPrimaryDark">@color/primaryColorDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="colorSecondary">@color/secondaryColor</item>
+        <item name="android:textColorPrimary">@color/primaryTextColor</item>
+        <item name="android:textColorSecondary">@color/colorAccent</item>
+        <item name="android:fontFamily">@font/roboto</item>
+        <item name="boxStrokeColor">@color/colorAccent</item>
+        <item name="boxStrokeWidth">2dp</item>
+    </style>
+    <style name="AppThemeMaterial" parent="Theme.MaterialComponents.Light.DarkActionBar.Bridge">
+        <item name="colorPrimary">@color/primaryColor</item>
+        <item name="colorPrimaryDark">@color/primaryColorDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="colorSecondary">@color/secondaryColor</item>
+        <item name="android:textColorPrimary">@color/primaryTextColor</item>
+        <item name="android:textColorSecondary">@color/colorAccent</item>
+        <item name="android:fontFamily">@font/roboto</item>
+        <item name="boxStrokeColor">@color/colorAccent</item>
+        <item name="boxStrokeWidth">2dp</item>
+    </style>
+    <style name="TextInputStyle" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+        <item name="android:textColorHint">@color/colorAccent</item>
+        <item name="boxStrokeColor">@color/text_input_selector</item>
+        <item name="counterOverflowTextColor">@color/primaryColorDark</item>
+        <item name="counterTextColor">@color/colorAccent</item>
     </style>
     <style name="Theme.Preferences" parent="Theme.AppCompat.Light.DarkActionBar">
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorPrimary">@color/primaryColor</item>
+        <item name="colorPrimaryDark">@color/primaryColorDark</item>
         <item name="colorAccent">@color/colorAccent</item>
         <item name="colorSecondary">@color/secondaryColor</item>
     </style>
@@ -30,8 +61,8 @@
     <!-- Base application theme. -->
     <style name="AppTheme.StatusBarTransparent" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorPrimary">@color/primaryColor</item>
+        <item name="colorPrimaryDark">@color/primaryColorDark</item>
         <item name="colorAccent">@color/colorAccent</item>
         <item name="colorControlActivated">@color/colorAccent</item>
         <item name="android:actionMenuTextColor">@color/colorAccent</item>
@@ -41,7 +72,7 @@
         <item name="android:layout_height">48dp</item>
         <item name="android:layout_margin">8dp</item>
         <item name="android:gravity">center</item>
-        <item name="android:textColor">@color/secondaryTextColor</item>
+        <item name="android:textColor">@color/colorAccent</item>
         <item name="android:textSize">26sp</item>
     </style>
     <style name="tableRow">
@@ -68,6 +99,14 @@
 
     <style name="TextView">
         <item name="android:textSize">20dp</item>
+    </style>
+
+    <style name="TextViewCard">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:gravity">center</item>
+        <item name="android:lines">2</item>
+        <item name="android:textColor">@color/primaryTextColor</item>
     </style>
     <style name="baseCardViewStyle">
         <item name="android:layout_marginBottom">2dp</item>
@@ -121,5 +160,14 @@
         <item name="android:layout_marginBottom">8dp</item>
         <item name="android:layout_weight">1</item>
         <item name="elevation">4dp</item>
+    </style>
+    <style name="tvSubTitle">
+        <item name="android:layout_marginTop">12dp</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="fontFamily">sans-serif-condensed-medium</item>
+        <item name="android:layout_marginStart">12dp</item>
+        <item name="android:textColor">@color/primaryColor</item>
+        <item name="android:textSize">16sp</item>
     </style>
 </resources>

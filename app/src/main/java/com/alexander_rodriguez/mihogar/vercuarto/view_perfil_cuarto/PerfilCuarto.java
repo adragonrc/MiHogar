@@ -1,6 +1,5 @@
 package com.alexander_rodriguez.mihogar.vercuarto.view_perfil_cuarto;
 
-import android.content.ContentValues;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.View;
@@ -11,13 +10,15 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 
 import androidx.cardview.widget.CardView;
+import androidx.core.content.ContextCompat;
 
+import com.alexander_rodriguez.mihogar.DataBase.items.ItemRental;
 import com.alexander_rodriguez.mihogar.R;
-import com.alexander_rodriguez.mihogar.UTILIDADES.TAlquiler;
 
 public class PerfilCuarto extends ScrollView{
     private TextView tvNumeroInquilinos;
     private TextView tvMensualidad;
+    private TextView tvAdvanceTotal;
     private TextView tvDetalles;
     private TextView tvFechaI;
     private TextView tvFechaC;
@@ -32,9 +33,11 @@ public class PerfilCuarto extends ScrollView{
     private ImageView ivAlert;
 
     private CardView cvDetallesAlquiler;
-    private CardView cvMensaje;
+    private CardView cvMPDetails;
+    private CardView cvMessage;
 
     private LinearLayout llPagoMensual;
+    private LinearLayout llAdvance;
     private LinearLayout llEditorMensualidad;
     private LinearLayout llShowMensualidad;
     private LinearLayout llEditorDetalles;
@@ -68,23 +71,25 @@ public class PerfilCuarto extends ScrollView{
         iniciarViews();
     }
 
-    public void showCuartoAlquilado(int cantidadDeUsuarios, String mensualidad, ContentValues alquiler) {
+    public void showCuartoAlquilado(int cantidadDeUsuarios, String mensualidad, ItemRental rental) {
         //String nombes = usuario.getAsString(TUsuario.NOMBRES) + ", " + usuario.getAsString(TUsuario.APELLIDO_PAT) + " " + usuario.getAsString(TUsuario.APELLIDO_MAT) + ".";
 
         tvNumeroInquilinos.setText(String.valueOf(cantidadDeUsuarios));
         tvMensualidad.setText(mensualidad);
-        tvFechaC.setText(alquiler.getAsString(TAlquiler.EXTRA_FECHA_PAGO));
-        tvFechaI.setText(alquiler.getAsString(TAlquiler.FECHA_INICIO));
-        tvNumeroTel.setText(alquiler.getAsString(TAlquiler.NUMERO_TEL));
-        tvCorreo.setText(alquiler.getAsString(TAlquiler.CORREO));
+        tvFechaC.setText(rental.getPaymentDateAsString());
+        tvFechaI.setText(rental.getEntryDateAsString());
+        tvNumeroTel.setText(rental.getPhoneNumber());
+        tvCorreo.setText(rental.getEmail());
 
-        cvMensaje.setVisibility(View.GONE);
-        cvDetallesAlquiler.setVisibility(View.VISIBLE);
+        cvMessage.setVisibility(GONE);
+        cvDetallesAlquiler.setVisibility(VISIBLE);
+        cvMPDetails.setVisibility(VISIBLE);
     }
 
     public void showCuartolibre() {
-        cvDetallesAlquiler.setVisibility(View.GONE);
-        cvMensaje.setVisibility(View.VISIBLE);
+        cvDetallesAlquiler.setVisibility(GONE);
+        cvMPDetails.setVisibility(GONE);
+        cvMessage.setVisibility(VISIBLE);
     }
 
     public void modoEditaMensualidad(){
@@ -149,22 +154,23 @@ public class PerfilCuarto extends ScrollView{
     }
 
     public void noPago(OnClickListener listener) {
-        ivAlert.setImageDrawable(getResources().getDrawable(R.drawable.ic_add_alert_black_24dp));
+        ivAlert.setImageDrawable(ContextCompat.getDrawable(getContext(), R.drawable.ic_add_alert_black_24dp));
         llPagoMensual.setOnClickListener(listener);
         findViewById(R.id.tvRealizarPago).setVisibility(View.VISIBLE);
     }
 
     public void pago(OnClickListener listener2) {
         findViewById(R.id.tvRealizarPago).setVisibility(View.GONE);
-        ivAlert.setImageDrawable(getResources().getDrawable(R.drawable.ic_mood_black_24dp));
+        ivAlert.setImageDrawable(ContextCompat.getDrawable(getContext(), R.drawable.ic_mood_black_24dp));
         llPagoMensual.setOnClickListener(listener2);
     }
 
     protected void iniciarViews() {
-        tvNumeroInquilinos = findViewById(R.id.tvNumeroInquilinos);
+        tvNumeroInquilinos = findViewById(R.id.tvTenantsNumber);
         tvMensualidad = findViewById(R.id.vcTvMensualidad);
+        tvAdvanceTotal = findViewById(R.id.tvAdvanceTotal);
         tvDetalles = findViewById(R.id.tvDetalles);
-        tvFechaI = findViewById(R.id.tvFechaIngreso);
+        tvFechaI = findViewById(R.id.tvEntryDate);
         tvFechaC = findViewById(R.id.tvFechaDePago);
         tvNumeroTel = findViewById(R.id.hutvNumTel);
         tvCorreo = findViewById(R.id.hutvCorreo);
@@ -175,7 +181,8 @@ public class PerfilCuarto extends ScrollView{
         etCorreo = findViewById(R.id.etCorreo);
 
         cvDetallesAlquiler = findViewById(R.id.cvDetallesAlquiler);
-        cvMensaje = findViewById(R.id.cvMensaje);
+        cvMPDetails = findViewById(R.id.cvMPDetails);
+        cvMessage = findViewById(R.id.cvMensaje);
 
         llEditarNumTel = findViewById(R.id.llEditarNumTel);
         llEditarCorreo = findViewById(R.id.llEditarCorreo);
@@ -186,6 +193,7 @@ public class PerfilCuarto extends ScrollView{
         llPagoMensual = findViewById(R.id.llPagoMensual);
         llConfirNumTel = findViewById(R.id.llConfirmNumTel);
         llConfirCorreo = findViewById(R.id.llConfirmCorreo);
+        llAdvance = findViewById(R.id.llAdvance);
 
         ivAlert = findViewById(R.id.ivAlert);
     }
@@ -232,5 +240,14 @@ public class PerfilCuarto extends ScrollView{
     }
     public String  getTelefonoText(){
         return etNumeroTel.getText().toString();
+    }
+
+    public void showAdvance(Double amount) {
+        llAdvance.setVisibility(VISIBLE);
+        tvAdvanceTotal.setText(String.valueOf(amount));
+    }
+
+    public void hideAdvance() {
+        llAdvance.setVisibility(GONE);
     }
 }

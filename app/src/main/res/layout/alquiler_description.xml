@@ -14,7 +14,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="4dp">
-        <TableRow>
+        <TableRow
+            >
             <TextView
                 android:text="Alquiler: "/>
             <TextView
@@ -38,7 +39,7 @@
                 android:text="Numero de inquilinos: "/>
 
             <TextView
-                android:id="@+id/tvNumeroInquilinos"
+                android:id="@+id/tvTenantsNumber"
                 android:gravity="center"
                 android:layout_weight="1"
                 android:text="8"/>
@@ -50,7 +51,7 @@
                 android:text="Fecha de ingreso: "/>
 
             <TextView
-                android:id="@+id/tvFechaIngreso"
+                android:id="@+id/tvEntryDate"
                 android:gravity="center"
                 android:layout_weight="1"
                 android:text="12/02/2020"/>
@@ -62,7 +63,7 @@
                 android:text="Fecha de salida: "/>
 
             <TextView
-                android:id="@+id/tvFechaSalida"
+                android:id="@+id/tvDepartureDate"
                 android:gravity="center"
                 android:layout_weight="1"
                 android:text="12/02/2021"/>
@@ -77,7 +78,7 @@
             android:textStyle="bold" />
 
         <TextView
-            android:id="@+id/tvMotivoSalida"
+            android:id="@+id/tvReason"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:lines="2"

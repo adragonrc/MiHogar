@@ -7,7 +7,6 @@ import android.os.Environment;
 import androidx.core.content.FileProvider;
 
 import com.alexander_rodriguez.mihogar.Base.BaseActivity;
-import com.alexander_rodriguez.mihogar.DataBase.DataBaseAdmin;
 import com.alexander_rodriguez.mihogar.DataBase.DataBaseInterface;
 
 import java.io.File;
@@ -24,7 +23,7 @@ public class MenuIterator implements interfazMenu{
     @Override
     public void onShared(String path) {
         if (path == null || path.equals("") ) {
-            mActivity.showMensaje("No hay foto");
+            mActivity.showMessage("No hay foto");
             return;
         }
         File dir = mActivity.getExternalFilesDir(Environment.DIRECTORY_PICTURES);
@@ -42,7 +41,4 @@ public class MenuIterator implements interfazMenu{
     public void onEdit() {
         mActivity.startCropImage();
     }
-
-
-
 }

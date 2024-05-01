@@ -370,7 +370,7 @@ public class DataBaseAdmin extends SQLiteOpenHelper implements DataBaseInterface
                 TAlquilerUsuario.DNI+" = '"+ idAl + "' and " + TAlquilerUsuario.DNI + " = '" + dni + "'; ");
     }
     @Override
-    public boolean agregarCuarto(String numCuarto, String detalles, String precio, String path){
+    public boolean agregarCuarto(String  numCuarto,  String detalles, String precio, String path){
         cv.put(TCuarto.NUMERO, numCuarto);
         cv.put(TCuarto.DETALLES, detalles);
         cv.put(TCuarto.PRECIO_E, precio);
@@ -424,11 +424,11 @@ public class DataBaseAdmin extends SQLiteOpenHelper implements DataBaseInterface
 
     @Override
     public boolean agregarAlquiler(ModelAA model) {
-        cv.put(TAlquiler.FECHA_INICIO, model.getFecha());
-        cv.put(TAlquiler.PAGOS_REALIZADOS, model.getPagosRealizados());
-        cv.put(TAlquiler.NUMERO_TEL, model.getNumeroTelef());
-        cv.put(TAlquiler.CORREO, model.getCorreo());
-        cv.put(TAlquiler.NUMERO_C, model.getNumCuarto());
+        cv.put(TAlquiler.FECHA_INICIO, model.getEntryDateAsString());
+        cv.put(TAlquiler.PAGOS_REALIZADOS, model.getPaymentsNumber());
+        cv.put(TAlquiler.NUMERO_TEL, model.getPhoneNumber());
+        cv.put(TAlquiler.CORREO, model.getEmail());
+        cv.put(TAlquiler.NUMERO_C, model.getRoomNumber());
         cv.put(TAlquiler.ALERT, false);
         return agregar(TAlquiler.T_NOMBRE);
     }

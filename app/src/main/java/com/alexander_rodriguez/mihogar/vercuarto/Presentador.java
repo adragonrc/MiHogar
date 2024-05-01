@@ -2,44 +2,62 @@ package com.alexander_rodriguez.mihogar.vercuarto;
 
 import android.Manifest;
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.pm.PackageManager;
-import android.database.Cursor;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.TableLayout;
 
 import androidx.core.content.ContextCompat;
 
 import com.alexander_rodriguez.mihogar.Base.BasePresenter;
-import com.alexander_rodriguez.mihogar.MyAdminDate;
+import com.alexander_rodriguez.mihogar.DataBase.items.ItemMonthlyPayment;
+import com.alexander_rodriguez.mihogar.DataBase.items.ItemPayment;
+import com.alexander_rodriguez.mihogar.DataBase.items.ItemRental;
+import com.alexander_rodriguez.mihogar.DataBase.items.ItemRoom;
+import com.alexander_rodriguez.mihogar.DataBase.models.TAdvance;
+import com.alexander_rodriguez.mihogar.DataBase.models.TRoom;
+import com.alexander_rodriguez.mihogar.AdminDate;
 import com.alexander_rodriguez.mihogar.PDF;
 import com.alexander_rodriguez.mihogar.R;
-import com.alexander_rodriguez.mihogar.UTILIDADES.Mensualidad;
-import com.alexander_rodriguez.mihogar.UTILIDADES.TAlquiler;
-import com.alexander_rodriguez.mihogar.UTILIDADES.TAlquilerUsuario;
-import com.alexander_rodriguez.mihogar.UTILIDADES.TCuarto;
-import com.alexander_rodriguez.mihogar.UTILIDADES.TPago;
+import com.alexander_rodriguez.mihogar.Save;
+import com.alexander_rodriguez.mihogar.table_activity.TableRowView;
+import com.google.firebase.Timestamp;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.storage.FileDownloadTask;
 import com.itextpdf.text.DocumentException;
 
+import org.jetbrains.annotations.NotNull;
+
+import java.io.File;
 import java.io.FileNotFoundException;
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class Presentador extends BasePresenter<Interface.view> implements Interface.Presenter {
 
-    private ContentValues datosCuarto;
-    //private ContentValues datosUsuario;
-    private ContentValues datosMensualidad;
-    private ContentValues datosAlquiler;
-    private String dni;
+    private ItemRoom room;
+    private ItemRental rental;
+    private ItemMonthlyPayment monthlyPayment;
+    private ItemMonthlyPayment monthlyPaymentAux;
+    private ItemPayment auxPayment;
+    private ItemPayment lastPayment;
 
-    private MyAdminDate myDate;
-    private String numeroCuarto;
+    private PDF.Model model;
+
+    private final AdminDate myDate;
+    private final String numeroCuarto;
+    private final Context mContext;
+
 
     public Presentador(Interface.view view, String numeroCuarto) {
         super(view);
+        this.mContext = view.getContext();
         this.numeroCuarto = numeroCuarto;
-        myDate = new MyAdminDate();
-        myDate.setFormat(MyAdminDate.FORMAT_DATE_TIME);
+        myDate = new AdminDate();
+        myDate.setFormat(AdminDate.FORMAT_DATE_TIME);
     }
 
     @Override
@@ -49,49 +67,140 @@ public class Presentador extends BasePresenter<Interface.view> implements Interf
 
     @Override
     public void deshacerContrato(String motivo) {
-        long id = datosAlquiler.getAsLong(TAlquiler.ID);
-        db.upDateAlquiler(TAlquiler.FECHA_SALIDA, MyAdminDate.getFechaActual(), id);
-        db.upDateAlquiler(TAlquiler.MOTIVO, motivo, id);
-        mostrarDetalles();
+        if(rental != null) {
+            db.terminateContract(rental.getId(), motivo, numeroCuarto)
+                    .addOnSuccessListener(this::terminateContractSuccess)
+                    .addOnFailureListener(this::terminateContractFailure);
+        }
     }
 
-    private void actualizarDatos(){
-        datosAlquiler = db.getFilaAlquilerByCuartoOf("*", numeroCuarto);
-        view.pago();
+    private void terminateContractFailure(@NotNull Exception e) {
+        view.showMessage("No se pudo anular el contrato");
+        e.printStackTrace();
+    }
+
+    private void terminateContractSuccess(Void aVoid) {
+        rental = null;
+        room.setCurrentRentalId(null);
+        mostrarDetalles();
     }
 
     @Override
     public void mostrarDetalles(){
-        datosCuarto = db.getFilaInCuarto("*", numeroCuarto);
-        datosAlquiler = db.getFilaAlquilerByCuartoOf("*", numeroCuarto);
-        int num = db.contDniOfAlquilerUsuario(datosAlquiler.getAsString(TAlquiler.ID));
-        if (datosAlquiler.size() != 0){
-            datosMensualidad = db.getFilaInMensualidadActual("*", datosAlquiler.get(TAlquiler.ID));
+        if(room == null) {
+            view.setProgressBarVisibility(View.VISIBLE);
+            db.getRoom(numeroCuarto).addOnSuccessListener(this::getRoomSucces);
+        }
+        else
+            getRental();
+    }
 
-            int pagosRealizados = datosAlquiler.getAsInteger(TAlquiler.PAGOS_REALIZADOS);
-            String fechaInicio = datosAlquiler.getAsString(TAlquiler.FECHA_INICIO);
-            try {
-                String fechaDePago = MyAdminDate.adelantarPorMeses(fechaInicio, pagosRealizados);
-                datosAlquiler.put(TAlquiler.EXTRA_FECHA_PAGO, fechaDePago);
-                if ((myDate.stringToDate(fechaDePago)).before(new Date())) {
-                    view.noPago();
-                }else {
-                    view.pago();
+    private void getRoomSucces(DocumentSnapshot documentSnapshot) {
+        if(documentSnapshot.exists()) {
+            TRoom tRoom = documentSnapshot.toObject(TRoom.class);
+            if(tRoom != null) {
+                room = new ItemRoom(tRoom);
+                room.setRoomNumber(documentSnapshot.getId());
+                File f = Save.createFile(mContext, mContext.getString(R.string.cRoom), room.getRoomNumber());
+                room.setPathImage(f.getAbsolutePath());
+
+                if(room.getPathImageStorage() != null && !room.getPathImageStorage().isEmpty()){
+                    db.downloadRoomPhoto(room.getRoomNumber(), f)
+                            .addOnSuccessListener(this::downloadRoomPhotoSuccess)
+                            .addOnFailureListener(this::downloadRoomPhotoFailure);
                 }
-            } catch (ParseException e) {
-                e.printStackTrace();
-                view.showMensaje("Error al actualizar la fecha de pago");
-            }
 
-            view.showCuartoAlquilado(datosCuarto, num, datosMensualidad.getAsString(Mensualidad.COSTO));
-        }else{
-            view.showCuartolibre(datosCuarto);
+                getRental();
+            }
         }
     }
 
+    private void getRental() {
+        if(room.getCurrentRentalId() != null && !room.getCurrentRentalId().isEmpty()){
+            if(rental == null){
+                db.getRental(room.getCurrentRentalId())
+                        .addOnSuccessListener(this::getRentalSuccess);
+            }else{
+                getMP();
+            }
+        }else{
+            view.showCuartolibre(room);
+        }
+    }
+
+    private void getMP() {
+        DocumentReference mp = rental.getCurrentMP();
+        if(mp != null) mp.get().addOnSuccessListener(this::getCurrentMPSuccess);
+        else view.showMessage(mContext.getString(R.string.smpNotFound));
+    }
+
+    private void downloadRoomPhotoFailure(@NotNull Exception e) {
+        e.printStackTrace();
+    }
+
+    private void downloadRoomPhotoSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
+        view.reloadRoomPhoto();
+    }
+
+    private void getRentalSuccess(DocumentSnapshot documentSnapshot) {
+        if (documentSnapshot.exists()) {
+            rental = ItemRental.newInstance(documentSnapshot);
+            getMP();
+        }else
+            view.showCuartolibre(room);
+    }
+
+    private void getCurrentMPSuccess(DocumentSnapshot documentSnapshot) {
+        if(!documentSnapshot.exists()){
+            view.showMessage(mContext.getString(R.string.smpNotFound));
+            view.showCuartoAlquilado(room, rental.getTenantsNumber(), "00.00");
+            return;
+        }
+
+        monthlyPayment = ItemMonthlyPayment.newInstance(documentSnapshot);
+
+        if (monthlyPayment.getLastPaymentId() != null && !monthlyPayment.getLastPaymentId().isEmpty())
+            db.getPayment(monthlyPayment.getLastPaymentId()).addOnSuccessListener(this::getLastPaymentSuccess);
+        else {
+            showUserPaymentStatus();
+            view.showCuartoAlquilado(room, rental.getTenantsNumber(), String.valueOf(monthlyPayment.getAmount()));
+        }
+    }
+
+
+    private void getLastPaymentSuccess(DocumentSnapshot documentSnapshot) {
+        if (documentSnapshot.exists()){
+            lastPayment = ItemPayment.getInstance(documentSnapshot);
+        }
+        showUserPaymentStatus();
+        view.showCuartoAlquilado(room, rental.getTenantsNumber(), String.valueOf(monthlyPayment.getAmount()));
+    }
+    private void showStatus(boolean f){
+        if (f){
+            view.pago();
+            view.hideAdvance();
+        }else{
+            view.noPago();
+            if (0 < lastPayment.getAmount()) view.showAdvance(getRemainingPayment());
+        }
+    }
+
+    private void showUserPaymentStatus(){
+        if (lastPayment==null) lastPayment = new ItemPayment();
+        int paymentsNumber = rental.getPaymentsNumber();
+        Date entryDate = rental.getEntryDate().toDate();
+        Date paymentDate = AdminDate.adelantarPorMeses(entryDate, paymentsNumber);
+
+        rental.setPaymentDate(paymentDate);
+        boolean itsOnTime = paymentDate.after(new Date());
+        boolean fullPayment = lastPayment.getAmount() >= monthlyPayment.getAmount();
+        showStatus(itsOnTime&&fullPayment);
+
+    }
+
     @Override
-    public ContentValues getDatosAlquiler() {
-        return datosAlquiler;
+    public ItemRental getDatosAlquiler() {
+        return rental;
     }
 
     //private boolean consultarConfirmacion(String s){
@@ -104,120 +213,227 @@ public class Presentador extends BasePresenter<Interface.view> implements Interf
 
 
     @Override
-    public void actualizarMensualidad(String mensualidad) {
-        DateFormat dateFormat = new SimpleDateFormat(MyAdminDate.FORMAT_DATE_TIME);
-        String fecha_i = dateFormat.format(new Date());
-        int id = datosAlquiler.getAsInteger(TAlquiler.ID);
-        if(db.agregarMensualidad(Double.parseDouble(mensualidad), fecha_i, id)){
-            datosMensualidad = db.getFilaInMensualidadActual("*",datosAlquiler.get(TAlquiler.ID));
-            view.actualizarMensualidad(mensualidad);
+    public void actualizarMensualidad(String sMonthlyPayment) {
+        try {
+            Double monthlyPayment = Double.parseDouble(sMonthlyPayment);
+            monthlyPaymentAux = new ItemMonthlyPayment(monthlyPayment, new Timestamp(new Date()), rental.getId(), lastPayment.getId());
+            db.agregarMensualidad(monthlyPaymentAux).addOnSuccessListener(this::addMonthlyPaymentSuccess);
+        }catch (NumberFormatException e){
+            e.printStackTrace();
+            view.showMessage(mContext.getString(R.string.sMPError));
         }
+    }
+
+    private void addMonthlyPaymentSuccess(DocumentReference document) {
+        monthlyPayment = monthlyPaymentAux;
+        monthlyPayment.setId(document.getId());
+        lastPayment.setMonthlyPaymentId(document.getId());
+        db.updatePayment(lastPayment.getId(), mContext.getString(R.string.mdPaymentMonthlyPaymentId), lastPayment.getMonthlyPaymentId());
+        view.actualizarMensualidad(String.valueOf(monthlyPayment.getAmount()));
     }
 
     @Override
     public void actualizarDetalles(String detalles) {
-        db.upDateCuarto(TCuarto.DETALLES, detalles, numeroCuarto);
-        setValCV(datosCuarto, TCuarto.DETALLES, detalles);
+        db.updateRoom(view.getContext().getString(R.string.mdRoomDetails), detalles, numeroCuarto);
+        room.setDetails(detalles);
         view.actualizarDetalles(detalles);
+    }
+
+    @Override
+    public void addAdvance(Double amount) {
+        double remaining =getRemainingPayment();
+        if (amount >= remaining) {
+            realizarPago();
+        }
+        else {
+            if (monthlyPayment.getLastPaymentId() == null || monthlyPayment.getLastPaymentId().isEmpty() || getRemainingPayment() == 0) {
+                auxPayment = new ItemPayment(Timestamp.now(), rental.getId(), room.getRoomNumber(), monthlyPayment.getId(), amount, rental.getMainTenant(), lastPayment.getId());
+                db.addPayment(auxPayment.getRoot()).addOnSuccessListener(this::addPaymentSuccess).continueWith(
+                        task -> {
+                            if (task.isSuccessful()) {
+                                if (task.getResult() != null) {
+                                    TAdvance advance = new TAdvance(amount, Timestamp.now());
+                                    db.addAdvanced(task.getResult().getId(), advance).addOnSuccessListener(doc -> {
+                                        addAdvanceFinish(advance, doc.getId());
+                                    });
+                                }
+                            }
+                            return null;
+                        });
+            } else {
+                TAdvance advance = new TAdvance(amount, Timestamp.now());
+                db.addAdvanced(lastPayment.getId(), advance).addOnSuccessListener(doc -> {
+                    updatePaymentAmount(advance.getAmount());
+                    addAdvanceFinish(advance, doc.getId());
+                });
+            }
+        }
+    }
+
+    private void updatePaymentAmount(double amount){
+        Double sum = lastPayment.getAmount() + amount;
+        db.updatePayment(lastPayment.getId(), mContext.getString(R.string.mdPaymentAmount), sum);
+        lastPayment.setAmount(sum);
+    }
+    private void updatePaymentNumber(){
+        int paymentsNumber = (rental.getPaymentsNumber() + 1);
+        db.updateRental(mContext.getString(R.string.mdRentalPaymentsNumber), paymentsNumber, rental.getId())
+                .addOnFailureListener(Throwable::printStackTrace);
+        rental.setPaymentsNumber(paymentsNumber);
+    }
+    private void addAdvanceFinish(TAdvance advance, String id){
+        String direccion = sp.getString(view.getContext().getString(R.string.direccion), "---");
+        model = new PDF.Model(numeroCuarto, lastPayment.getDni(), id, String.valueOf(advance.getAmount()), direccion, AdminDate.dateToString(advance.getDate().toDate()));
+        crearPDF();
     }
 
     @Override
     public void realizarPago() {
         String s_modo;
         int modo = 0;
-        int pagosRealizados;
 
         s_modo = sp.getString("list_tiempo", "0");
         if (s_modo!= null) modo = Integer.parseInt(s_modo);
 
-        pagosRealizados = datosAlquiler.getAsInteger(TAlquiler.PAGOS_REALIZADOS);
-        pagosRealizados++;
-        //fechaNueva = myDate.adelantarUnMes(datosAlquiler.getAsString(TAlquiler.EXTRA_FECHA_PAGO), modo);
-
-        String fechaHoraActual = myDate.getDateFormat().format(new Date());
-        Long idMensualidad = datosMensualidad.getAsLong(Mensualidad.ID);
-         int dniResponsable = db.getUsuarioResponsableDe(datosAlquiler.getAsString(TAlquilerUsuario.ID_AL));;
-        if(db.agregarPago(fechaHoraActual, idMensualidad, dniResponsable)){
-            view.showMensaje("pago agregado");
-            db.upDateAlquiler(TAlquiler.PAGOS_REALIZADOS, pagosRealizados, datosAlquiler.getAsInteger(TAlquiler.ID));
-            actualizarDatos();
-            String fechaInicio = datosAlquiler.getAsString(TAlquiler.FECHA_INICIO);
-            try {
-                String fechaDePago = MyAdminDate.adelantarPorMeses(fechaInicio, pagosRealizados);
-                datosAlquiler.remove(TAlquiler.EXTRA_FECHA_PAGO);
-                datosAlquiler.put(TAlquiler.EXTRA_FECHA_PAGO, fechaDePago);
-                view.actualizarFechaPago(fechaDePago);
-            } catch (ParseException e) {
-                e.printStackTrace();
-                view.showMensaje("Error al actualizar la fecha de pago");
-            }
-
-            if(permisoPDF()){
-                crearPDF();
-            }else{
-                view.solicitarPermiso();
-            }
-
+        double remaining = getRemainingPayment();
+        if (remaining == monthlyPayment.getAmount()){
+            auxPayment = new ItemPayment(Timestamp.now(),rental.getId(), room.getRoomNumber(), rental.getCurrentMP().getId(), monthlyPayment.getAmount(), rental.getMainTenant(), null);
+            db.addPayment(auxPayment.getRoot())
+                    .addOnSuccessListener(this::addPaymentSuccess)
+                    .addOnFailureListener(this::addPaymentFailure);
         }else{
-            view.showMensaje("Error al pagar");
+            TAdvance advance = new TAdvance(remaining, Timestamp.now());
+            db.addAdvanced(lastPayment.getId(), advance).addOnSuccessListener(doc -> {
+                updatePaymentAmount(advance.getAmount());
+                updatePaymentNumber();
+                paymentFinished();
+                addAdvanceFinish(advance, doc.getId());
+                //view.addAvanceSuccess();
+            });
         }
+    }
+    private void paymentFinished(){
+        Date nextPaymentDate = AdminDate.adelantarPorMeses(rental.getEntryDate().toDate(), rental.getPaymentsNumber());
+        rental.setPaymentDate(nextPaymentDate);
+        view.pago();
+        view.actualizarFechaPago(AdminDate.dateToString(nextPaymentDate));
+    }
+
+    private void addPaymentFailure(Exception e) {
+            view.showMessage("Error al pagar");
+    }
+
+    private void addPaymentSuccess(DocumentReference documentReference) {
+        lastPayment = auxPayment;
+        lastPayment.setId(documentReference.getId());
+        db.updateMonthlyPayment(monthlyPayment.getRentalId(), monthlyPayment.getId(), mContext.getString(R.string.mdmpLastPayment), lastPayment.getId())
+                .addOnFailureListener(Throwable::printStackTrace);
+
+        monthlyPayment.setLastPaymentId(documentReference.getId());
+
+        view.showMessage("pago agregado");
+
+        if (lastPayment.getAmount().equals(monthlyPayment.getAmount())) {
+            int paymentsNumber = (rental.getPaymentsNumber() + 1);
+            db.updateRental(mContext.getString(R.string.mdRentalPaymentsNumber), paymentsNumber, rental.getId())
+                    .addOnFailureListener(Throwable::printStackTrace);
+            rental.setPaymentsNumber(paymentsNumber);
+            paymentFinished();
+            createPdfModel(lastPayment.getAmount());
+            crearPDF();
+        }else {
+            view.noPago();
+        }
+
     }
 
     @Override
     public void actualizarNumTel(String numero) {
-        db.upDateAlquiler(TAlquiler.NUMERO_TEL, numero, datosAlquiler.getAsString(TAlquiler.ID));
+        db.updateRental(mContext.getString(R.string.mdRentalPhoneNumber), numero, rental.getId());
+        rental.setPhoneNumber(numero);
         view.actualizarNumTel(numero);
     }
 
     @Override
-    public void actualizarCorreo(String correo) {
-        db.upDateAlquiler(TAlquiler.CORREO, correo, datosAlquiler.getAsString(TAlquiler.ID));
-        view.actualizarCorreo(correo);
+    public void actualizarCorreo(String email) {
+        db.updateRental(mContext.getString(R.string.mdRentalEmail), email, rental.getId());
+        rental.setEmail(email);
+        view.actualizarCorreo(email);
     }
 
-
-    public void crearPDF(){
-        Cursor pago;
-        PDF pdf;
-
-        String numeroDePago;
-        String fecha;
-        String costo;
+    private void createPdfModel(double amount){
         String direccion;
-        String dni;
+        direccion = sp.getString(view.getContext().getString(R.string.direccion), "---");
+        if (model == null)
+            model = new PDF.Model(numeroCuarto, lastPayment.getDni(), lastPayment.getId(), String.valueOf(amount), direccion, AdminDate.dateToString(lastPayment.getDate().toDate()));
+        else model.setAmount(String.valueOf(amount));
+    }
+    public void crearPDF(){
+        if (permisoPDF()) {
+            PDF pdf;
 
-        pago = db.gePagosRealizados(Mensualidad.ID);
-
-        if  (pago != null){
-            if (pago.moveToLast()){
-                numeroDePago = pago.getString(TPago.INT_ID);
-                fecha = pago.getString(TPago.INT_FECHA);
-                dni = pago.getString(TPago.INT_DNI);
+            if (lastPayment != null) {
                 try {
-                    pdf= new PDF();
-                    costo = datosMensualidad.getAsString(Mensualidad.COSTO);
-                    direccion = sp.getString(view.getContext().getString(R.string.direccion), "---");
-
-                    pdf.crearVoucher(numeroCuarto, dni, numeroDePago, costo, direccion, fecha);
-                    db.agregarVoucher(pdf.getPdfFile().getAbsolutePath(), pago.getString(TPago.INT_ID));
-                    view.mostrarPDF(pdf.getPdfFile(), datosAlquiler);
-
+                    pdf = new PDF();
+                    pdf.crearVoucher(model);
+                    db.agregarVoucher(pdf.getPdfFile().getAbsolutePath(), lastPayment.getId());
+                    view.mostrarPDF(pdf.getPdfFile(), rental);
                 } catch (FileNotFoundException ex) {
-                    view.showMensaje("error al crear el archivo");
+                    view.showMessage("error al crear el archivo");
                     ex.printStackTrace();
                 } catch (DocumentException ex) {
-                    view.showMensaje("error al crear el documento");
+                    view.showMessage("error al crear el documento");
                     ex.printStackTrace();
                 }
             }
-            pago.close();
+        }else {
+            view.solicitarPermiso();
         }
     }
 
     @Override
     public String getResponsable() {
-        int dni = db.getUsuarioResponsableDe(datosAlquiler.getAsString(TAlquiler.ID));
-        return String.valueOf(dni);
+        return rental.getMainTenant();
+    }
+
+    private void addPayment(double amount){
+    }
+
+    public double getAmount(){
+        return monthlyPayment == null ? 0: monthlyPayment.getAmount();
+    }
+    @Override
+    public double getRemainingPayment() {
+        double remaining = monthlyPayment.getAmount() - (lastPayment == null ? 0d: lastPayment.getAmount());
+        return remaining < 0? 0: remaining;
+    }
+
+    @Override
+    public void ocShowDetailsAdvance() {
+        db.getAllAdvance(lastPayment.getId()).addOnSuccessListener(this::getAllAdvanceSuccess);
+    }
+
+    @Override
+    public void refresh() {
+        room = null;
+        rental = null;
+        monthlyPayment = null;
+        monthlyPaymentAux = null;
+        auxPayment = null;
+        lastPayment = null;
+        iniciarComandos();
+    }
+
+
+    private void getAllAdvanceSuccess(QuerySnapshot queryDocumentSnapshots) {
+        TableLayout tl = (TableLayout) LayoutInflater.from(view.getContext()).inflate(R.layout.view_table_layout, null, false);
+        for (QueryDocumentSnapshot doc : queryDocumentSnapshots){
+            TAdvance advance = doc.toObject(TAdvance.class);
+            TableRowView v =(TableRowView) LayoutInflater.from(view.getContext()).inflate(R.layout.view_fila_of_pagos, tl, false);
+            v.setText(doc.getId(), AdminDate.dateToString(advance.getDate().toDate()), String.valueOf(advance.getAmount()));
+            tl.addView(v);
+        }
+        view.showAllAdvances(tl);
     }
 
     public boolean permisoPDF(){
@@ -226,9 +442,26 @@ public class Presentador extends BasePresenter<Interface.view> implements Interf
     }
 
     @Override
-    public void actualizarPhoto(String path) {
-        db.upDateCuarto(TCuarto.URL, path, numeroCuarto);
+    public void updatePhoto(String path) {
+        db.updateRoom(mContext.getString(R.string.mdRoomPathImage), path, numeroCuarto);
+        db.saveRoomPhoto(numeroCuarto, path).addOnFailureListener(exception -> {
+            // Handle unsuccessful uploads
+            view.showMessage("Photo upload failed");
+        }).addOnSuccessListener(taskSnapshot -> {
+            // taskSnapshot.getMetadata() contains file metadata such as size, content-type, etc.
+            // ...
+            String pathStorage;
+            if(taskSnapshot.getMetadata() != null){
+                pathStorage = taskSnapshot.getMetadata().getPath();
+            }else{
+                pathStorage = db.getRoomPhotoStoregeAsString(numeroCuarto);
+            }
+            db.updateRoom(mContext.getString(R.string.mdRoomPathImageStorage), pathStorage, numeroCuarto);
+        });;
     }
 
-
+    @Override
+    public ItemRoom getRoom() {
+        return room;
+    }
 }

@@ -1,16 +1,22 @@
 package com.alexander_rodriguez.mihogar.vercuarto;
 
-import android.content.ContentValues;
+import android.view.LayoutInflater;
+import android.view.Menu;
+import android.widget.TableLayout;
 
 import com.alexander_rodriguez.mihogar.Base.BaseView;
 import com.alexander_rodriguez.mihogar.Base.IBasePresenter;
+import com.alexander_rodriguez.mihogar.DataBase.items.ItemRental;
+import com.alexander_rodriguez.mihogar.DataBase.items.ItemRoom;
 import com.alexander_rodriguez.mihogar.vercuarto.view_perfil_cuarto.perfilCuartoInterface;
 
 import java.io.File;
 
 public interface Interface {
     interface Presenter extends IBasePresenter {
-        ContentValues getDatosAlquiler();
+        ItemRental getDatosAlquiler();
+
+        ItemRoom getRoom();
 
         void mostrarDetalles();
 
@@ -26,27 +32,46 @@ public interface Interface {
 
         void actualizarCorreo(String toString);
 
-        void actualizarPhoto(String path);
+        void updatePhoto(String path);
 
         void crearPDF();
 
         String getResponsable();
+
+        void addAdvance(Double amount);
+
+        double getAmount();
+
+        double getRemainingPayment();
+
+        void ocShowDetailsAdvance();
+
+        void refresh();
+
     }
     interface view extends BaseView, perfilCuartoInterface {
         void noPago();
 
         void pago();
 
-        void showCuartolibre(ContentValues cuarto);
+        void showCuartolibre(ItemRoom cuarto);
 
-        void showCuartoAlquilado(ContentValues cuarto, int numCuarto, String mensualidad);
+        void showCuartoAlquilado(ItemRoom cuarto, int numCuarto, String mensualidad);
 
-        void mostrarPDF(File pdfFile, ContentValues datosUsuario);
+        void mostrarPDF(File pdfFile, ItemRental datosUsuario);
 
         void actualizarMensualidad(String mensualidad);
 
         void actualizarDetalles(String detalles);
 
         void actualizarFechaPago(String fecha);
+
+        void reloadRoomPhoto();
+
+        void hideAdvance();
+
+        void showAdvance(Double amount);
+
+        void showAllAdvances(TableLayout tl);
     }
 }

@@ -1,19 +1,22 @@
 package com.alexander_rodriguez.mihogar.registrarcasa;
 
-import android.view.View;
-
 import com.alexander_rodriguez.mihogar.Base.BaseView;
 import com.alexander_rodriguez.mihogar.Base.IBasePresenter;
+import com.alexander_rodriguez.mihogar.registrarcasa.details.DetailsView;
+import com.alexander_rodriguez.mihogar.registrarcasa.register.RegisterView;
 
 public interface interfaz {
     interface presentador extends IBasePresenter {
-        void ingresar(String dir, String corr);
+        void ingresar(RegisterView dir, DetailsView corr);
         void onResume();
     }
-    interface view extends BaseView {
-        void ocAceptar(View view);
+    interface view extends BaseView{
         void salir();
 
         void avanzar();
+
+        void onlyDetailsMode();
+
+        void newUserMode();
     }
 }

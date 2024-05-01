@@ -17,9 +17,7 @@ import com.itextpdf.text.pdf.PdfWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 
 public class PDF {
     public static final String  DIRECTORI_NAME = "docs";
@@ -33,34 +31,37 @@ public class PDF {
     private Font fText = new Font(Font.FontFamily.TIMES_ROMAN, 12, Font.NORMAL);
     private Font fHint = new Font(Font.FontFamily.TIMES_ROMAN, 15, Font.NORMAL);
 
-    public void createFile(){
-        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-        fileName = "VPDF_" + timeStamp + ".pdf";
-
-        File folder = new File(Environment.getExternalStorageDirectory().toString(), DIRECTORI_NAME);
+    public static File getFolder(){
+        return new File(Environment.getExternalStorageDirectory().toString(), DIRECTORI_NAME);
+    }
+    public static String parseName(String id){
+        return "VPDF_" + id + ".pdf";
+    }
+    public void createFile(String id){
+        fileName = parseName(id);
+        File folder = getFolder();
         if (!folder.exists())   folder.mkdir();
         pdfFile = new File(folder, fileName);
-
     }
-    public  void openDocument() throws DocumentException, FileNotFoundException {
-        createFile();
+    public  void openDocument(String id) throws DocumentException, FileNotFoundException {
+        createFile(id);
         document = new Document(PageSize.A4);
         pdfWriter = PdfWriter.getInstance(document, new FileOutputStream((pdfFile)));
         document.open();
 
     }
 
-    public void crearVoucher(String numCuarto, String dni, String numVoucher,String costo, String direccion, String fecha) throws FileNotFoundException, DocumentException {
-        openDocument();
+    public void crearVoucher(Model model) throws FileNotFoundException, DocumentException {
+        openDocument(model.getNumVoucher());
         addMetaData("Alquiler", "voucher", "AlexRodriguez");
 
         addParagraph("RECIBO DE ALQUILER");
-        addParagraph( direccion + " - HABITACION N°" + numCuarto);
-        addParagraph(fecha);
-        addParagraph("PAGO REALIZADO N°:  #    "+ numVoucher);
+        addParagraph( model.direccion + " - HABITACION N°" + model.numCuarto);
+        addParagraph(model.fecha);
+        addParagraph("PAGO REALIZADO N°:  #    "+ model.numVoucher);
         addParagraph("--------------------------------------------------------");
-        addParagraph("DOCUMENTO          "+ dni);
-        addParagraph("VALOR DE PAGO:     S/  "+ costo);
+        addParagraph("DOCUMENTO          "+ model.dni);
+        addParagraph("VALOR DE PAGO:     S/  "+ model.amount);
         addParagraph("ESTE ES UN COMPROVANTE DE PAGO\nRESPALDADO POR \"My House\"");
         addParagraph("--------------------------------------------------------");
         addParagraph("GRACIAS POR PAGAR A TIEMPO");
@@ -144,5 +145,51 @@ public class PDF {
 
     public String getFileName() {
         return fileName;
+    }
+
+    public static class Model{
+        private final String numCuarto;
+        private final String dni;
+        private final String numVoucher;
+        private String amount;
+        private final String direccion;
+        private final String fecha;
+
+        public Model(String numCuarto, String dni, String numVoucher, String amount, String direccion, String fecha) {
+            this.numCuarto = numCuarto;
+            this.dni = dni;
+            this.numVoucher = numVoucher;
+            this.amount = amount;
+            this.direccion = direccion;
+            this.fecha = fecha;
+        }
+
+        public String getNumCuarto() {
+            return numCuarto;
+        }
+
+        public String getDni() {
+            return dni;
+        }
+
+        public String getNumVoucher() {
+            return numVoucher;
+        }
+
+        public String getAmount() {
+            return amount;
+        }
+
+        public String getDireccion() {
+            return direccion;
+        }
+
+        public String getFecha() {
+            return fecha;
+        }
+
+        public void setAmount(String costo) {
+            this.amount = costo;
+        }
     }
 }

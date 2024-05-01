@@ -6,6 +6,7 @@
 
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
         android:allowBackup="true"
@@ -15,14 +16,9 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:configChanges="orientation" >
-        <activity android:name=".registrarcasa.RegistrarCasaActivity" >
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <action android:name="android.intent.action.VIEW" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
-        <activity android:name=".viewregistraralquiler.AgregarAlquilerView"/>
+        <activity android:name=".registrarcasa.RegistrarCasaActivity"
+            android:theme="@style/AppThemeMaterial.NoActionBar"/>
+
         <activity android:name=".ViewPdfActivity" />
         <activity
             android:name=".ActivityShowImage"
@@ -31,37 +27,33 @@
             android:name="com.theartofdev.edmodo.cropper.CropImageActivity"
             android:theme="@style/Base.Theme.AppCompat" />
         <activity android:name=".VistaPreviaActivity" />
-        <activity android:name=".alquilerusuario.AlquilerUsuarioActivity" />
-        <activity android:name=".listalquileres.ListAlquileresActivity" />
-        <activity android:name=".historialcasa.HistorialCasaActivity" />
+        <activity android:name=".historial_casa.HistorialCasaActivity" />
         <activity android:name=".mi_casa.MiCasaActivity" />
-        <activity android:name=".historialUserPakage.HistorialUsuarioActivity"
+        <activity android:name=".history_user.HistorialUsuarioActivity"
             android:theme="@style/AppTheme.StatusBarTransparent"
             android:label=""/>
-        <activity android:name=".tableActivity.TableActivity" />
+        <activity android:name=".table_activity.TableActivity" />
 
         <activity
-            android:name=".vercuarto.VerCuarto2"
+            android:name=".vercuarto.ShowRoomActivity"
             android:label=""
             android:configChanges="orientation"
             android:theme="@style/AppTheme.StatusBarTransparent"/>
-        <activity android:name=".viewUser.DialogConfirmPago" />
 
         <activity
-            android:name=".agregarcuarto.AgregarCuarto"
+            android:name=".add_room.AgregarCuarto"
             android:windowSoftInputMode="stateAlwaysVisible" />
 
-        <activity android:name=".verInquilinos.VerInquilinos" />
+        <activity android:name=".menu_main.MenuPricipal"/>
 
-        <activity android:name=".menuPrincipal.MenuPricipal"/>
-
-        <activity android:name=".mainactivity.MainActivity">
-
+        <activity android:name=".mainactivity.MainActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
-
-        <activity
-            android:name=".view_registrar_usuario.RegistroUsuarioView"
-            android:theme="@style/AppTheme" />
 
         <activity
             android:name=".Preferencias"
@@ -69,7 +61,7 @@
             android:label="@string/title_activity_settings"
             android:theme="@style/Theme.Preferences" />
 
-        <activity android:name=".agregarInquilino.AgregarAlquilerActivity"
+        <activity android:name=".add_rental.AddRentalActivity"
             android:theme="@style/ThemeAddList"
             android:configChanges="orientation|screenSize"/>
 
@@ -82,6 +74,9 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/file_paths" />
         </provider>
+        <meta-data
+            android:name="preloaded_fonts"
+            android:resource="@array/preloaded_fonts" />
 
     </application>
 </manifest>

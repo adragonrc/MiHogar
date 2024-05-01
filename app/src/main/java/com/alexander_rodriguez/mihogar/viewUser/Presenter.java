@@ -3,7 +3,7 @@ package com.alexander_rodriguez.mihogar.viewUser;
 import android.content.ContentValues;
 
 import com.alexander_rodriguez.mihogar.DataBase.DataBaseAdmin;
-import com.alexander_rodriguez.mihogar.MyAdminDate;
+import com.alexander_rodriguez.mihogar.AdminDate;
 import com.alexander_rodriguez.mihogar.UTILIDADES.TAlquiler;
 
 import java.text.ParseException;
@@ -14,11 +14,11 @@ public class Presenter implements Interfaz.Presenter{
     private Interfaz.View view;
     private DataBaseAdmin db;
     private ContentValues datosAlquiler;
-    private MyAdminDate myAdminDate;
+    private AdminDate adminDate;
     public Presenter(Interfaz.View view, String idAlquiler ){
         this.view = view;
         this.idAlquiler = idAlquiler;
-        myAdminDate = new MyAdminDate();
+        adminDate = new AdminDate();
         db = new DataBaseAdmin(view.getContext(),null,1);
     }
     @Override
@@ -26,7 +26,7 @@ public class Presenter implements Interfaz.Presenter{
         try {
             datosAlquiler = db.getFilaAlquilerOf("*", idAlquiler);
             String fechac = datosAlquiler.getAsString(TAlquiler.EXTRA_FECHA_PAGO);
-            Date d = myAdminDate.getDateFormat().parse(fechac);
+            Date d = adminDate.getDateFormat().parse(fechac);
             if (d.before(new Date()))
                 view.doNoPago();
             else

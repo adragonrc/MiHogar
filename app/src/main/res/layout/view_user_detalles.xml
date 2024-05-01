@@ -6,13 +6,26 @@
     android:layout_height="wrap_content"
     android:orientation="horizontal"
     android:layout_margin="4dp">
-    <de.hdodenhof.circleimageview.CircleImageView
-        android:id="@+id/ivPhoto"
+    <FrameLayout
         android:layout_width="64dp"
         android:layout_height="64dp"
-        android:layout_margin="8dp"
-        android:gravity="center"
-        android:src="@drawable/images"/>
+        android:layout_margin="8dp">
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/ivPhoto"
+            android:layout_width="64dp"
+            android:layout_height="64dp"
+            android:layout_gravity="center"
+            android:src="@drawable/images"
+            android:padding="8dp"/>
+        <ImageButton
+            android:id="@+id/ivCheck"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_gravity="bottom|right"
+            android:src="@drawable/ic_round_check_circle_24"
+            android:visibility="gone"/>
+    </FrameLayout>
 
     <TableLayout
         android:id="@+id/layout"
@@ -48,11 +61,20 @@
             </TableLayout>
 
             <ImageView
+                android:id="@+id/ivDetails"
+                android:layout_height="24dp"
+                android:layout_width="24dp"
+                android:layout_gravity="center"
+                android:src="@drawable/ic_baseline_feedback_24"
+                android:visibility="gone"/>
+
+            <ImageView
                 android:id="@+id/ivAlert"
                 android:layout_height="24dp"
                 android:layout_width="24dp"
                 android:layout_gravity="center"
-                android:src="@drawable/ic_star_black_24dp"/>
+                android:src="@drawable/ic_baseline_report_problem_24"
+                android:visibility="gone"/>
         </TableRow>
     </TableLayout>
 </LinearLayout>

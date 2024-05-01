@@ -21,26 +21,19 @@ public class Save {
 
     private Context context;
 
-    public String SaveImage(Context context, String  path){
+    public String SaveImage(Context context, String  path,  String parent, String name){
         if (path == null || path.equals("")) return "";
         Bitmap bm = BitmapFactory.decodeFile(path);
-        return SaveImage(context, bm);
+        return SaveImage(context, bm, parent,name);
     }
-    public String SaveImage(Context context, Bitmap ImageToSave) {
+    public String SaveImage(Context context, Bitmap ImageToSave, String parent, String name) {
         if(ImageToSave == null ) return "";
 
         this.context = context;
         //  String file_path = Environment.getExternalStorageDirectory().getAbsolutePath() + NameOfFolder;
-        String CurrentDateAndTime = getCurrentDateAndTime();
-        //  File dir = new File(file_path);
-        File dir = this.context.getExternalFilesDir(Environment.DIRECTORY_PICTURES);
-        if (dir != null)
-            if (!dir.exists()) {
-                dir.mkdirs();
-            }
-        String nameOfFile = "IMG_";
-        File file = new File(dir, nameOfFile + CurrentDateAndTime + ".jpg");
 
+        //  File dir = new File(file_path);
+        File file = createFile(context, parent, name);
         try {
             FileOutputStream fOut = new FileOutputStream(file);
 
@@ -55,12 +48,24 @@ public class Save {
         }
         return "";
     }
+    public static File createFile(Context mContext, String folder, String name){
+        File parent = mContext.getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+        if (parent != null) {
+            if (!parent.exists()) {
+                parent.mkdirs();
+            }
+            parent = new File(parent, folder);
+            if (!parent.exists()) {
+                parent.mkdirs();
+            }
+        }
+        return new File(parent, name + ".jpg");
+    }
 
     private void MakeSureFileWasCreatedThenMakeAvabile(File file){
         MediaScannerConnection.scanFile(context,
                 new String[] { file.toString() } , null,
                 new MediaScannerConnection.OnScanCompletedListener() {
-
                     public void onScanCompleted(String path, Uri uri) {
                     }
                 });

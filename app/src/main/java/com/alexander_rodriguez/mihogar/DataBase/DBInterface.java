@@ -6,12 +6,31 @@ import android.database.Cursor;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.alexander_rodriguez.mihogar.DataBase.items.ItemRoom;
+import com.alexander_rodriguez.mihogar.DataBase.items.ItemTenant;
+import com.alexander_rodriguez.mihogar.DataBase.models.TAdvance;
+import com.alexander_rodriguez.mihogar.DataBase.models.THouse;
+import com.alexander_rodriguez.mihogar.DataBase.models.TMonthlyPayment;
+import com.alexander_rodriguez.mihogar.DataBase.models.TPayment;
+import com.alexander_rodriguez.mihogar.DataBase.models.TRental;
+import com.alexander_rodriguez.mihogar.R;
 import com.alexander_rodriguez.mihogar.TableCursor;
 import com.alexander_rodriguez.mihogar.modelos.ModelUsuario;
-import com.alexander_rodriguez.mihogar.viewregistraralquiler.ModelAA;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.storage.FileDownloadTask;
+import com.google.firebase.storage.UploadTask;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.io.File;
 import java.util.ArrayList;
 
 
@@ -25,9 +44,35 @@ public interface DBInterface {
         return cv;
     }
 
+    Task<AuthResult> sigIn(String email, String pass);
+
+    DocumentReference getCuartoDR(String numCuarto);
+
+    CollectionReference getCuartoCR();
+
+    CollectionReference getRentalCR();
+
+    CollectionReference getUserCR();
+
+    DocumentReference getRentalDR(String rentalId);
+
+    DocumentReference getUserDR(String dni);
+
+    Task<DocumentSnapshot> getUser(String dni);
+
+    CollectionReference getAlquilerUserCR();
+
+    CollectionReference getMonthlyPaymentCR(String rentalId);
+
+    CollectionReference getPaymentCR();
+
+    DocumentReference getPaymentDR(String lastPaymentId);
+
     boolean revertir(String tableName, String columKey, Object key);
 
-    ContentValues getFilaInCuarto(String columnas, Object numCuarto);
+    Task<DocumentSnapshot> getRoom(String numCuarto);
+
+    Task<DocumentSnapshot> getPayment(String id);
 
     ContentValues getFilaInMensualidadActual(String columnas, Object idAlquiler);
 
@@ -53,9 +98,9 @@ public interface DBInterface {
 
     Cursor getAllCuartos(String columnas);
 
-    Cursor getAllCuartosJoinAlquiler(String columnas);
+    Task<QuerySnapshot> getAllCuartosJoinAlquiler(String columnas);
 
-    Cursor getCuartosLibres(String columnas);
+    Task<QuerySnapshot> getEmptyRooms();
 
     Cursor getCuartosAlquilados(String columnas);
 
@@ -63,9 +108,9 @@ public interface DBInterface {
 
     Cursor getAllUsuariosADDAlert(String columnas);
 
-    Cursor getUsuariosForAlquiler(String columnas, String ida);
+    Task<QuerySnapshot> getRentalTenant(String field, String ida);
 
-    ContentValues getFilaAlquilerByCuartoOf(String columnas, Object numCuarto);
+    ContentValues getRentByRoom(String columnas, Object numCuarto);
 
     String[] getDniOfAlquilerUser(Object idAlquiler);
 
@@ -73,7 +118,7 @@ public interface DBInterface {
 
     ContentValues getFilaAlquilerByUserOf(String columnas, Object DNI);
 
-    TableCursor getPagosOf(String columnas, Object idMensualidad);
+    Task<QuerySnapshot> getPayments(String field, Object value);
 
     String[] getIdOfAllAlquileres();
 
@@ -83,31 +128,39 @@ public interface DBInterface {
 
     int contDniOfAlquilerUsuario(String idAlquiler);
 
-    void upDateUsuario(String columna, Object valor, Object DNI);
+    Task<Void> updateTenant(String field, Object valor, String DNI);
 
-    void upDateCuarto(String columna, Object valor, Object numeroDeCuarto);
+    Task<Void> updateRoom(String field, Object valor, String numeroDeCuarto);
 
-    void upDateAlquiler(String columna, Object valor, Object id);
+    Task<Void> updateRental(String columna, Object valor, String id);
+
+    Task<Void> updateMonthlyPayment(String rentalID, String mpId, String field, Object data);
+
+    Task<Void> updatePayment(String id, String field, Object data);
 
     void upDateAlquilerUsuario(String columna, Object valor, Object idAl, Object dni);
 
-    boolean agregarCuarto(String numCuarto, String detalles, String precio, String path);
+    Task<Void> agregarCuarto(ItemRoom room);
 
     boolean usuarioAlertado(Object DNI);
 
     boolean agregarInquilino(String DNI, String nombres, String apellidoPat, String apellidoMat, String URI);
 
-    boolean agregarInquilino(ModelUsuario mu);
+    Task<Void> agregarInquilino(ItemTenant mu);
+
+    Task<Void> agregarInquilinos(ArrayList<ItemTenant> list, String  idAlquiler);
 
     boolean agregarAlquiler(String numC, String fecha, String pagosRealizados, String numTel, String correo);
 
     boolean agregarAlquilerUsuario(long idAlquiler, String dni, boolean isMain);
 
-    boolean agregarAlquiler(ModelAA model);
+    Task<DocumentReference> agregarAlquiler(TRental model);
 
-    boolean agregarMensualidad(double costo, String fecha_i, long idA);
+    Task<DocumentReference> agregarMensualidad( TMonthlyPayment monthlyPayment );
 
-    boolean agregarPago(String fecha, long idM, long DNI);
+    Task<DocumentReference> addPayment(TPayment payment);
+
+    Task<DocumentReference> addAdvanced(String id, TAdvance advance);
 
     boolean agregarInquilinoExist(String DNI, String numC, double costo, @NonNull String fecha_i, @Nullable String fecha_c, String numTel, String correo);
 
@@ -117,11 +170,11 @@ public interface DBInterface {
 
     long getIdMaxAlquiler();
 
-    String[] consultarNumerosDeCuartoDisponibles();
+    Task<QuerySnapshot> consultarNumerosDeCuartoDisponibles();
 
     boolean existIntoCuarto(String valor);
 
-    boolean existeUsuario(String dni);
+    Task<DocumentSnapshot> existeUsuario(String dni);
 
     boolean esUsuarioAntiguo(String dni);
 
@@ -136,4 +189,55 @@ public interface DBInterface {
     Cursor getPago(String id);
 
     int getUsuarioResponsableDe(String idAlquiler);
+
+    void updateCurrentRoomRent(String numCuarto, String rentalId);
+
+    void updateCurrentRentMP(String rentalId, DocumentReference id);
+
+    DocumentReference getDocument(DocumentReference currentMP);
+
+    Task<QuerySnapshot> getAllAdvance(String id);
+
+    Task<QuerySnapshot> getAllRoom();
+
+    Task<QuerySnapshot> getAllTenants();
+
+    Task<DocumentSnapshot> getRental(String currentRentalId);
+
+    UploadTask saveRoomPhoto(String numeroCuarto, String path);
+
+    UploadTask saveTenantPhoto(String dni, String path);
+
+    String getRoomPhotoStoregeAsString(String numeroCuarto) ;
+
+    String getTenantPhotoStoregeAsString(String dni);
+
+    FileDownloadTask downloadRoomPhoto(String roomNumber,@NonNull File localFile);
+
+    String getPathTenant(String DNI);
+
+    String getPathRoom(String roomNumber);
+
+    Task<QuerySnapshot> getTenantHistory(String dni);
+
+    Task<QuerySnapshot> getRentalsOfRoom(String roomNumber);
+
+    Task<Void> terminateContract(String id,  String motivo, String numeroCuarto);
+
+    Task<AuthResult> sigInWithGoogle(GoogleSignInAccount account);
+
+    FirebaseUser getCurrentUser();
+
+    void initData();
+
+    void signOut();
+
+    Task<AuthResult> createUser(String email, String pass);
+
+    Task<DocumentSnapshot> getHouseDR();
+
+    Task<Void> updateHouseDetails(THouse house);
+
+    void setAuthStateListener(FirebaseAuth.AuthStateListener listener);
+
 }

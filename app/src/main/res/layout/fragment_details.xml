@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.alexander_rodriguez.mihogar.registrarcasa.details.DetailsView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".registrarcasa.details.DetailsView"
+    android:layout_margin="8dp"
+    android:orientation="vertical"
+    android:id="@+id/details">
+
+    <com.google.android.material.textfield.TextInputLayout
+        style="@style/TextInputStyle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:counterEnabled="true"
+        android:layout_marginTop="4dp"
+        app:counterMaxLength="@integer/count_max_name">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/etName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/name"
+            android:text="Yorvin Alexander"
+            android:inputType="textPersonName"
+            android:textColor="@color/primaryTextColor"/>
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        style="@style/TextInputStyle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:counterMaxLength="@integer/count_max_last_name"
+        app:counterEnabled="true"
+        >
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/etLastName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Apellidos *"
+            android:text="Rodriguez Carrion"
+            android:inputType="textPersonName"
+            android:textColor="@color/primaryTextColor"/>
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        style="@style/TextInputStyle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:counterEnabled="true"
+        app:counterMaxLength="@integer/count_max_details">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/etDetails"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Descripcion de vivienda"
+            android:text="Casa de tres pisos, con13 habitaciones"
+            android:gravity="bottom"
+            android:maxLines="3"
+            android:inputType="textPersonName|textMultiLine"
+            android:textColor="@color/primaryTextColor"/>
+    </com.google.android.material.textfield.TextInputLayout>
+
+
+    <!--
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:baselineAligned="false">
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="2"
+            android:textColorHint="@color/colorAccent"
+            android:layout_marginEnd="4dp">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/etCountry"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/sCountry"
+                android:text="Peru"
+                android:inputType="textPersonName"
+                android:textColor="@color/primaryTextColor"/>
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginStart="4dp"
+            android:textColorHint="@color/colorAccent">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/etRegion"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/sDepartamento"
+                android:text="La libertad"
+                android:inputType="textPersonName"
+                android:textColor="@color/primaryTextColor"/>
+        </com.google.android.material.textfield.TextInputLayout>
+    </LinearLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColorHint="@color/colorAccent">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/etCity"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/sProvince"
+            android:text="Viru"
+            android:inputType="textPostalAddress"
+            android:textColor="@color/primaryTextColor"/>
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColorHint="@color/colorAccent">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/etAddress"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/sAddress"
+            android:text="A.H. Los pinos Mz16 Lt5"
+            android:inputType="textPostalAddress"
+            android:textColor="@color/primaryTextColor"/>
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColorHint="@color/colorAccent">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/etZipCode"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/sZipCode"
+            android:inputType="number"
+            android:text="13621"
+            android:textColor="@color/primaryTextColor"/>
+    </com.google.android.material.textfield.TextInputLayout>
+    -->
+</com.alexander_rodriguez.mihogar.registrarcasa.details.DetailsView>

@@ -1,68 +1,66 @@
 package com.alexander_rodriguez.mihogar.viewregistraralquiler;
 
+import android.net.wifi.aware.Characteristics;
+
+import com.alexander_rodriguez.mihogar.AdminDate;
 import com.alexander_rodriguez.mihogar.Base.BasePresenter;
-import com.alexander_rodriguez.mihogar.MyAdminDate;
+import com.alexander_rodriguez.mihogar.DataBase.models.TRental;
+import com.alexander_rodriguez.mihogar.Validator;
+import com.google.firebase.Timestamp;
+import com.google.firebase.firestore.DocumentReference;
 
-public class ModelAA{
-    private String precio;
-    private String correo;
-    private String numeroTelef;
+public class ModelAA extends TRental {
+    private String price;
+    private String sEntryDate;
+    private String sDepartureDate;
 
-    private String numCuarto;
-    private String fecha;
 
-    private String plazo;
-
-    private int pagosRealizados;
-
-    public ModelAA(String precio, String correo, String numeroTelef, String numCuarto, String fecha,  int pagosRealizados, String plazo){
-        this.precio = precio;
-        this.correo = correo;
-        this.numeroTelef = numeroTelef;
-        this.numCuarto = numCuarto;
-        this.fecha = fecha;
-        this.plazo = plazo;
-        this.pagosRealizados = pagosRealizados;
+    public ModelAA(Timestamp entryDate, String roomNumber, int paymentsNumber, String phoneNumber, String email, String price ) {
+        super(entryDate, null, "",  roomNumber, null,null,  0, paymentsNumber, phoneNumber, email);
+        this.price = price;
+    }
+    public ModelAA(Timestamp entryDate, Timestamp departureDate, String reasonExit, String roomNumber, DocumentReference currentMP, String mainTenant, int paymentsNumber, String phoneNumber, String email) {
+        super(entryDate, departureDate, reasonExit, roomNumber, currentMP, mainTenant,0, paymentsNumber, phoneNumber, email);
     }
 
-    public String getPrecio() {
-        return precio;
+
+    public TRental getRoot(){
+        return new TRental(entryDate, departureDate, reasonExit, roomNumber, currentMP, mainTenant, tenantsNumber, paymentsNumber, phoneNumber, email);
     }
 
-    public String getCorreo() {
-        return correo;
+    public String getPrice() {
+        return price;
     }
 
-    public String getNumeroTelef() {
-        return numeroTelef;
-    }
+   // public String getPlazo() {
+  //      return plazo;
+   // }
 
-    public String getNumCuarto() {
-        return numCuarto;
-    }
-
-    public String getFecha() {
-        return fecha;
-    }
-
-    public String getPlazo() {
-        return plazo;
-    }
-
-    public boolean pago() {
-        return pagosRealizados != 0;
+    public boolean wasPaid() {
+        return paymentsNumber != 0;
     }
 
     public boolean isCorrect() {
-        return  BasePresenter.validarStrings(precio, numCuarto, fecha, plazo);
+        boolean f = BasePresenter.validarStrings(price, roomNumber);
+        try {
+            Double.parseDouble(price);
+            return f;
+        }catch (NumberFormatException e){
+            return false;
+        }
     }
 
-
-    public int getPagosRealizados() {
-        return pagosRealizados;
+    public String getEntryDateAsString() {
+        if(sEntryDate == null || sEntryDate.isEmpty()){
+            sEntryDate = AdminDate.dateToString(entryDate.toDate());
+        }
+        return sEntryDate;
     }
 
-    public void setFecha(String fecha) {
-        this.fecha = fecha;
+    public String getDepartureDateAsString() {
+        if(sDepartureDate == null || sDepartureDate.isEmpty()){
+            sDepartureDate = AdminDate.dateToString(departureDate.toDate());
+        }
+        return sDepartureDate;
     }
 }

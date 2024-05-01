@@ -4,6 +4,8 @@ import android.content.Context;
 
 public interface BaseView{
     Context getContext();
-    void showMensaje(String mensaje);
+    void showMessage(String mensaje);
     void solicitarPermiso();
+    void setProgressBarVisibility(int visibility);
+    void goToLogin();
 }

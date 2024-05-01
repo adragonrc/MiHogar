@@ -10,6 +10,8 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatDialogFragment;
 
 import com.alexander_rodriguez.mihogar.R;
@@ -17,7 +19,14 @@ import com.alexander_rodriguez.mihogar.UTILIDADES.Mensualidad;
 import com.alexander_rodriguez.mihogar.UTILIDADES.TAlquiler;
 import com.alexander_rodriguez.mihogar.UTILIDADES.TCuarto;
 
+import org.jetbrains.annotations.NotNull;
+
 public class DialogConfirmPago extends AppCompatDialogFragment {
+    public static final String ARG_DNI = "dni";
+    public static final String ARG_ROOM_NUMBER = "roomNumber";
+    public static final String ARG_PAYMENT_DATA = "paymentData";
+    public static final String ARG_AMOUNT = "amount";
+
     private TextView tvDni;
     private TextView tvCuarto;
     private TextView tvFechaDePago;
@@ -38,18 +47,16 @@ public class DialogConfirmPago extends AppCompatDialogFragment {
 
     }
 
-    public DialogConfirmPago(Bundle datos, Context context){
-        super();
-        this.datos = datos;
+    public DialogConfirmPago(Context context){
         this.context  = context;
-        inflater = getLayoutInflater();
+        inflater = LayoutInflater.from(context);
         vista = inflater.inflate(R.layout.dialog_agregar_pago, null);
         iniciarViews();
 
     }
 
     @Override
-    public Dialog onCreateDialog(Bundle savedInstanceState) {
+    public @NotNull Dialog onCreateDialog(Bundle savedInstanceState) {
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         if (vista != null)
             if  (vista.getParent() != null)
@@ -57,8 +64,16 @@ public class DialogConfirmPago extends AppCompatDialogFragment {
 
         builder.setView(vista);
         dialog = builder.create();
+        this.datos = getArguments();
+        if (datos!= null) {
+            tvDni.setText(datos.getString(ARG_DNI));
+            tvCuarto.setText(datos.getString(ARG_ROOM_NUMBER));
+            tvFechaDePago.setText(datos.getString(ARG_PAYMENT_DATA));
+            tvMonto.setText(datos.getString(ARG_AMOUNT));
+        }
         return dialog;
     }
+
 
     public void setOnClickListenerAceptar(View.OnClickListener listenerAceptar){
         aceptar.setOnClickListener(listenerAceptar);
@@ -76,10 +91,6 @@ public class DialogConfirmPago extends AppCompatDialogFragment {
         aceptar = vista.findViewById(R.id.btAceptar);
         cancelar = vista.findViewById(R.id.btCancelar);
 
-       // tvDni.setText(datos.getString(TUsuario.DNI));
-        tvCuarto.setText(datos.getString(TCuarto.NUMERO));
-        tvFechaDePago.setText(datos.getString(TAlquiler.EXTRA_FECHA_PAGO));
-        tvMonto.setText(datos.getString(Mensualidad.COSTO));
     }
 }
 

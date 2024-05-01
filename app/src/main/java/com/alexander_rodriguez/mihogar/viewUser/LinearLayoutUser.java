@@ -11,16 +11,16 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentManager;
 
 import com.alexander_rodriguez.mihogar.R;
 import com.alexander_rodriguez.mihogar.UTILIDADES.TAlquiler;
-import com.alexander_rodriguez.mihogar.UTILIDADES.TUsuario;
-import com.alexander_rodriguez.mihogar.mydialog.DialogImput;
-import com.alexander_rodriguez.mihogar.mydialog.DialogInterfaz;
-import com.alexander_rodriguez.mihogar.mydialog.DialogOptions;
-import com.alexander_rodriguez.mihogar.mydialog.PresenterDialogImput;
-import com.alexander_rodriguez.mihogar.tableActivity.TableActivity;
+import com.alexander_rodriguez.mihogar.dialogs.DialogImput;
+import com.alexander_rodriguez.mihogar.dialogs.DialogInterfaz;
+import com.alexander_rodriguez.mihogar.dialogs.DialogOptions;
+import com.alexander_rodriguez.mihogar.dialogs.PresenterDialogImput;
+import com.alexander_rodriguez.mihogar.table_activity.TableActivity;
 
 public class LinearLayoutUser implements Interfaz.View{
     private LayoutInflater inflater;
@@ -105,18 +105,18 @@ public class LinearLayoutUser implements Interfaz.View{
         */
     }
     public void layoutOnClick(){
-        Intent i = new Intent(mContext, DialogConfirmPago.class);
+     /*   Intent i = new Intent(mContext, DialogConfirmPago.class);
         i.putExtra(TUsuario.DNI,Integer.parseInt(tvDni.getText().toString()));
-        mContext.startActivity(i);
+        mContext.startActivity(i);*/
     }
     public void onClickMoreOptions(){
         dialogOptions.showDiaglog(transaction, "option", dop);
     }
     public void doPago(){
-        imEstado.setImageDrawable(view.getResources().getDrawable(R.drawable.ic_mood_black_24dp));
+        imEstado.setImageDrawable(ContextCompat.getDrawable(getContext(), R.drawable.ic_mood_black_24dp));
     }
     public void doNoPago(){
-        imEstado.setImageDrawable(view.getResources().getDrawable(R.drawable.ic_mood_bad_black_24dp));
+        imEstado.setImageDrawable(ContextCompat.getDrawable(getContext(), R.drawable.ic_mood_bad_black_24dp));
     }
     public void setAttributes(String dni, String fecha){
         tvFecha.setText(fecha);
