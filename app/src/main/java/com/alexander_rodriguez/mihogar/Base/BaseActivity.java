@@ -18,7 +18,7 @@ import androidx.fragment.app.Fragment;
 
 import com.alexander_rodriguez.mihogar.R;
 import com.alexander_rodriguez.mihogar.mainactivity.MainActivity;
-import com.theartofdev.edmodo.cropper.CropImage;
+import com.juliodigital.crooperimage.CropImage;
 
 
 public abstract class BaseActivity<P extends IBasePresenter> extends AppCompatActivity implements BaseView {

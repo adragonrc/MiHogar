@@ -17,7 +17,7 @@ import com.alexander_rodriguez.mihogar.Base.BaseActivity;
 import com.alexander_rodriguez.mihogar.view_buttons_ac.ButtonsAC;
 import com.alexander_rodriguez.mihogar.R;
 import com.alexander_rodriguez.mihogar.Save;
-import com.theartofdev.edmodo.cropper.CropImage;
+import com.juliodigital.crooperimage.CropImage;
 
 public class AgregarCuarto extends BaseActivity<Interfaz.Presenter> implements Interfaz.view, ButtonsAC.Listener{
     private EditText numeroDeCuarto;

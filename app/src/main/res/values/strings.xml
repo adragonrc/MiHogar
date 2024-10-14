@@ -1,6 +1,8 @@
 <resources>
-    <string name="app_name">Mi Hogar</string>
-    <string name="msmAvanzarCont">PRESIONA TRES VECES PARA BORRAR:</string>
+    <string name="app_name" translatable="false">Mi Hogar</string>
+    <string name="msmAvanzarCont" translatable="false">PRESIONA TRES VECES PARA BORRAR:</string>
+    <string name="default_web_client_id">1060475592379-i0lvhre7cdb907v84ivk0qg52j6he046.apps.googleusercontent.com</string>
+
     <string-array name="dias">
         <item>01</item>
         <item>02</item>
@@ -78,7 +80,7 @@
 
     <style name="valueTiempo">key_tiempo_pago</style>
 
-    <string name="sNombreUser">Nombres.</string>
+    <string name="sNombreUser" translatable="false">Nombres.</string>
     <string name="email">identificador</string>
     <string name="password">password</string>
     <string name="direccion">direccion</string>

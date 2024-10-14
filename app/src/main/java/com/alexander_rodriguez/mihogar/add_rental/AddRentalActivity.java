@@ -30,7 +30,7 @@ import com.alexander_rodriguez.mihogar.add_room.AgregarCuarto;
 import com.alexander_rodriguez.mihogar.history_user.HistorialUsuarioActivity;
 import com.alexander_rodriguez.mihogar.viewregistraralquiler.ModelAA;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
-import com.theartofdev.edmodo.cropper.CropImage;
+import com.juliodigital.crooperimage.CropImage;
 
 public class AddRentalActivity extends BaseActivity<Interfaz.presenter> implements Interfaz.view{
 

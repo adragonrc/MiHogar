@@ -27,7 +27,7 @@ import com.alexander_rodriguez.mihogar.Save;
 import com.alexander_rodriguez.mihogar.menu_photo.MenuIterator;
 import com.alexander_rodriguez.mihogar.menu_photo.interfazMenu;
 import com.alexander_rodriguez.mihogar.vercuarto.view_perfil_cuarto.ProfileView;
-import com.theartofdev.edmodo.cropper.CropImage;
+import com.juliodigital.crooperimage.CropImage;
 
 
 public class HistorialUsuarioActivity extends BaseActivity<Interfaz.presenter> implements Interfaz.view {

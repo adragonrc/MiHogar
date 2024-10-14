@@ -13,6 +13,6 @@
         android:id="@+id/app_bar_shared"
         android:icon="@drawable/ic_share_black_24dp"
         android:orderInCategory="100"
-        android:title="Search"
+        android:title="share"
         app:showAsAction="ifRoom" />
 </menu>

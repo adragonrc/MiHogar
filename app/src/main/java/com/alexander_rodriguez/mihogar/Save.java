@@ -8,10 +8,7 @@ import android.net.Uri;
 import android.os.Environment;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
-
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
@@ -40,7 +37,7 @@ public class Save {
             ImageToSave.compress(Bitmap.CompressFormat.JPEG, 100, fOut);
             fOut.flush();
             fOut.close();
-            MakeSureFileWasCreatedThenMakeAvabile(file);
+            MakeSureFileWasCreatedThenMakeAvailable(file);
             AbleToSave();
             return file.getAbsolutePath();
         } catch(IOException e) {
@@ -62,7 +59,7 @@ public class Save {
         return new File(parent, name + ".jpg");
     }
 
-    private void MakeSureFileWasCreatedThenMakeAvabile(File file){
+    private void MakeSureFileWasCreatedThenMakeAvailable(File file){
         MediaScannerConnection.scanFile(context,
                 new String[] { file.toString() } , null,
                 new MediaScannerConnection.OnScanCompletedListener() {
