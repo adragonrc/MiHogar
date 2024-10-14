@@ -23,7 +23,6 @@ public class Presentador extends BasePresenter<Interface.View>  {
 
     @Override
     protected void userLogin() {
-
         FirebaseUser user = db.getCurrentUser();
         if (!user.isEmailVerified()){
 

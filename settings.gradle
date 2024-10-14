@@ -1,2 +1,3 @@
 rootProject.name='Mi Hogar'
 include ':app'
+include ':crooperImage'

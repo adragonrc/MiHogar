@@ -103,17 +103,12 @@ public class Presenter extends BasePresenter<Interface.View> implements Interfac
         this.menu = menu;
         if (iMenu != 0){
             menuInflater.inflate(this.iMenu, menu);
-            switch (idItemMenuSelected) {
-                case R.id.iVerAlquileres: {
-                    menu.findItem(R.id.item_ordenar_numero).setVisible(true);
-                    menu.findItem(R.id.item_ordenar_nombre).setVisible(false);
-                    break;
-                }
-                default: {
-                    menu.findItem(R.id.item_ordenar_numero).setVisible(false);
-                    menu.findItem(R.id.item_ordenar_nombre).setVisible(true);
-                    break;
-                }
+            if (idItemMenuSelected == R.id.iVerAlquileres) {
+                menu.findItem(R.id.item_ordenar_numero).setVisible(true);
+                menu.findItem(R.id.item_ordenar_nombre).setVisible(false);
+            } else {
+                menu.findItem(R.id.item_ordenar_numero).setVisible(false);
+                menu.findItem(R.id.item_ordenar_nombre).setVisible(true);
             }
         }
     }

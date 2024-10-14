@@ -19,12 +19,14 @@ import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.FirebaseApp;
 
 public class MainActivity extends BaseActivity<Interface.presenter> implements Interface.view, LoginFragment.Interface {
     private static final int RC_SIGN_IN = 1;
     private static final String TAG = "errorLoginWithGoogle";
     private GoogleSignInClient mGoogleSignInClient;
     private LoginFragment loginFragment;
+
     @Override
     protected void iniciarComandos() {
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
@@ -71,6 +73,7 @@ public class MainActivity extends BaseActivity<Interface.presenter> implements I
     @NonNull
     @Override
     protected Interface.presenter createPresenter() {
+        FirebaseApp.initializeApp(this);
         return new Presenter(this);
     }
 

@@ -6,6 +6,7 @@ import android.graphics.BitmapFactory;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -19,27 +20,13 @@ import com.google.android.material.appbar.AppBarLayout;
 
 import java.io.File;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
-
 public class ProfileView extends CoordinatorLayout implements AppBarLayout.OnOffsetChangedListener {
-    @BindView(R.id.toolbar_header_view)
-    protected HeaderView toolbarHeaderView;
-
-    @BindView(R.id.float_header_view)
-    protected HeaderView floatHeaderView;
-
-    @BindView(R.id.appbar)
-    protected AppBarLayout appBarLayout;
-
-    @BindView(R.id.toolbar)
-    protected Toolbar toolbar;
-
-    @BindView(R.id.nestedCuerpo)
-    protected NestedScrollView nestedCuerpo;
-
-    @BindView(R.id.ivPerfil)
-    protected ImageView ivPerfil;
+    HeaderView toolbarHeaderView;
+    HeaderView floatHeaderView;
+    AppBarLayout appBarLayout;
+    Toolbar toolbar;
+    NestedScrollView nestedCuerpo;
+    ImageView ivPerfil;
     private boolean isHideToolbarView = false;
 
     public ProfileView(@NonNull Context context) {
@@ -57,8 +44,17 @@ public class ProfileView extends CoordinatorLayout implements AppBarLayout.OnOff
     @Override
     protected void onFinishInflate() {
         super.onFinishInflate();
-        ButterKnife.bind(this);
+        initViews();
         initUi();
+    }
+
+    private void initViews() {
+        toolbarHeaderView = findViewById(R.id.toolbar_header_view);
+        floatHeaderView = findViewById(R.id.float_header_view);
+        appBarLayout = findViewById(R.id.appbar);
+        toolbar = findViewById(R.id.toolbar);
+        nestedCuerpo = findViewById(R.id.nestedCuerpo);
+        ivPerfil = findViewById(R.id.ivPerfil);
     }
 
     public void addToCuerpo(View view){
@@ -78,8 +74,8 @@ public class ProfileView extends CoordinatorLayout implements AppBarLayout.OnOff
         floatHeaderView.setNameText(title);
     }
     public void setSubTitle(String subTitle){
-        toolbarHeaderView.setLastSeenText(subTitle);
-        floatHeaderView.setLastSeenText(subTitle);
+        toolbarHeaderView.setNameText(subTitle);
+        floatHeaderView.setNameText(subTitle);
     }
 
     public void reloadPhoto(String path){

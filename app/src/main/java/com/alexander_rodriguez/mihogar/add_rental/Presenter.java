@@ -134,7 +134,7 @@ public class Presenter extends BasePresenter<Interfaz.view> implements Interfaz.
     }
 
     public ArrayAdapter<String> getAdapterCuartos () {
-        return new ArrayAdapter<>(view.getContext(), R.layout.support_simple_spinner_dropdown_item, cuartosDisponibles);
+        return new ArrayAdapter<>(view.getContext(), androidx.appcompat.R.layout.support_simple_spinner_dropdown_item, cuartosDisponibles);
     }
 
     @Override

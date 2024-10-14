@@ -15,8 +15,7 @@ import com.google.android.material.appbar.AppBarLayout;
 
 public class WhatsappHeaderBehavior extends CoordinatorLayout.Behavior<HeaderView> {
 
-    private Context mContext;
-
+    private final Context mContext;
     private int mStartMarginLeft;
     private int mEndMarginLeft;
     private int mMarginRight;

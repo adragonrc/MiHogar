@@ -45,12 +45,11 @@ import com.alexander_rodriguez.mihogar.table_activity.TableActivity;
 import com.alexander_rodriguez.mihogar.vercuarto.view_perfil_cuarto.PerfilCuarto;
 import com.alexander_rodriguez.mihogar.vercuarto.view_perfil_cuarto.ProfileView;
 import com.alexander_rodriguez.mihogar.viewUser.DialogConfirmPago;
-import com.theartofdev.edmodo.cropper.CropImage;
+import com.juliodigital.crooperimage.CropImage;
 
 import java.io.File;
 import java.util.Objects;
 
-import butterknife.ButterKnife;
 
 public class ShowRoomActivity extends BaseActivity<Interface.Presenter> implements Interface.view, ButtonsAC.Listener, DialogAddAdvance.Interface {
     private static final String TAG_REALIZAR_PAGO = "confirmarPago";
@@ -145,7 +144,6 @@ public class ShowRoomActivity extends BaseActivity<Interface.Presenter> implemen
     @Override
     protected void iniciarComandos() {
         interfazMenu = new MenuIterator(this);
-        ButterKnife.bind(this);
 
         setSupportActionBar(profileCuarto.getToolbar());
         ActionBar ab =  getSupportActionBar();
@@ -246,7 +244,8 @@ public class ShowRoomActivity extends BaseActivity<Interface.Presenter> implemen
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
             presenter.crearPDF();
         }
     }

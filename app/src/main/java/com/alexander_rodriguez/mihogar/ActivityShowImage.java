@@ -20,7 +20,7 @@ import com.alexander_rodriguez.mihogar.DataBase.DBInterface;
 import com.alexander_rodriguez.mihogar.DataBase.FDAdministrator;
 import com.alexander_rodriguez.mihogar.menu_photo.MenuIterator;
 import com.alexander_rodriguez.mihogar.menu_photo.interfazMenu;
-import com.theartofdev.edmodo.cropper.CropImage;
+import com.juliodigital.crooperimage.*;
 
 import java.io.IOError;
 
@@ -88,19 +88,12 @@ public class ActivityShowImage extends BaseActivity<IBasePresenter> {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-        switch (id){
-            case R.id.app_bar_edit:{
-                interfazMenu.onEdit();
-                break;
-            }
-            case R.id.app_bar_shared:{
-                interfazMenu.onShared(path);
-                break;
-            }
-            case BACK_PRESSED:{
-                onBackPressed();
-                break;
-            }
+        if (id == R.id.app_bar_edit) {
+            interfazMenu.onEdit();
+        } else if (id == R.id.app_bar_shared) {
+            interfazMenu.onShared(path);
+        } else if (id == BACK_PRESSED) {
+            onBackPressed();
         }
         return super.onOptionsItemSelected(item);
     }
